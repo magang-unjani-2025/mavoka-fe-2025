@@ -1,14 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import "swiper/css";
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
     html {
       font-family: 'Poppins', sans-serif;
     }
+    h1 {
+      @apply text-2xl font-bold;
+    }
+
+  h2 {
+    @apply text-xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+
+  p {
+    @apply text-sm;
+  }
+
+  small {
+    @apply text-xs; 
+  }
 }
+
+@layer components {
+  .text-5xl-custom {
+    @apply text-5xl;
+  }
+}
+
 
 :root {
   --background: #ffffff;
