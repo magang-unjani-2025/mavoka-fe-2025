@@ -11,7 +11,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
   {
-    companyLogo: "/logos/dropbox.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Brand Designer",
     company: "Dropbox",
     location: "San Francisco, US",
@@ -19,7 +19,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
     {
-    companyLogo: "/logos/revolut.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Email Marketing",
     company: "Revolut",
     location: "Madrid, Spain",
@@ -27,7 +27,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
   {
-    companyLogo: "/logos/dropbox.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Brand Designer",
     company: "Dropbox",
     location: "San Francisco, US",
@@ -35,7 +35,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
     {
-    companyLogo: "/logos/revolut.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Email Marketing",
     company: "Revolut",
     location: "Madrid, Spain",
@@ -43,7 +43,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
   {
-    companyLogo: "/logos/dropbox.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Brand Designer",
     company: "Dropbox",
     location: "San Francisco, US",
@@ -51,7 +51,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
     {
-    companyLogo: "/logos/revolut.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Email Marketing",
     company: "Revolut",
     location: "Madrid, Spain",
@@ -59,7 +59,7 @@ const jobs = [
     closingDate: "28 Juli 2025",
   },
   {
-    companyLogo: "/logos/dropbox.png",
+    companyLogo: "/img/logo-mavoka.png",
     title: "Brand Designer",
     company: "Dropbox",
     location: "San Francisco, US",
@@ -76,7 +76,7 @@ export default function JobList() {
         <h2 className="text-xl font-semibold">
           Daftar <span className="text-blue-600">Lowongan</span>
         </h2>
-        <a href="/jobs" className="text-blue-600 hover:underline flex items-center gap-1">
+        <a href="/jobs" className="text-blue-600 hover:underline flex items-center gap-1 text-sm">
           Lihat semua lowongan <ArrowRight size={20} />
         </a>
       </div>

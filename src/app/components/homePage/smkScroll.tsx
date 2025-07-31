@@ -15,7 +15,7 @@ export default function SmkLogoMarquee() {
   const logos = [...smkLogos, ...smkLogos, ...smkLogos];
 
   return (
-    <section className="py-1">
+    <section className="py-8">
       <h2 className="text-xl md:text-2xl font-semibold text-center mb-4">
         SMK NEGERI & SWASTA
       </h2>

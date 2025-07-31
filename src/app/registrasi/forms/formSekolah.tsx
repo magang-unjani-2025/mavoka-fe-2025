@@ -11,6 +11,7 @@ type FormSekolahValues = {
   email: string;
   username: string;
   password: string;
+  website: string;
 };
 
 export default function FormSekolah() {
@@ -32,6 +33,12 @@ export default function FormSekolah() {
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <Input
+        label="Nama Sekolah"
+        placeholder="Nama Sekolah"
+        {...register("namaSekolah", { required: "Nama Sekolah wajib diisi" })}
+        error={errors.namaSekolah?.message}
+      />
+      <Input
         label="NPSN"
         placeholder="NPSN"
         {...register("npsn", { required: "NPSN wajib diisi" })}
@@ -44,6 +51,13 @@ export default function FormSekolah() {
         type="email"
         {...register("email", { required: "Email wajib diisi" })}
         error={errors.email?.message}
+      />
+
+      <Input
+        label="Website Sekolah"
+        placeholder="Website Sekolah"
+        {...register("website", { required: "Website Sekolah wajib diisi" })}
+        error={errors.website?.message}
       />
 
       <Input

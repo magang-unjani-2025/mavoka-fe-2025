@@ -11,6 +11,8 @@ type FormPerusahaanValues = {
   username: string;
   password: string;
   nib: string;
+  bidangUsaha: string;
+  website: string;
 };
 
 export default function FormPerusahaan() {
@@ -25,13 +27,32 @@ export default function FormPerusahaan() {
 
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      <Input label="NIB" placeholder="NIB Perusahaan" {...register("nib")} />
+      <Input
+        label="Nama Perusahaan"
+        placeholder="Nama Perusahaan"
+        type="text"
+        {...register("namaPerusahaan")}
+      />
+
+      <Input
+        label="Bidang Usaha"
+        placeholder="Bidang Usaha"
+        type="text"
+        {...register("bidangUsaha")}
+      />
 
       <Input
         label="Email"
         placeholder="Email"
         type="email"
         {...register("email")}
+      />
+
+      <Input
+        label="Website Perusahaan"
+        placeholder="Website Perusahaan"
+        type="text"
+        {...register("website")}
       />
 
       <Input

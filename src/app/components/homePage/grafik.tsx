@@ -1,4 +1,9 @@
-import { Building2, Briefcase, School, Users } from "lucide-react";
+import {
+  HiOutlineLibrary,
+  HiOutlineIdentification,
+  HiAcademicCap,
+  HiUserGroup,
+} from "react-icons/hi";
 
 function formatCount(count: number, minValue: number) {
   return count >= minValue ? `${minValue}+` : `${count}`;
@@ -20,10 +25,8 @@ export default function StatsSection({
   return (
     <section className="max-w-[1154px] mx-auto px-4">
       <div className="bg-[#0F67B1] text-white rounded-[15px] p-8 relative overflow-hidden">
-        {/* ✅ Rectangle Dekorasi */}
-
-  {/* ✅ SVG sebagai dekorasi */}
-  <svg
+        {/* ✅ SVG sebagai dekorasi */}
+        <svg
           className="absolute top-0 right-0 z-0"
           width="194"
           height="126"
@@ -40,7 +43,6 @@ export default function StatsSection({
           />
         </svg>
 
-        {/* ✅ SVG Gradient (ditimpa di atas) */}
         <svg
           className="absolute top-0 right-0 z-10"
           width="162"
@@ -69,26 +71,22 @@ export default function StatsSection({
             </linearGradient>
           </defs>
         </svg>
-  
 
-
-
-        {/* Judul */}
         <h2 className="text-2xl font-semibold mb-2 relative z-10">
-          Kami telah Kerjasama dengan beberapa Perusahaan, 
-          <br /> Lembaga Pelatihan dan
-          Sekolah <span className="text-yellow-400">terbaik</span> di seluruh
-          Indonesia
+          Kami telah Kerjasama dengan beberapa Perusahaan,
+          <br /> Lembaga Pelatihan dan Sekolah{" "}
+          <span className="text-yellow-400">terbaik</span> di seluruh Indonesia
         </h2>
         <p className="text-sm mb-6 relative z-10">
-          MAVOKA membantu para siswa SMK untuk belajar secara langsung di dunia industri
+          MAVOKA membantu para siswa SMK untuk belajar secara langsung di dunia
+          industri
         </p>
 
         {/* Grid Statistik */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center sm:text-left relative z-10">
           {/* Perusahaan */}
-          <div className="flex items-center gap-3 border-r border-white pr-3">
-            <Building2 size={28} />
+          <div className="flex items-center gap-3 border-x border-white px-3">
+            <HiOutlineLibrary size={25} />
             <div>
               <p className="text-5xl font-bold">
                 {formatCount(totalCompanies, 20)}
@@ -99,7 +97,7 @@ export default function StatsSection({
 
           {/* Lembaga Pelatihan */}
           <div className="flex items-center gap-3 border-r border-white pr-3">
-            <Briefcase size={28} />
+            <HiOutlineIdentification size={30} />
             <div>
               <p className="text-5xl font-bold">
                 {formatCount(totalTrainingCenters, 15)}
@@ -110,7 +108,7 @@ export default function StatsSection({
 
           {/* Sekolah */}
           <div className="flex items-center gap-3 border-r border-white pr-3">
-            <School size={28} />
+            <HiAcademicCap size={30} />
             <div>
               <p className="text-5xl font-bold">
                 {formatCount(totalSchools, 187)}
@@ -121,7 +119,7 @@ export default function StatsSection({
 
           {/* Siswa */}
           <div className="flex items-center gap-3">
-            <Users size={28} />
+            <HiUserGroup size={30} />
             <div>
               <p className="text-5xl font-bold">
                 {formatCount(totalStudents, 65427)}
