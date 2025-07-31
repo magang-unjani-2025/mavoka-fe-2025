@@ -57,7 +57,7 @@ export default function HomePage() {
       <CompanyList />
       <TrainingCarousel />
 
-      <hr className="border-gray-300 my-5 mt-[38px] mb-[10px] mx-auto" />
+      <hr className="border-gray-300" />
 
       <SmkLogoMarquee />
       <Footer />

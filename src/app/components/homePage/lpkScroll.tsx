@@ -69,11 +69,11 @@ export default function TrainingCarousel() {
   };
 
   return (
-    <section className="py-10">
+    <section className="py-8">
       <div className="max-w-[1154px] mx-auto px-6 text-center">
         <h2 className="text-xl font-semibold mb-2">Lembaga Pelatihan</h2>
-        
-                <div className="flex justify-center my-3">
+
+        <div className="flex justify-center my-3">
           <svg
             width="59"
             height="9"
@@ -103,7 +103,7 @@ export default function TrainingCarousel() {
             </defs>
           </svg>
         </div>
-        
+
         <p className="text-sm text-gray-600 mb-8">
           MAVOKA bekerja sama dengan berbagai lembaga pelatihan
         </p>
@@ -113,7 +113,11 @@ export default function TrainingCarousel() {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          style={{ padding: "20px 0", minHeight: "140px", transform: `translateX(-${currentIndex * 2}px)` }} 
+          style={{
+            padding: "20px 0",
+            minHeight: "140px",
+            transform: `translateX(-${currentIndex * 2}px)`,
+          }}
         >
           {getVisibleLogos().map((center, idx) => (
             <div

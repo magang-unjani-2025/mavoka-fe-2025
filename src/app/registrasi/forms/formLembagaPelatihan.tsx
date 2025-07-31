@@ -9,6 +9,9 @@ type FormValues = {
   usernameLembaga: string;
   email: string;
   password: string;
+  namaLembaga: string;
+  bidangPelatihan: string;
+  websiteLembaga: string;
 };
 
 export default function FormLembaga() {
@@ -24,10 +27,17 @@ export default function FormLembaga() {
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
       <Input
-        label="Username"
-        placeholder="Username Lembaga"
+        label="Nama Lembaga Pelatihan"
+        placeholder="Nama Lembaga Pelatihan"
         type="text"
-        {...register("usernameLembaga")}
+        {...register("namaLembaga")}
+      />
+
+      <Input
+        label="Bidang Pelatihan"
+        placeholder="Bidang Pelatihan"
+        type="text"
+        {...register("bidangPelatihan")}
       />
 
       <Input
@@ -35,6 +45,20 @@ export default function FormLembaga() {
         placeholder="Email aktif"
         type="email"
         {...register("email")}
+      />
+
+            <Input
+        label="Website Lembaga"
+        placeholder="Website Lembaga"
+        type="text"
+        {...register("websiteLembaga")}
+      />
+
+      <Input
+        label="Username"
+        placeholder="Username Lembaga"
+        type="text"
+        {...register("usernameLembaga")}
       />
 
       <div>
@@ -67,7 +91,10 @@ export default function FormLembaga() {
 
       <p className="text-xs text-center text-gray-600 mt-2">
         Sudah punya akun?{" "}
-        <a href="/masuk" className="text-[#0F67B1] font-semibold hover:underline">
+        <a
+          href="/masuk"
+          className="text-[#0F67B1] font-semibold hover:underline"
+        >
           Masuk
         </a>
       </p>

@@ -126,27 +126,7 @@ export default function FormSMK() {
 
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      {/*<div>
-        <label className="block text-sm text-black mb-1">Asal Sekolah</label>
-        <select
-          {...register("asalSekolah")}
-          className="w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
-        >
-          <option value="">Pilih sekolah</option>
-          <option value="SMK Negeri 1">SMK Negeri 1</option>
-          <option value="SMK Negeri 2">SMK Negeri 2</option>
-          <option value="SMK Swasta">SMK Swasta</option>
-        </select>
-      </div>*/}
-
       <ComboAsalSekolah register={register} setValue={setValue} />
-
-      <Input
-        label="Username"
-        placeholder="Username"
-        type="text"
-        {...register("username")}
-      />
 
       <Input
         label="NISN"
@@ -160,6 +140,13 @@ export default function FormSMK() {
         placeholder="Email"
         type="email"
         {...register("email")}
+      />
+
+      <Input
+        label="Username"
+        placeholder="Username"
+        type="text"
+        {...register("username")}
       />
 
       <div>

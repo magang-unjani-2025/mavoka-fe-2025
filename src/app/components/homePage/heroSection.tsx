@@ -13,7 +13,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="w-full px-[70px] py-12 lg:py-[27px] font-family">
+    <section className="w-full px-[70px] py-2.5 lg:py-2.5 font-family">
       <div
         className="min-h-[500px] grid grid-cols-1 lg:grid-cols-2 items-center
         rounded-tl-[48px] rounded-bl-[48px] rounded-tr-[48px] rounded-br-[300px]
