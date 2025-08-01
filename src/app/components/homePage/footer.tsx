@@ -7,10 +7,10 @@ export default function Footer() {
     <footer className="mt-[24px]">
       {/* Bagian utama */}
       <div className="bg-[#D9ECFB]">
-        <div className="max-w-7xl mx-auto px-[70px] py-10 flex flex-col lg:flex-row justify-between gap-10">
+        <div className="max-w-7xl mx-auto px-[70px] py-4 flex flex-col lg:flex-row justify-between gap-10">
           
           {/* Kolom Logo + Deskripsi */}
-          <div className="max-w-[420px]">
+          <div className="max-w-[420px] ">
             <div className="flex items-center gap-2">
               <Image
                 src="/img/logo-fit-academy.png"
@@ -52,7 +52,7 @@ export default function Footer() {
 
           {/* Quick Link */}
           <div>
-            <h3 className="text-black font-semibold mb-11">Quick link</h3>
+            <h3 className="text-black font-semibold mt-9 mb-6">Quick link</h3>
             <ul className="space-y-2 text-black text-sm">
               <li><a href="#">Beranda</a></li>
               <li><a href="#">Tentang MAVOKA</a></li>
@@ -65,7 +65,7 @@ export default function Footer() {
 
           {/* Help */}
           <div>
-            <h3 className="text-black font-semibold mb-3">Help</h3>
+            <h3 className="text-black font-semibold mt-9 mb-6">Help</h3>
             <ul className="space-y-2 text-black text-sm">
               <li><a href="#">Customer Support</a></li>
               <li><a href="#">Privacy Policy</a></li>
@@ -74,7 +74,7 @@ export default function Footer() {
 
           {/* Alamat */}
           <div className="max-w-[220px]">
-            <h3 className="text-black font-semibold mb-3">Alamat Kami</h3>
+            <h3 className="text-black font-semibold mt-9 mb-6">Alamat Kami</h3>
             <p className="text-black text-sm">
               Jl. Kembang Baru No.10 55281<br />
               Maguwoharjo<br />
