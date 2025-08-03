@@ -35,7 +35,8 @@ export default function FormLogin() {
       return;
     }
 
-    router.push(`/dashboard/${user.role}`);
+    //router.push(`/dashboard/${user.role}`);
+    router.push(`/dashboard-${user.role}`);
   };
 
   return (
@@ -48,12 +49,12 @@ export default function FormLogin() {
       />
 
       <div>
-        <label className="block text-sm text-black mb-1">Password</label>
+        <label className="block text-sm text-black mb-1">Kata Sandi</label>
         <div className="relative">
           <input
             {...register("password")}
             type={showPassword ? "text" : "password"}
-            placeholder="Masukkan password"
+            placeholder="Masukkan Kata Sandi"
             className="w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
           />
           <button
@@ -71,7 +72,7 @@ export default function FormLogin() {
       </Button>
 
       <p className="text-xs text-center text-gray-600 mt-2">
-        Tidak punya akun?{" "}
+        Belum punya akun?{" "}
         <a
           href="/registrasi"
           className="text-[#0F67B1] font-semibold hover:underline"
