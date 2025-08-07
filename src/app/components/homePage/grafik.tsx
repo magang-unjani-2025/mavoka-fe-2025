@@ -5,8 +5,8 @@ import {
   HiUserGroup,
 } from "react-icons/hi";
 
-function formatCount(count: number, minValue: number) {
-  return count >= minValue ? `${minValue}+` : `${count}`;
+function formatCount(count: number, minValue?: number) {
+  return minValue && count >= minValue ? `${minValue}+` : `${count}`;
 }
 
 type StatsSectionProps = {
@@ -22,10 +22,37 @@ export default function StatsSection({
   totalSchools,
   totalStudents,
 }: StatsSectionProps) {
+  const stats = [
+    {
+      icon: <HiOutlineLibrary size={25} />,
+      value: formatCount(totalCompanies, 20),
+      label: "Perusahaan terdaftar",
+      border: "border-x",
+    },
+    {
+      icon: <HiOutlineIdentification size={30} />,
+      value: formatCount(totalTrainingCenters, 15),
+      label: "Lembaga Pelatihan terdaftar",
+      border: "border-r",
+    },
+    {
+      icon: <HiAcademicCap size={30} />,
+      value: formatCount(totalSchools, 200),
+      label: "Sekolah SMK terdaftar",
+      border: "border-r",
+    },
+    {
+      icon: <HiUserGroup size={30} />,
+      value: formatCount(totalStudents, 1000),
+      label: "Siswa SMK terdaftar",
+      border: "",
+    },
+  ];
+
   return (
     <section className="max-w-[1154px] mx-auto px-4">
       <div className="bg-[#0F67B1] text-white rounded-[15px] p-8 relative overflow-hidden">
-        {/* ✅ SVG sebagai dekorasi */}
+        {/* SVG Background Decorative */}
         <svg
           className="absolute top-0 right-0 z-0"
           width="194"
@@ -84,49 +111,18 @@ export default function StatsSection({
 
         {/* Grid Statistik */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center sm:text-left relative z-10">
-          {/* Perusahaan */}
-          <div className="flex items-center gap-3 border-x border-white px-3">
-            <HiOutlineLibrary size={25} />
-            <div>
-              <p className="text-5xl font-bold">
-                {formatCount(totalCompanies, 20)}
-              </p>
-              <span className="text-sm">Perusahaan terdaftar</span>
+          {stats.map((stat, idx) => (
+            <div
+              key={idx}
+              className={`flex items-center gap-3 ${stat.border} border-white px-3`}
+            >
+              {stat.icon}
+              <div>
+                <p className="text-5xl font-bold">{stat.value}</p>
+                <span className="text-sm">{stat.label}</span>
+              </div>
             </div>
-          </div>
-
-          {/* Lembaga Pelatihan */}
-          <div className="flex items-center gap-3 border-r border-white pr-3">
-            <HiOutlineIdentification size={30} />
-            <div>
-              <p className="text-5xl font-bold">
-                {formatCount(totalTrainingCenters, 15)}
-              </p>
-              <span className="text-sm">Lembaga Pelatihan terdaftar</span>
-            </div>
-          </div>
-
-          {/* Sekolah */}
-          <div className="flex items-center gap-3 border-r border-white pr-3">
-            <HiAcademicCap size={30} />
-            <div>
-              <p className="text-5xl font-bold">
-                {formatCount(totalSchools, 187)}
-              </p>
-              <span className="text-sm">Sekolah SMK terdaftar</span>
-            </div>
-          </div>
-
-          {/* Siswa */}
-          <div className="flex items-center gap-3">
-            <HiUserGroup size={30} />
-            <div>
-              <p className="text-5xl font-bold">
-                {formatCount(totalStudents, 65427)}
-              </p>
-              <span className="text-sm">Siswa SMK terdaftar</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

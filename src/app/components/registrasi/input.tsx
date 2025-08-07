@@ -9,12 +9,13 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, ...props }, ref) => {
+  ({ label, error, className, required, ...props }, ref) => {
     return (
-      <div className="w-full">
+      <div className="w-full mb-3">
         {label && (
-          <label className="block text-sm text-black">
+          <label className="block mb-1">
             {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
           </label>
         )}
         <input
@@ -24,6 +25,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             error ? 'border-red-500' : 'border-gray-300',
             className
           )}
+          required={required}
           {...props}
         />
         {error && <p className="text-xs text-red-500 mt-1">{error}</p>}

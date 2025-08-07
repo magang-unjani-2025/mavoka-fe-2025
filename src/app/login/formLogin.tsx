@@ -3,72 +3,109 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Input from "@/app/components/input";
-import Button from "@/app/components/button";
+import Input from "@/app/components/registrasi/input";
+import Button from "@/app/components/registrasi/button";
+import InputPassword from "@/app/components/registrasi/InputPassword";
+import { login } from "@/lib/api-auth";
+import { Login } from "@/types/user";
 
 type FormValues = {
   username: string;
   password: string;
+  role: "siswa" | "sekolah" | "perusahaan" | "lpk";
 };
 
-export default function FormLogin() {
-  const { register, handleSubmit } = useForm<FormValues>();
-  const [showPassword, setShowPassword] = useState(false);
+export default function FormLoginMultiRole() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
+
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [redirectInfo, setRedirectInfo] = useState<{
+    role: string;
+  } | null>(null);
 
-  // Dummy data user
-  const dummyUsers = [
-    { username: "admin", password: "123", role: "admin" },
-    { username: "perusahaan", password: "123", role: "perusahaan" },
-    { username: "lpk", password: "123", role: "lpk" },
-    { username: "sekolah", password: "123", role: "sekolah" },
-    { username: "siswa", password: "123", role: "siswa" },
-  ];
+  const onSubmit = async (data: FormValues) => {
+    const mappedData: Login = {
+      username: data.username,
+      password: data.password,
+      role: data.role,
+    };
 
-  const onSubmit = (data: FormValues) => {
-    const user = dummyUsers.find(
-      (u) => u.username === data.username && u.password === data.password
-    );
+    try {
+      setLoading(true);
+      const res = await login(mappedData);
+      console.log("Login berhasil:", res.data);
 
-    if (!user) {
-      alert("Username atau password salah");
-      return;
+      switch (data.role) {
+        case "siswa":
+          router.push("/dashboard-siswa");
+          break;
+        case "sekolah":
+          router.push("/dashboard-sekolah");
+          break;
+        case "perusahaan":
+          router.push("/dashboard-perusahaan");
+          break;
+        case "lpk":
+          router.push("/dashboard-lpk");
+          break;
+        default:
+          router.push("/");
+      }
+
+      reset();
+    } catch (err: any) {
+      console.error("Login gagal:", err.response?.data || err.message);
+      alert("Login gagal. Periksa kembali username, password, dan role Anda.");
+    } finally {
+      setLoading(false);
     }
-
-    //router.push(`/dashboard/${user.role}`);
-    router.push(`/dashboard-${user.role}`);
   };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Masuk sebagai
+        </label>
+        <select
+          {...register("role", { required: "Role wajib dipilih" })}
+          className="w-full border text-xs mb-1 rounded-[6px] px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
+        >
+          <option>--Masuk Sebagai--</option>
+          <option value="siswa">Siswa</option>
+          <option value="sekolah">Sekolah</option>
+          <option value="perusahaan">Perusahaan</option>
+          <option value="lpk">Lembaga Pelatihan</option>
+        </select>
+        {errors.role && (
+          <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+        )}
+      </div>
+
       <Input
         label="Username"
         placeholder="Masukkan username"
+        required
         type="text"
-        {...register("username")}
+        {...register("username", { required: "Username wajib diisi" })}
       />
 
-      <div>
-        <label className="block text-sm text-black mb-1">Kata Sandi</label>
-        <div className="relative">
-          <input
-            {...register("password")}
-            type={showPassword ? "text" : "password"}
-            placeholder="Masukkan Kata Sandi"
-            className="w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-600"
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
-        </div>
-      </div>
+      <InputPassword
+        label="Kata Sandi"
+        placeholder="Masukkan kata sandi"
+        register={register("password", { required: "Kata sandi wajib diisi" })}
+        error={errors.password?.message}
+      />
 
-      <Button type="submit" className="w-full">
-        Masuk
+
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? "Memproses..." : "Masuk"}
       </Button>
 
       <p className="text-xs text-center text-gray-600 mt-2">

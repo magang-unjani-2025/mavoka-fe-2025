@@ -2,102 +2,145 @@
 
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import Input from "@/app/components/input";
-import Button from "@/app/components/button";
+import Input from "@/app/components/registrasi/input";
+import Button from "@/app/components/registrasi/button";
+import InputPassword from "@/app/components/registrasi/InputPassword";
+import RegistrasiBerhasil from "@/app/components/registrasi/RegistrasiBerhasil";
+import { registerPerusahaan } from "@/lib/api-auth";
+import { RegisterPerusahaan } from "@/types/user";
 
 type FormPerusahaanValues = {
-  namaPerusahaan: string;
+  nama_perusahaan: string;
   email: string;
   username: string;
   password: string;
-  nib: string;
-  bidangUsaha: string;
-  website: string;
+  bidang_usaha: string;
+  web_perusahaan: string;
 };
 
 export default function FormPerusahaan() {
-  const { register, handleSubmit, reset } = useForm<FormPerusahaanValues>();
-  const [showPassword, setShowPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormPerusahaanValues>();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [redirectInfo, setRedirectInfo] = useState<{
+    email: string;
+    role: string;
+  } | null>(null);
 
-  const onSubmit = (data: FormPerusahaanValues) => {
-    console.log("Data Perusahaan:", data);
-    alert("Form perusahaan berhasil dikirim (simulasi)!");
-    reset();
+  const onSubmit = async (data: FormPerusahaanValues) => {
+    const mappedData: RegisterPerusahaan = {
+      nama_perusahaan: data.nama_perusahaan,
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      bidang_usaha: data.bidang_usaha,
+      web_perusahaan: data.web_perusahaan,
+    };
+
+    try {
+      setLoading(true);
+      const res = await registerPerusahaan(mappedData);
+      console.log("Respon:", res.data);
+      setRedirectInfo({ email: data.email, role: "perusahaan" });
+      setShowSuccessPopup(true);
+      reset();
+    } catch (err: any) {
+      console.error("Gagal:", err.response?.data || err.message);
+      alert("Terjadi kesalahan saat mendaftar perusahaan.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
         label="Nama Perusahaan"
         placeholder="Nama Perusahaan"
+        required
         type="text"
-        {...register("namaPerusahaan")}
+        {...register("nama_perusahaan", {
+          required: "Nama perusahaan wajib diisi",
+        })}
+        error={errors.nama_perusahaan?.message}
       />
 
       <Input
-        label="Bidang Usaha"
+        label="Jenis Bidang Usaha"
         placeholder="Bidang Usaha"
+        required
         type="text"
-        {...register("bidangUsaha")}
+        {...register("bidang_usaha", { required: "Bidang usaha wajib diisi" })}
+        error={errors.bidang_usaha?.message}
       />
 
       <Input
         label="Email"
         placeholder="Email"
+        required
         type="email"
-        {...register("email")}
+        {...register("email", { required: "Email wajib diisi" })}
+        error={errors.email?.message}
       />
 
       <Input
-        label="Website Perusahaan"
-        placeholder="Website Perusahaan"
+        label="Website"
+        placeholder="Nama Website"
+        required
         type="text"
-        {...register("website")}
+        {...register("web_perusahaan", { required: "Website wajib diisi" })}
+        error={errors.web_perusahaan?.message}
       />
 
       <Input
         label="Username"
         placeholder="Username"
-        {...register("username")}
+        required
+        {...register("username", { required: "Username wajib diisi" })}
+        error={errors.username?.message}
       />
 
-      <div>
-        <label className="block text-sm text-black mb-1">Kata Sandi</label>
-        <div className="relative">
-          <input
-            {...register("password")}
-            type={showPassword ? "text" : "password"}
-            placeholder="Kata Sandi"
-            className="w-full border text-xs rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-600"
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
-        </div>
-      </div>
+      <InputPassword
+        label="Kata Sandi"
+        placeholder="Masukkan kata sandi"
+        register={register("password", { required: "Kata sandi wajib diisi" })}
+        error={errors.password?.message}
+      />
 
-      <div className="flex items-start text-xs text-[#292D32] font-medium">
-        <input type="checkbox" className="mr-2 mt-1" required />
+      {/* <div className="flex items-start text-xs text-[#292D32] font-medium">
+        <input type="checkbox" className="mr-2 mb-3" required />
         <span>Saya menyetujui syarat & ketentuan yang berlaku</span>
-      </div>
+      </div> */}
 
-      <Button type="submit" className="w-full">
-        Daftar
+      <Button type="submit" className="w-full mb-3" disabled={loading}>
+        {loading ? "Mengirim..." : "Daftar"}
       </Button>
 
-      <p className="text-xs text-center text-gray-600 mt-2">
+      <p className="text-xs text-center text-gray-600 mb-3">
         Sudah punya akun?{" "}
         <a
-          href="/masuk"
+          href="/login"
           className="text-[#0F67B1] font-semibold hover:underline"
         >
           Masuk
         </a>
       </p>
+      {showSuccessPopup && redirectInfo && (
+        <RegistrasiBerhasil
+          message="Pendaftaran akun berhasil! Silakan periksa email Anda untuk memasukkan kode OTP."
+          onClose={() => {
+            setShowSuccessPopup(false);
+            window.location.href = `/otp?email=${encodeURIComponent(
+              redirectInfo.email
+            )}&role=${redirectInfo.role}`;
+          }}
+        />
+      )}
     </form>
   );
 }

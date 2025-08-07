@@ -27,11 +27,11 @@ export default function JobCard({
       </div>
 
       <h3 className="text-xl text-[#25324B]">{title}</h3>
-      <p className="text-[#C7C9D9]">
-        {company} – {location}
-      </p>
       <p className="text-xs text-[#AA999F] font-semibold mb-2">
         {positions} Posisi
+      </p>
+      <p className="text-[#C7C9D9]">
+        {company} – {location}
       </p>
 
       <hr className="border-gray-200 mb-3" />

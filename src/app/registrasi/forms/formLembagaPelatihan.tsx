@@ -2,102 +2,151 @@
 
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import Input from "@/app/components/input";
-import Button from "@/app/components/button";
+import Input from "@/app/components/registrasi/input";
+import Button from "@/app/components/registrasi/button";
+import InputPassword from "@/app/components/registrasi/InputPassword";
+import RegistrasiBerhasil from "@/app/components/registrasi/RegistrasiBerhasil";
+import { registerLembaga } from "@/lib/api-auth";
+import { RegisterLembaga } from "@/types/user";
 
 type FormValues = {
-  usernameLembaga: string;
+  username: string;
   email: string;
   password: string;
-  namaLembaga: string;
-  bidangPelatihan: string;
-  websiteLembaga: string;
+  nama_lembaga: string;
+  bidang_pelatihan: string;
+  web_lembaga: string;
 };
 
 export default function FormLembaga() {
-  const { register, handleSubmit, reset } = useForm<FormValues>();
-  const [showPassword, setShowPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [redirectInfo, setRedirectInfo] = useState<{
+    email: string;
+    role: string;
+  } | null>(null);
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Data Lembaga:", data);
-    alert("Form berhasil dikirim (simulasi)!");
-    reset();
+  const onSubmit = async (data: FormValues) => {
+    const mappedData: RegisterLembaga = {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      nama_lembaga: data.nama_lembaga,
+      bidang_pelatihan: data.bidang_pelatihan,
+      web_lembaga: data.web_lembaga,
+    };
+
+    try {
+      setLoading(true);
+      const res = await registerLembaga(mappedData);
+      console.log("Respon:", res.data);
+      setRedirectInfo({ email: data.email, role: "lpk" });
+      setShowSuccessPopup(true);
+      reset();
+    } catch (err: any) {
+      console.error("Gagal:", err.response?.data || err.message);
+      alert("Terjadi kesalahan saat mendaftar lembaga.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        label="Nama Lembaga Pelatihan"
-        placeholder="Nama Lembaga Pelatihan"
-        type="text"
-        {...register("namaLembaga")}
-      />
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          label="Nama Lembaga Pelatihan"
+          placeholder="Nama Lembaga Pelatihan"
+          required
+          type="text"
+          {...register("nama_lembaga", {
+            required: "Nama lembaga wajib diisi",
+          })}
+          error={errors.nama_lembaga?.message}
+        />
 
-      <Input
-        label="Bidang Pelatihan"
-        placeholder="Bidang Pelatihan"
-        type="text"
-        {...register("bidangPelatihan")}
-      />
+        <Input
+          label="Bidang Pelatihan"
+          placeholder="Bidang Pelatihan"
+          required
+          type="text"
+          {...register("bidang_pelatihan", {
+            required: "Bidang pelatihan wajib diisi",
+          })}
+          error={errors.bidang_pelatihan?.message}
+        />
 
-      <Input
-        label="Email"
-        placeholder="Email aktif"
-        type="email"
-        {...register("email")}
-      />
+        <Input
+          label="Email"
+          placeholder="Email aktif"
+          required
+          type="email"
+          {...register("email", { required: "Email wajib diisi" })}
+          error={errors.email?.message}
+        />
 
-            <Input
-        label="Website Lembaga"
-        placeholder="Website Lembaga"
-        type="text"
-        {...register("websiteLembaga")}
-      />
+        <Input
+          label="Website Lembaga"
+          placeholder="Website Lembaga"
+          required
+          type="text"
+          {...register("web_lembaga", { required: "Website wajib diisi" })}
+          error={errors.web_lembaga?.message}
+        />
 
-      <Input
-        label="Username"
-        placeholder="Username Lembaga"
-        type="text"
-        {...register("usernameLembaga")}
-      />
+        <Input
+          label="Username"
+          placeholder="Username Lembaga"
+          required
+          {...register("username", { required: "Username wajib diisi" })}
+          error={errors.username?.message}
+        />
 
-      <div>
-        <label className="block text-sm text-black mb-1">Kata Sandi</label>
-        <div className="relative">
-          <input
-            {...register("password")}
-            type={showPassword ? "text" : "password"}
-            placeholder="Kata Sandi"
-            className="w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-600"
+        <InputPassword
+          label="Kata Sandi"
+          placeholder="Masukkan kata sandi"
+          register={register("password", {
+            required: "Kata sandi wajib diisi",
+          })}
+          error={errors.password?.message}
+        />
+
+        {/* <div className="flex items-start text-xs text-[#292D32] font-medium">
+          <input type="checkbox" className="mr-2 mb-3" required />
+          <span>Saya menyetujui syarat & ketentuan yang berlaku</span>
+        </div> */}
+
+        <Button type="submit" className="w-full mb-3" disabled={loading}>
+          {loading ? "Mengirim..." : "Daftar"}
+        </Button>
+
+        <p className="text-xs text-center text-gray-600 mb-3">
+          Sudah punya akun?{" "}
+          <a
+            href="/login"
+            className="text-[#0F67B1] font-semibold hover:underline"
           >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-start text-xs text-[#292D32] font-medium">
-        <input type="checkbox" className="mr-2 mt-1" />
-        <span>Saya menyetujui syarat & ketentuan yang berlaku</span>
-      </div>
-
-      <Button type="submit" className="w-full">
-        Daftar
-      </Button>
-
-      <p className="text-xs text-center text-gray-600 mt-2">
-        Sudah punya akun?{" "}
-        <a
-          href="/masuk"
-          className="text-[#0F67B1] font-semibold hover:underline"
-        >
-          Masuk
-        </a>
-      </p>
-    </form>
+            Masuk
+          </a>
+        </p>
+        {showSuccessPopup && redirectInfo && (
+          <RegistrasiBerhasil
+            message="Pendaftaran akun berhasil! Silakan periksa email Anda untuk memasukkan kode OTP."
+            onClose={() => {
+              setShowSuccessPopup(false);
+              window.location.href = `/otp?email=${encodeURIComponent(
+                redirectInfo.email
+              )}&role=${redirectInfo.role}`;
+            }}
+          />
+        )}
+      </form>
+    </>
   );
 }

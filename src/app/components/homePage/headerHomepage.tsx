@@ -72,7 +72,7 @@ export default function HeaderHome() {
         <div className=" lg:flex space-x-1.5 font-poppins text-sm">
           <button
             onClick={() => router.push("/login")}
-            className="px-4 py-2 rounded-[8px] bg-blue-600 text-white hover:bg-blue-700 transition"
+            className="px-4 py-2 rounded-[8px] bg-[#0F67B1] text-white hover:bg-opacity-70 transition"
           >
             Masuk
           </button>
@@ -81,7 +81,7 @@ export default function HeaderHome() {
 
           <button
             onClick={() => router.push("/registrasi")}
-            className="border border-blue-600 text-blue-600 px-4 py-2 rounded-[8px]"
+            className="border hover:bg-gray-100 border-[#0F67B1] text-[#0F67B1] px-4 py-2 rounded-[8px]"
           >
             Daftar
           </button>

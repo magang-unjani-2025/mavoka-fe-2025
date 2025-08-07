@@ -2,12 +2,16 @@
 
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import Input from "@/app/components/input";
-import Button from "@/app/components/button";
+import Input from "@/app/components/registrasi/input";
+import Button from "@/app/components/registrasi/button";
+import InputPassword from "@/app/components/registrasi/InputPassword";
+import RegistrasiBerhasil from "@/app/components/registrasi/RegistrasiBerhasil";
+import { registerSekolah } from "@/lib/api-auth";
+import { RegisterSekolah } from "@/types/user";
 
 type FormSekolahValues = {
   npsn: string;
-  namaSekolah: string;
+  nama_sekolah: string;
   email: string;
   username: string;
   password: string;
@@ -21,32 +25,60 @@ export default function FormSekolah() {
     formState: { errors },
     reset,
   } = useForm<FormSekolahValues>();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false); // ✅ TAMBAHKAN INI
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [redirectInfo, setRedirectInfo] = useState<{
+    email: string;
+    role: string;
+  } | null>(null);
 
-  const onSubmit = (data: FormSekolahValues) => {
-    console.log("Data Sekolah:", data);
-    alert("Form sekolah berhasil dikirim (simulasi)!");
-    reset();
+  const onSubmit = async (data: FormSekolahValues) => {
+    const mappedData: RegisterSekolah = {
+      npsn: data.npsn,
+      nama_sekolah: data.nama_sekolah,
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      web_sekolah: data.website,
+    };
+
+    try {
+      setLoading(true);
+      const res = await registerSekolah(mappedData);
+      console.log("Respon:", res.data);
+      setRedirectInfo({ email: data.email, role: "sekolah" });
+      setShowSuccessPopup(true);
+      reset();
+    } catch (err: any) {
+      console.error("Gagal:", err.response?.data || err.message);
+      alert("Terjadi kesalahan saat mendaftar sekolah.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
-        label="Nama Sekolah"
-        placeholder="Nama Sekolah"
-        {...register("namaSekolah", { required: "Nama Sekolah wajib diisi" })}
-        error={errors.namaSekolah?.message}
+        label="Sekolah"
+        required
+        placeholder="Daftar Sekolah"
+        {...register("nama_sekolah", { required: "Nama Sekolah wajib diisi" })}
+        error={errors.nama_sekolah?.message}
       />
       <Input
         label="NPSN"
+        required
         placeholder="NPSN"
         {...register("npsn", { required: "NPSN wajib diisi" })}
         error={errors.npsn?.message}
       />
 
       <Input
-        label="Email Sekolah"
+        label="Email"
+        required
         placeholder="Email"
         type="email"
         {...register("email", { required: "Email wajib diisi" })}
@@ -54,56 +86,57 @@ export default function FormSekolah() {
       />
 
       <Input
-        label="Website Sekolah"
-        placeholder="Website Sekolah"
+        label="Website"
+        required
+        placeholder="Nama Website"
         {...register("website", { required: "Website Sekolah wajib diisi" })}
         error={errors.website?.message}
       />
 
       <Input
         label="Username"
+        required
         placeholder="Username"
         type="text"
         {...register("username")}
       />
 
-      <div>
-        <label className="block text-sm text-black mb-1">Kata Sandi</label>
-        <div className="relative">
-          <input
-            {...register("password")}
-            type={showPassword ? "text" : "password"}
-            placeholder="Kata Sandi"
-            className="w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-600"
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
-        </div>
-      </div>
+      <InputPassword
+        label="Kata Sandi"
+        placeholder="Masukkan kata sandi"
+        register={register("password", { required: "Kata sandi wajib diisi" })}
+        error={errors.password?.message}
+      />
 
-      <div className="flex items-start text-xs text-[#292D32] font-medium">
-        <input type="checkbox" className="mr-2 mt-1" required />
+      {/* <div className="flex items-start text-xs text-[#292D32] font-medium">
+        <input type="checkbox" className="mr-2 mb-3" required />
         <span>Saya menyetujui syarat & ketentuan yang berlaku</span>
-      </div>
+      </div> */}
 
-      <Button type="submit" className="w-full">
-        Daftar
+      <Button type="submit" className="w-full mb-3" disabled={loading}>
+        {loading ? "Mengirim..." : "Daftar"}
       </Button>
 
-      <p className="text-xs text-center text-gray-600 mt-2">
+      <p className="text-xs text-center text-gray-600 mb-3">
         Sudah punya akun?{" "}
         <a
-          href="/masuk"
+          href="/login"
           className="text-[#0F67B1] font-semibold hover:underline"
         >
           Masuk
         </a>
       </p>
+      {showSuccessPopup && redirectInfo && (
+        <RegistrasiBerhasil
+          message="Pendaftaran akun berhasil! Silakan periksa email Anda untuk memasukkan kode OTP."
+          onClose={() => {
+            setShowSuccessPopup(false);
+            window.location.href = `/otp?email=${encodeURIComponent(
+              redirectInfo.email
+            )}&role=${redirectInfo.role}`;
+          }}
+        />
+      )}
     </form>
   );
 }

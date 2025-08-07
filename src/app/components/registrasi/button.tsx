@@ -12,7 +12,7 @@ export default function Button({ children, variant = 'primary', className, ...pr
     'rounded-[50px] px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none'
 
   const variants = {
-    primary: 'bg-[#0F67B1] text-white hover:bg-blue-700',
+    primary: 'bg-[#0F67B1] text-white hover:opacity-70',
     secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
   }
 

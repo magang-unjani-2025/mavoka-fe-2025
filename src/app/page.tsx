@@ -30,10 +30,10 @@ import StatsSection from "@/app/components/homePage/grafik";
 import TrainingCarousel from "@/app/components/homePage/lpkScroll";
 import SmkLogoMarquee from "./components/homePage/smkScroll";
 import Footer from "./components/homePage/footer";
+import StatsSectionWrapper from "@/app/components/homePage/StatSectionWraper";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-//AOS.init();
 
 export default function HomePage() {
   const router = useRouter();
@@ -44,13 +44,7 @@ export default function HomePage() {
       <JobList />
 
       <hr className="border-gray-300 my-5 mt-10 max-w-[1120px] mx-auto" />
-
-      <StatsSection
-        totalCompanies={50}
-        totalTrainingCenters={30}
-        totalSchools={200}
-        totalStudents={70000}
-      />
+      <StatsSectionWrapper />
 
       <hr className="border-gray-300 my-5 mb-10 max-w-[1120px] mx-auto" />
 

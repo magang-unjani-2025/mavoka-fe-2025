@@ -1,0 +1,24 @@
+import axios from "axios";
+import { RegisterSekolah, RegisterSiswa, RegisterPerusahaan, RegisterLembaga, Login } from "@/types/user";
+
+const API_BASE_URL = "http://localhost:8000/api/user";
+
+export const registerSekolah = (data: RegisterSekolah) => {
+  return axios.post(`${API_BASE_URL}/register/sekolah`, data);
+};
+
+export const registerSiswa = (data: RegisterSiswa) => {
+  return axios.post(`${API_BASE_URL}/siswa/lengkapi-registrasi`, data);
+};
+
+export const registerPerusahaan = (data: RegisterPerusahaan) => {
+  return axios.post(`${API_BASE_URL}/register/perusahaan`, data);
+};
+
+export const registerLembaga = (data: RegisterLembaga) => {
+  return axios.post(`${API_BASE_URL}/register/lpk`, data);
+};
+
+export const login = (data: Login) => {
+  return axios.post(`${API_BASE_URL}/login/${data.role}`, data);
+};
