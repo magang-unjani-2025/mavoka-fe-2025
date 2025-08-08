@@ -8,9 +8,14 @@ export default function DashboardLayout({
   role: "admin" | "perusahaan" | "lpk" | "sekolah" | "siswa";
 }) {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar role={role} />
-      <main className="flex-1 p-6 bg-gray-50">{children}</main>
+    <div className="flex h-screen overflow-hidden">
+      <div className="w-64 flex-shrink-0">
+        <Sidebar role={role} />
+      </div>
+
+      <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+        {children}
+      </main>
     </div>
   );
 }

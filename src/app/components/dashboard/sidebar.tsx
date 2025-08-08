@@ -29,12 +29,12 @@ export default function Sidebar({ role }: SidebarProps) {
     admin: [
       { name: "Dashboard", href: "/dashboard-admin", icon: <Home size={20} /> },
       {
-        name: "Kelola Akun Pengguna",
+        name: "Kelola Akun",
         href: "/dashboard-admin/users",
         icon: <Users size={20} />,
       },
       {
-        name: "Generate Laporan Umum",
+        name: "Laporan Umum",
         href: "/dashboard-admin/reports",
         icon: <FileText size={20} />,
       },
@@ -88,10 +88,11 @@ export default function Sidebar({ role }: SidebarProps) {
 
   return (
     <aside
-      className={`bg-white border-r flex flex-col justify-between min-h-screen transition-all duration-300 ${
-        isOpen ? "w-50" : "w-20"
-      }`}
-    >
+  className={`bg-white border-r flex flex-col justify-between min-h-screen transition-all duration-300 overflow-hidden ${
+    isOpen ? "w-60" : "w-20"
+  }`}
+>
+
       <div>
         <div
           className={`flex flex-col border-b py-3 transition-all duration-300 ${
@@ -114,7 +115,7 @@ export default function Sidebar({ role }: SidebarProps) {
           />
         </div>
 
-        <nav className="mt-6">
+        <nav className="mt-6 flex flex-col space-y-2">
           {menus[role].map((item) => {
             const isActive = pathname === item.href;
             return (
