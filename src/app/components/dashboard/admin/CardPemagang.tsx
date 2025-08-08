@@ -3,7 +3,7 @@ import { Card } from "flowbite-react";
 export function CardPemagang() {
   return (
     <Card className="max-w-sm">
-      <div className="p-3 space-y-1">
+      <div className="p-2 space-y-1">
         <h3 className="text-base">Total Siswa Pemagang Saat Ini</h3>
         <h2 className="font-bold tracking-tight text-gray-900 dark:text-white">
           185

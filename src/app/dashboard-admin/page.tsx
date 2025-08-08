@@ -14,20 +14,21 @@ export default function DashboardAdmin() {
           Hi, Minvo. Selamat datang kembali di MAVOKA Admin Dashboard!
         </p>
         <div className="flex flex-col gap-4">
-            <CardList />
+          <CardList />
 
           <div className="grid grid-cols-4 gap-4">
             <div className="col-span-3">
               <LineChartAdmin />
             </div>
-            <div className="flex flex-col gap-4">
+
+            <div className="grid grid-rows-2 gap-4">
               <CardPelamar />
               <CardPemagang />
             </div>
           </div>
         </div>
         <div className="mt-10">
-            <TotalPresentasePemagang />
+          <TotalPresentasePemagang />
         </div>
       </div>
     </DashboardLayout>
