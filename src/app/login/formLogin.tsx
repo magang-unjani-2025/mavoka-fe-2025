@@ -103,6 +103,14 @@ export default function FormLoginMultiRole() {
         error={errors.password?.message}
       />
 
+      <p className="text-xs text-right mt-1">
+        <a
+          href="/lupa-kataSandi"
+          className="text-[#0F67B1] hover:underline"
+        >
+          Lupa Kata Sandi?
+        </a>
+      </p>
 
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? "Memproses..." : "Masuk"}
