@@ -13,22 +13,27 @@
     }
     h1 {
       @apply text-3xl font-bold;
+      /* 30 */
     }
 
   h2 {
     @apply text-2xl font-semibold;
+    /* 24 */
   }
 
   h3 {
     @apply text-xl font-semibold;
+    /* 20 */
   }
 
   p {
     @apply text-sm;
+    /* 14 */
   }
 
   small {
     @apply text-xs; 
+    /* 12 */
   }
 
   label {

@@ -8,11 +8,11 @@ const data = [
   { name: "Pelamar", value: 0.24 },
 ];
 
-const COLORS = ["#007BFF", "#E5E7EB"]; 
+const COLORS = ["#2D9CDB", "#E5E7EB"]; 
 
 export function TotalPresentasePemagang() {
   return (
-    <Card className="max-w-lg">
+    <>
       <h3 className="text-lg font-semibold text-center mb-2">
         Total Pemagang MAVOKA
       </h3>
@@ -52,7 +52,7 @@ export function TotalPresentasePemagang() {
             Jumlah Pelamar
           </div>
           <div className="flex items-center">
-            <span className="w-3 h-3 rounded-sm bg-blue-500 mr-2"></span>
+            <span className="w-3 h-3 rounded-sm bg-[#2D9CDB] mr-2"></span>
             Pemagang
           </div>
         </div>
@@ -61,6 +61,6 @@ export function TotalPresentasePemagang() {
       <p className="text-center text-pink-600 font-medium mt-2">
         Presentase Total
       </p>
-    </Card>
+    </>
   );
 }
