@@ -6,7 +6,7 @@ import Input from "@/app/components/registrasi/input";
 import ComboAsalSekolah from "@/app/components/registrasi/comboAsalSekolah";
 import Button from "@/app/components/registrasi/button";
 import InputPassword from "@/app/components/registrasi/InputPassword";
-import RegistrasiBerhasil from "@/app/components/registrasi/RegistrasiBerhasil";
+import SuccesModal from "@/app/components/registrasi/PopupBerhasil";
 import { registerSiswa } from "@/lib/api-auth";
 import { RegisterSiswa } from "@/types/user";
 
@@ -118,8 +118,11 @@ export default function FormSMK() {
         </a>
       </p>
       {showSuccessPopup && redirectInfo && (
-        <RegistrasiBerhasil
+        <SuccesModal
+          open={showSuccessPopup}
+          title="Berhasil"
           message="Pendaftaran akun berhasil! Silakan periksa email Anda untuk memasukkan kode OTP."
+          showCloseIcon 
           onClose={() => {
             setShowSuccessPopup(false);
             window.location.href = `/otp?email=${encodeURIComponent(

@@ -5,7 +5,7 @@ import { useState } from "react";
 import Input from "@/app/components/registrasi/input";
 import Button from "@/app/components/registrasi/button";
 import InputPassword from "@/app/components/registrasi/InputPassword";
-import RegistrasiBerhasil from "@/app/components/registrasi/RegistrasiBerhasil";
+import SuccesModal from "@/app/components/registrasi/PopupBerhasil";
 import { registerSekolah } from "@/lib/api-auth";
 import { RegisterSekolah } from "@/types/user";
 
@@ -127,8 +127,11 @@ export default function FormSekolah() {
         </a>
       </p>
       {showSuccessPopup && redirectInfo && (
-        <RegistrasiBerhasil
+        <SuccesModal
+          open={showSuccessPopup}
+          title="Berhasil"
           message="Pendaftaran akun berhasil! Silakan periksa email Anda untuk memasukkan kode OTP."
+          showCloseIcon 
           onClose={() => {
             setShowSuccessPopup(false);
             window.location.href = `/otp?email=${encodeURIComponent(
