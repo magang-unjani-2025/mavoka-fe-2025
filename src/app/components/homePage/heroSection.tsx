@@ -35,7 +35,7 @@ const HeroSection = () => {
 
             <Link
               href="/tentang"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 font-semibold text-sm px-[26px] py-[12px] rounded-[12px] hover:bg-gray-100 transition"
+              className="inline-flex items-center gap-2 bg-white text-blue-600 font-semibold text-sm px-[26px] py-[12px] rounded-[6px] hover:bg-gray-100 transition shadow-md"
             >
               Tentang MAVOKA 
               <ArrowRight size={24} />

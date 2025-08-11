@@ -130,9 +130,8 @@ export default function CompanyList() {
           {companies.slice(0, 8).map((company) => (
             <CompanyCard
               key={company.id}
-              logo={company.logo_perusahaan ?? "/img/default-logo.png"}
+              logo={company.logo_perusahaan || null}
               name={company.nama_perusahaan}
-              positions={0} // bisa diganti jika ada data lowongan
               detailLink={`/company/${company.nama_perusahaan.toLowerCase().replace(/\s+/g, "-")}`}
             />
           ))}

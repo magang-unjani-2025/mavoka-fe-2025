@@ -19,6 +19,7 @@ export default function InputPassword({
   error,
 }: InputPasswordProps) {
   const [showPassword, setShowPassword] = useState(false)
+  const [value, setValue] = useState('')
 
   return (
     <div className="w-full mb-3">
@@ -31,10 +32,13 @@ export default function InputPassword({
       <div className="relative">
         <input
           {...register}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           type={showPassword ? 'text' : 'password'}
           placeholder={placeholder}
           className={clsx(
-            'w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]',
+            'w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1] placeholder-gray-400 transition-colors duration-200',
+            value ? 'text-black' : 'text-gray-400',
             error ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'
           )}
         />

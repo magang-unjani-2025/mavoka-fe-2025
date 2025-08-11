@@ -39,6 +39,10 @@
   label {
     @apply text-sm text-black; 
   }
+
+  button {
+    @apply text-sm rounded-[5px] shadow-md px-4 py-2;
+  }
   :root {
         --background: 0 0% 100%;
         --foreground: 0 0% 3.9%;

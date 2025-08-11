@@ -1,6 +1,6 @@
 'use client'
 
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, forwardRef, useState } from 'react'
 import clsx from 'clsx'
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -10,6 +10,8 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, className, required, ...props }, ref) => {
+    const [hasValue, setHasValue] = useState(false)
+
     return (
       <div className="w-full mb-3">
         {label && (
@@ -21,11 +23,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={clsx(
-            'w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1]',
+            'w-full border text-xs mb-1 rounded-[6px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F67B1] placeholder-gray-400',
+            hasValue ? 'text-black' : 'text-black',
             error ? 'border-red-500' : 'border-gray-300',
             className
           )}
           required={required}
+          onChange={(e) => {
+            setHasValue(e.target.value.trim() !== '')
+            props.onChange?.(e)
+          }}
           {...props}
         />
         {error && <p className="text-xs text-red-500 mt-1">{error}</p>}

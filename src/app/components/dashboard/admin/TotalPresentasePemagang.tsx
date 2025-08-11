@@ -58,7 +58,7 @@ export function TotalPresentasePemagang() {
         </div>
       </div>
 
-      <p className="text-center text-pink-600 font-medium mt-2">
+      <p className="text-center text-red-500 font-medium mt-2">
         Presentase Total
       </p>
     </>

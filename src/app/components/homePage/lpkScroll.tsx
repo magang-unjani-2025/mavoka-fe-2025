@@ -1,17 +1,18 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { HiUser } from "react-icons/hi";
 
 export default function TrainingCarousel() {
   const trainingCenters = [
-    { logo: "/logos/vayond.png", name: "Vayond" },
-    { logo: "/logos/indobot.png", name: "Indobot Academy" },
-    { logo: "/logos/kodingnext.png", name: "Koding Next" },
-    { logo: "/logos/adirim.png", name: "Adirim" },
-    { logo: "/logos/gamelab.png", name: "Gamelab Indonesia" },
-    { logo: "/logos/genius.png", name: "Genius Learning" },
-    { logo: "/logos/rumahmesin.png", name: "Rumah Mesin" },
-    { logo: "/logos/bdm.png", name: "BDM School" },
+    { logo: "", name: "Vayond" },
+    { logo: "", name: "Indobot Academy" },
+    { logo: "", name: "Koding Next" },
+    { logo: "", name: "Adirim" },
+    { logo: "", name: "Gamelab Indonesia" },
+    { logo: "", name: "Genius Learning" },
+    { logo: "", name: "Rumah Mesin" },
+    { logo: "", name: "BDM School" },
     // ... tambah logo lain
   ];
 
@@ -130,12 +131,16 @@ export default function TrainingCarousel() {
                 className="rounded-full border-2 border-blue-400 flex items-center justify-center bg-white"
                 style={{ width: "90px", height: "90px" }}
               >
-                <Image
-                  src={center.logo}
-                  alt={center.name}
-                  width={60}
-                  height={60}
-                />
+                {center.logo ? (
+                  <Image
+                    src={center.logo}
+                    alt={center.name}
+                    width={60}
+                    height={60}
+                  />
+                ) : (
+                  <HiUser className="w-12 h-12 text-black" />
+                )}
               </div>
 
               {center.isCenter && (

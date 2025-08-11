@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import { HiUser } from "react-icons/hi";
 
 type JobCardProps = {
-  companyLogo: string;
+  companyLogo: string | null;
   title: string;
   company: string;
   location: string;
@@ -22,14 +22,22 @@ export default function JobCard({
   const router = useRouter();
   return (
     <div className="border p-4 shadow-md hover:shadow-lg transition cursor-pointer">
-      <div className="flex items-center gap-2 mb-3">
-        <Image src={companyLogo} alt={company} width={48} height={48} />
-      </div>
-
       <h3 className="text-xl text-[#25324B]">{title}</h3>
       <p className="text-xs text-[#AA999F] font-semibold mb-2">
         {positions} Posisi
       </p>
+      <div className="w-12 h-12 overflow-hidden flex items-center justify-center mb-2">
+        {companyLogo ? (
+          <img
+            src={companyLogo}
+            alt={`${company} logo`}
+            className="object-contain w-full h-full"
+          />
+        ) : (
+          <HiUser className="text-black w-12 h-12" />
+        )}
+      </div>
+
       <p className="text-[#C7C9D9]">
         {company} – {location}
       </p>
@@ -46,7 +54,7 @@ export default function JobCard({
       <div className="flex justify-center w-full">
         <button
           onClick={() => router.push("/jobs/email-marketing")}
-          className="bg-[#0F67B1] text-white text-sm font-medium w-full py-2 rounded-[3px] hover:opacity-90 transition mt-3 flex items-center justify-center gap-2"
+          className="bg-[#0F67B1] text-white font-medium w-full shadow-md hover:opacity-90 transition mt-3 flex items-center justify-center gap-2"
         >
           Lihat Detail <ArrowRight size={20} />
         </button>

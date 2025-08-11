@@ -69,19 +69,19 @@ export default function HeaderHome() {
         </nav>
 
         {/* Tombol Desktop */}
-        <div className=" lg:flex space-x-1.5 font-poppins text-sm">
+        <div className="lg:flex items-center space-x-1.5">
           <button
             onClick={() => router.push("/login")}
-            className="px-4 py-2 rounded-[8px] bg-[#0F67B1] text-white hover:bg-opacity-70 transition"
+            className="bg-[#0F67B1] text-white hover:bg-opacity-70 transition"
           >
             Masuk
           </button>
 
-          <div className="w-px h-10 bg-gray-300" />
+          <div className="w-[1.5px] h-7 bg-black" />
 
           <button
             onClick={() => router.push("/registrasi")}
-            className="border hover:bg-gray-100 border-[#0F67B1] text-[#0F67B1] px-4 py-2 rounded-[8px]"
+            className="border hover:bg-gray-100 border-[#0F67B1] text-[#0F67B1]"
           >
             Daftar
           </button>

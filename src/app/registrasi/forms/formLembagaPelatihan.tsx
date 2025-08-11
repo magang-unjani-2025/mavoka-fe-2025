@@ -110,7 +110,6 @@ export default function FormLembaga() {
 
         <InputPassword
           label="Kata Sandi"
-          placeholder="Masukkan kata sandi"
           register={register("password", {
             required: "Kata sandi wajib diisi",
           })}

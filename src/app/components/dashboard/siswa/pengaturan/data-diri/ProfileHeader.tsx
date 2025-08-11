@@ -1,21 +1,3 @@
-// import { FaEdit } from "react-icons/fa";
-
-// export default function ProfileHeader() {
-//   return (
-//     <div className="flex items-center justify-between border-b pb-4 mb-6">
-//       <div>
-//         <h3 className="font-bold text-gray-800">Data Pribadi</h3>
-//         <p className="text-gray-500">
-//           Pastikan data pribadi benar untuk mempermudah proses pemberkasan.
-//         </p>
-//       </div>
-//       <button className="flex items-center gap-2 text-[#0F67B1] hover:text-blue-800">
-//         <FaEdit /> Ubah Data
-//       </button>
-//     </div>
-//   );
-// }
-
 import { FaEdit } from "react-icons/fa";
 
 export default function ProfileHeader({ onEdit }: { onEdit: () => void }) {
@@ -23,7 +5,7 @@ export default function ProfileHeader({ onEdit }: { onEdit: () => void }) {
     <div className="flex items-center justify-between border-b pb-4 mb-6">
       <div>
         <h3 className="font-bold text-gray-800">Data Pribadi</h3>
-        <p className="text-gray-500">
+        <p>
           Pastikan data pribadi benar untuk mempermudah proses pemberkasan.
         </p>
       </div>
