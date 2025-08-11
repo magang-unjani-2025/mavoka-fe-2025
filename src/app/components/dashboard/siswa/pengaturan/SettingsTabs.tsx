@@ -52,7 +52,7 @@ export default function SettingsTabs() {
         {["dataDiri", "akun", "sekolah"].map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 font-semibold ${
+            className={`rounded-none shadow-none font-semibold ${
               activeTab === tab
                 ? "border-b-2 border-[#0F67B1] text-[#0F67B1] bg-[#0F67B1]/5"
                 : "text-gray-600 hover:text-[#0F67B1]"

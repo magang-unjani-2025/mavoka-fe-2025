@@ -26,7 +26,7 @@ export default function TopNavbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="relative">
+          <button className="relative rounded-none shadow-none p-0">
             <FaBell className="w-6 h-6 text-[#0F67B1]" />
             <span className="absolute top-1 right-0 block w-2 h-2 bg-[#28A745] rounded-full"></span>
           </button>

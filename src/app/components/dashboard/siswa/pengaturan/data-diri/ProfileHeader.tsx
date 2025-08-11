@@ -11,7 +11,7 @@ export default function ProfileHeader({ onEdit }: { onEdit: () => void }) {
       </div>
       <button
         onClick={onEdit}
-        className="flex items-center gap-2 text-[#0F67B1] hover:text-[#116ACC]"
+        className="flex items-center gap-2 text-[#0F67B1] hover:text-[#116ACC] rounded-none shadow-none"
       >
         <FaEdit /> Ubah Data
       </button>
