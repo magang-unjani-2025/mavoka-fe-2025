@@ -147,10 +147,13 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         />
       </div>
 
-      {/* Nav */}
       <nav className="mt-6 flex-1 flex flex-col space-y-3">
         {menus[role].map((item) => {
-          const isActive = pathname === item.href;
+          const isActive =
+            item.href === "/pengaturan/data-diri"
+              ? pathname.startsWith("/pengaturan")
+              : pathname === item.href;
+
           return (
             <Link key={item.href} href={item.href}>
               <div className="relative flex items-center">
@@ -176,6 +179,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           );
         })}
 
+        {/* Tombol logout */}
         <button
           type="button"
           onClick={() => setLogoutOpen(true)}
@@ -183,10 +187,13 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         >
           <LogOut size={20} />
           {isOpen && (
-            <span className="text-sm font-medium whitespace-nowrap">Keluar</span>
+            <span className="text-sm font-medium whitespace-nowrap">
+              Keluar
+            </span>
           )}
         </button>
       </nav>
+
       <ConfirmLogoutDialog
         open={logoutOpen}
         onClose={() => setLogoutOpen(false)}

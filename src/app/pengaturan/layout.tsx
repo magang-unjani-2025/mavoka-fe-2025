@@ -31,7 +31,7 @@ export default function PengaturanLayout({ children }: { children: React.ReactNo
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 mt-5 bg-white h-full">
+        <div className="flex-1 overflow-y-auto p-6 mt-5 bg-white h-full">
           {children}
         </div>
       </div>
