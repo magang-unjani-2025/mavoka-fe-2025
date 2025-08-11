@@ -4,6 +4,9 @@ import ProfileHeader from "@/app/components/dashboard/siswa/pengaturan/data-diri
 import ProfileAvatar from "@/app/components/dashboard/siswa/pengaturan/data-diri/ProfileAvatar";
 import ProfileView from "@/app/components/dashboard/siswa/pengaturan/data-diri/ProfileView";
 import ProfileForm from "@/app/components/dashboard/siswa/pengaturan/data-diri/ProfileForm";
+import AkunHeader from "@/app/components/dashboard/siswa/pengaturan/akun/AkunHeader";
+import AkunView from "@/app/components/dashboard/siswa/pengaturan/akun/AkunView";
+import ChangePasswordFlow from "@/app/components/dashboard/siswa/pengaturan/akun/ChangePasswordFlow";
 import SekolahHeader from "@/app/components/dashboard/siswa/pengaturan/sekolah/SekolahHeader";
 import SekolahView from "@/app/components/dashboard/siswa/pengaturan/sekolah/SekolahView";
 
@@ -14,6 +17,8 @@ export default function SettingsTabs() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [form, setForm] = useState({
+    username: "Lisa Mariana Aja",
+    password: "Lisa12345",
     fullName: "Lisa Mariana Treynggar Amsori",
     profilePic: "",
     email: "Lisaaja@gmail.com",
@@ -47,7 +52,6 @@ export default function SettingsTabs() {
 
   return (
     <>
-      {/* Tabs */}
       <div className="flex border-b border-gray-300">
         {["dataDiri", "akun", "sekolah"].map((tab) => (
           <button
@@ -66,7 +70,6 @@ export default function SettingsTabs() {
         ))}
       </div>
 
-      {/* Content */}
       <div className="bg-white rounded-lg shadow-sm p-6 overflow-auto max-h-[calc(100vh-150px)]">
         {activeTab === "dataDiri" && (
           <>
@@ -100,7 +103,22 @@ export default function SettingsTabs() {
           </>
         )}
 
-        {activeTab === "akun" && <p>Informasi Akun Anda</p>}
+        {activeTab === "akun" && (
+          <>
+            <AkunHeader />
+            {!isEditing && (
+              <AkunView
+                form={form}
+                setForm={setForm}
+                onChangePassword={() => setIsEditing(true)}
+              />
+            )}
+            {isEditing && (
+              <ChangePasswordFlow onCancel={() => setIsEditing(false)} />
+            )}
+          </>
+        )}
+
         {activeTab === "sekolah" && (
           <>
             <SekolahHeader />

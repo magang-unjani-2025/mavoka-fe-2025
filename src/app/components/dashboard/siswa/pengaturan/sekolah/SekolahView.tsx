@@ -15,10 +15,10 @@ export default function SekolahView({ form }: SekolahViewProps) {
     <div className="grid grid-cols-1 gap-4">
       {fields.map((field) => (
         <div key={field.label} className="flex flex-col">
-          <span className="text-sm font-medium text-gray-600">{field.label}</span>
-          <span className="mt-1 text-gray-900 border rounded-md px-3 py-2 bg-gray-50">
+          <p className="text-sm font-medium text-gray-600">{field.label}</p>
+          <p className="text-sm mt-1 text-gray-900 border rounded-md px-3 py-2 bg-gray-50">
             {field.value || "-"}
-          </span>
+          </p>
         </div>
       ))}
     </div>

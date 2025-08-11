@@ -23,12 +23,12 @@ export default function ProfileView({ form }: ProfileViewProps) {
             field.colSpan === 2 ? "md:col-span-2" : ""
           }`}
         >
-          <span className="text-sm font-medium text-gray-600">
+          <p className="font-medium text-gray-600">
             {field.label}
-          </span>
-          <span className="mt-1 text-gray-900 border rounded-md px-3 py-2 bg-gray-50">
+          </p>
+          <p className="mt-1 text-gray-900 border rounded-md px-3 py-2 bg-gray-50">
             {field.value || "-"}
-          </span>
+          </p>
         </div>
       ))}
     </div>

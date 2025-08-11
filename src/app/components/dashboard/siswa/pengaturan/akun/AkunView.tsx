@@ -1,0 +1,63 @@
+"use client";
+import { useState } from "react";
+import { HiOutlinePencilAlt } from "react-icons/hi";
+import { IoIosArrowForward } from "react-icons/io";
+import EditUsernameModal from "./EditUsernameModal";
+
+interface AkunViewProps {
+  form: any;
+  setForm: (data: any) => void;
+  onChangePassword: () => void;
+}
+
+export default function AkunView({ form, setForm, onChangePassword }: AkunViewProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fields = [
+    {
+      label: "Username",
+      value: form.username,
+      icon: (
+        <HiOutlinePencilAlt
+          className="text-[#0F67B1] cursor-pointer"
+          size={20}
+          onClick={() => setIsModalOpen(true)}
+        />
+      ),
+    },
+    {
+      label: "Kata Sandi",
+      value: form.password,
+      icon: (
+        <IoIosArrowForward
+          className="text-[#0F67B1] cursor-pointer"
+          size={20}
+          onClick={onChangePassword}
+        />
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-4">
+        {fields.map((field) => (
+          <div key={field.label} className="flex flex-col">
+            <p className="font-medium text-gray-600">{field.label}</p>
+            <div className="mt-1 border rounded-md px-3 py-2 bg-gray-50 flex items-center justify-between">
+              <p className="text-gray-400">{field.value || "-"}</p>
+              {field.icon}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <EditUsernameModal
+        isOpen={isModalOpen}
+        currentUsername={form.username}
+        onClose={() => setIsModalOpen(false)}
+        onSave={(newUsername) => setForm({ ...form, username: newUsername })}
+      />
+    </>
+  );
+}

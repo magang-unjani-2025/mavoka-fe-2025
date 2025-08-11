@@ -111,7 +111,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pengaturan",
-        href: "/pengaturan",
+        href: "/pengaturan/data-diri",
         icon: <MdOutlineSettings size={20} />,
       },
     ],

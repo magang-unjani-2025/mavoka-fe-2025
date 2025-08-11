@@ -21,7 +21,7 @@ export default function SelectField({
         name={name}
         value={value}
         onChange={onChange}
-        className="border-[2px] border-[#0F67B1] rounded-lg p-2 focus:outline-none focus:ring-[#116ACC]"
+        className="text-sm border-[2px] border-[#0F67B1] rounded-lg p-2 focus:outline-none focus:ring-[#116ACC]"
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
