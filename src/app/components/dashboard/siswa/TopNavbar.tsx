@@ -33,7 +33,7 @@ export default function TopNavbar() {
 
           <div className="w-px h-10 bg-gray-300"></div>
 
-          <Link href="/dashboard-siswa/pengaturan" passHref>
+          <Link href="/pengaturan/data-diri" passHref>
             <div className="relative w-9 h-9">
               {profilePic ? (
                 <Image
