@@ -231,39 +231,30 @@ type SidebarProps = {
   role: "admin" | "perusahaan" | "lpk" | "sekolah" | "siswa";
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  mobileOpen: boolean; // ⬅️ tambahkan
-  setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>; // ⬅️ tambahkan
+  mobileOpen: boolean;
+  setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
 
 export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [logoutOpen, setLogoutOpen] = React.useState(false);
 
-  // Breakpoints
-  const isDesktop = useMedia("(min-width:1024px)");
-  const isTablet = useMedia("(min-width:640px) and (max-width:1023.98px)");
-  const isMobile = !isDesktop && !isTablet;
+  const isDesktop = useMedia("(min-width:1280px)");
+  const isTablet = useMedia("(min-width:744px) and (max-width:1279.98px)");
+  const isMobile = useMedia("(max-width:743.98px)");
 
-  // State lokal untuk drawer mobile (terpisah dari isOpen desktop)
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  // Di tablet kita pakai isOpen dari parent juga, tapi kita "normalkan" defaultnya ke mini (false)
   React.useEffect(() => {
-    if (isDesktop) {
-      // biarkan isOpen apa adanya (kontrol parent)
-      return;
-    }
+    if (isDesktop) return;
     if (isTablet) {
-      setIsOpen(false); // default mini di tablet
+      setIsOpen(false);
       setMobileOpen(false);
       return;
     }
     if (isMobile) {
-      setMobileOpen(false); // default benar2 tertutup
-      // jangan setIsOpen di mobile; biar desktop/tablet tidak ikut berubah
+      setMobileOpen(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDesktop, isTablet, isMobile]);
 
   const menus: Record<typeof role, MenuItem[]> = {
@@ -364,14 +355,11 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
 
   const handleLogout = () => router.push("/login");
 
-  // Auto close ketika route berubah (mobile: tutup drawer; tablet: collapse)
   React.useEffect(() => {
     if (isMobile) setMobileOpen(false);
     if (isTablet) setIsOpen(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // Shared renderer utk list menu (klik → auto close sesuai mode)
   const renderMenuList = () => (
     <nav className="mt-6 flex-1 flex flex-col space-y-3">
       {menus[role].map((item) => {
@@ -401,7 +389,6 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
                 }`}
               >
                 {item.icon}
-                {/* Teks hanya muncul kalau expanded (desktop isOpen true / tablet isOpen true / mobile drawer open) */}
                 {(isDesktop && isOpen) ||
                 (isTablet && isOpen) ||
                 (isMobile && mobileOpen) ? (
@@ -414,8 +401,6 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           </Link>
         );
       })}
-
-      {/* Logout */}
       <button
         type="button"
         onClick={() => setLogoutOpen(true)}
@@ -431,12 +416,12 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
     </nav>
   );
 
-  // Header (logo + toggle) — dipakai di panel desktop/tablet & drawer mobile
   const Header = ({ onToggle }: { onToggle: () => void }) => (
     <div
-      className={`flex flex-col border-b py-3 transition-all duration-300 ${
-        isDesktop && isOpen ? "items-end px-4 mr-5" : "items-center mr-5 px-4"
-      }`}
+      className={`
+    flex flex-col border-b py-3 transition-all duration-300 h-[84px]
+    ${isDesktop && isOpen ? "items-end px-4 mr-5" : "justify-center mr-5 px-4"}
+  `}
     >
       <button
         onClick={onToggle}
@@ -445,40 +430,29 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       >
         <Menu size={22} />
       </button>
-      <Image
-        src={
-          (isDesktop && isOpen) ||
-          (isTablet && isOpen) ||
-          (isMobile && mobileOpen)
-            ? "/img/logo-mavoka.png"
-            : "/img/logo-m.png"
-        }
-        alt="Mavoka"
-        width={
-          (isDesktop && isOpen) ||
-          (isTablet && isOpen) ||
-          (isMobile && mobileOpen)
-            ? 150
-            : 30
-        }
-        height={40}
-        className="transition-all duration-300"
-        priority
-      />
+
+      {(isDesktop && isOpen) ||
+      (isTablet && isOpen) ||
+      (isMobile && mobileOpen) ? (
+        <Image
+          src="/img/logo-mavoka.png"
+          alt="Mavoka"
+          width={150}
+          height={40}
+          className="transition-all duration-300"
+          priority
+        />
+      ) : null}
     </div>
   );
 
   return (
     <>
-      {/* ======= DESKTOP & TABLET PANEL (kiri, non-overlay) ======= */}
       <aside
         className={[
           "bg-white border-r flex flex-col min-h-screen transition-all duration-300 overflow-hidden",
-          // Desktop: gunakan isOpen untuk w-60/w-20
           isDesktop ? (isOpen ? "w-60" : "w-20") : "",
-          // Tablet: default mini (w-20), expand saat toggled
           isTablet ? (isOpen ? "w-60" : "w-20") : "",
-          // Mobile: panel non-overlay disembunyikan
           isMobile ? "hidden" : "",
         ].join(" ")}
       >
@@ -488,7 +462,6 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           }
         />
         {renderMenuList()}
-
         <ConfirmLogoutDialog
           open={logoutOpen}
           onClose={() => setLogoutOpen(false)}
@@ -499,7 +472,6 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         />
       </aside>
 
-      {/* ======= MOBILE HAMBURGER FLOATING BUTTON ======= */}
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
@@ -509,17 +481,14 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         <Menu size={22} />
       </button>
 
-      {/* ======= MOBILE DRAWER (overlay) ======= */}
       {isMobile && (
         <>
-          {/* Backdrop */}
           <div
             className={`fixed inset-0 z-40 bg-black/30 transition-opacity ${
               mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
             onClick={() => setMobileOpen(false)}
           />
-          {/* Panel */}
           <aside
             className={`fixed z-50 top-0 left-0 h-full bg-white border-r w-60 transform transition-transform duration-300 ${
               mobileOpen ? "translate-x-0" : "-translate-x-full"

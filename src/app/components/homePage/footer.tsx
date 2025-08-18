@@ -112,7 +112,7 @@ export default function Footer() {
           <div className="flex flex-col desktop:flex-row desktop:items-start desktop:justify-between gap-10">
             
             {/* Logo + Deskripsi (center di mobile/tablet, kiri di desktop) */}
-            <div className="max-w-[520px] text-center desktop:text-left desktop:flex-1">
+            <div className="max-w-[520px] text-center tablet:mx-auto desktop:text-left">
               <div className="flex items-center justify-center desktop:justify-start gap-2">
                 <Image src="/img/logo-fit-academy.png" alt="FitAcademy" width={55} height={56} />
                 <Image src="/img/logo-mavoka.png" alt="Mavoka" width={125} height={38} className="-mt-2" />
