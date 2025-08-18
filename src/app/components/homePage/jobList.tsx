@@ -51,7 +51,7 @@ export default function JobList() {
       {loading ? (
         <p>Memuat lowongan...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
           {jobs.slice(0, 8).map((job) => (
             <JobCard
               key={job.id}

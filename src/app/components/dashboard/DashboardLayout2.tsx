@@ -74,6 +74,7 @@ export default function DashboardLayout2({
 
   return (
     <div className="flex h-screen overflow-hidden">
+      
       {/* Sidebar terima mobileOpen */}
       <Sidebar
         role={role}
