@@ -53,7 +53,12 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		screens: {
+			mobile: "393px",
+			tablet: "744px",
+			desktop: "1024px",
+      }
   	}
   },
   plugins: [

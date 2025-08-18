@@ -34,7 +34,6 @@ import TopNavbar from "./topNavbar";
 import Sidebar from "./sidebar";
 
 type Role = "perusahaan" | "lpk" | "sekolah" | "siswa";
-
 type UserBrief = {
   fullName: string;
   orgName?: string;
@@ -44,15 +43,15 @@ type UserBrief = {
 export default function DashboardLayout2({
   children,
   role,
-  user, // <- boleh undefined
+  user,
 }: {
   children: React.ReactNode;
   role: Role;
   user?: UserBrief;
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);          // desktop/tablet
+  const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer
 
-  // ✅ SELALU pakai safeUser, jangan refer langsung user.fullName
   const safeUser = useMemo<UserBrief>(() => {
     return {
       fullName: user?.fullName ?? "Pengguna",
@@ -70,12 +69,19 @@ export default function DashboardLayout2({
       : role === "sekolah"
       ? "/pengaturan"
       : role === "lpk"
-      ? "/dashboard-lpk/pengaturan"
+      ? "/pengaturan"
       : "/dashboard-perusahaan/pengaturan";
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar role={role} isOpen={isOpen} setIsOpen={setIsOpen} />
+      {/* Sidebar terima mobileOpen */}
+      <Sidebar
+        role={role}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
 
       <div className="flex flex-col flex-1 overflow-hidden">
         <TopNavbar
@@ -85,10 +91,10 @@ export default function DashboardLayout2({
           profilePic={safeUser.profilePic}
           settingsHref={settingsHref}
           hasNotification
+          //onOpenSidebar={() => setMobileOpen(true)} // buka drawer mobile
         />
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">{children}</main>
       </div>
     </div>
   );
 }
-
