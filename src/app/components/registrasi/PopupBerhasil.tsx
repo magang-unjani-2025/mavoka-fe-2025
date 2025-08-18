@@ -56,7 +56,7 @@ export default function SuccessModal({
         {showCloseIcon && (
           <button
             onClick={onClose}
-            className="absolute right-3 top-3 text-2xl leading-none text-gray-500 hover:text-gray-700"
+            className="shadow-none rounded-none absolute right-3 top-3 text-2xl leading-none text-gray-500 hover:text-gray-700"
             aria-label="Tutup"
           >
             &times;
@@ -64,10 +64,9 @@ export default function SuccessModal({
         )}
 
         <HiCheckCircle className="mx-auto mb-3 text-6xl text-green-500" />
-        <h2 className="mb-2 text-xl font-semibold text-gray-900">{title}</h2>
-        {message && <p className="mb-5 text-sm text-gray-500">{message}</p>}
+        <h2 className="mb-2 text-gray-900">{title}</h2>
+        {message && <p className="mb-5 text-gray-500">{message}</p>}
 
-        {/* Tampilkan tombol HANYA jika primaryText diberikan */}
         {primaryText && (
           <button
             onClick={onClose}
