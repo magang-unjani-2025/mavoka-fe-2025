@@ -70,7 +70,7 @@ export default function FormOtpLupa() {
     if (code.length !== 6) {
       alert("Masukkan 6 digit kode OTP");
       return;
-    }
+    }  
 
     // ⬇️ MOCK verifikasi OTP
     setLoading(true);

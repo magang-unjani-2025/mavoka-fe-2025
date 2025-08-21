@@ -1,18 +1,16 @@
-//import DashboardLayout from "@/app/components/dashboard/layout";
-
-//export default function DashboardPerusahaan() {
-//  return (
-//    <DashboardLayout role="perusahaan">
-//      <h1 className="text-2xl font-bold mt-11 ml-[20px] text-[#0F67B1]">Selamat Datang</h1>
-//      <p className="ml-[20px] text-[#A3A3A3]">Hi, Minvo. Selamat datang kembali  di MAVOKA!</p>
-//    </DashboardLayout>
-//  );
-//}
-
 import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";
 import * as React from "react";
+import DashboardTopCard from "@/app/components/dashboard/perusahaan/DashboardTopCard";
+import LowonganTerpasang from "@/app/components/dashboard/perusahaan/LowonganTerpasang";
+import LembagaPelatihan from "@/app/components/dashboard/perusahaan/LembagaPelatihan";
 
 export default function DashboardPerusahaan() {
+  const stats = [
+    { title: "Total Pemagang Aktif", value: 25, label: "Siswa diterima" },
+    { title: "Total Pelamar Aktif", value: 255, label: "Siswa mendaftar lowongan" },
+    { title: "Total Lowongan", value: 12, label: "Lowongan tersedia" },
+  ];
+
   return (
     <DashboardLayout2
       role="perusahaan"
@@ -20,9 +18,22 @@ export default function DashboardPerusahaan() {
         fullName: "Kepala Perusahaan",
         orgName: "Perusahaan XYZ",
         profilePic: "",
-      }}>
-        <></>
+      }}
+    >
+      {/* Section Top Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {stats.map((stat, index) => (
+          <DashboardTopCard key={index} stat={stat} />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 items-center">
+        <div className="md:col-span-2 h-full">
+          <LowonganTerpasang className="h-full" />
+        </div>
+        <div className="h-full">
+          <LembagaPelatihan className="h-full" />
+        </div>
+      </div>
     </DashboardLayout2>
   );
 }
-

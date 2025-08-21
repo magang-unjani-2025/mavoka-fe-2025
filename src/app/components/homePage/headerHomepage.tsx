@@ -1,96 +1,3 @@
-//// src/components/home/HeaderHome.tsx
-//import Image from "next/image";
-//import Link from "next/link";
-//import { useRouter } from "next/navigation";
-
-//export default function HeaderHome() {
-//  const router = useRouter();
-
-//  return (
-//    <header className="w-full bg-white shadow-md">
-//      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 md:px-10 lg:px-[70px] py-0">
-//        {/* Logo */}
-//        <div className="flex items-center space-x-2">
-//          <Image
-//            src="/img/logo-fit-academy.png"
-//            alt="Logo"
-//            width={55}
-//            height={56}
-//            className="mt-3 mb-3"
-//          />
-//          <div className="flex items-center h-[56px]">
-//            <Image
-//              src="/img/logo-mavoka.png"
-//              alt="Mavoka"
-//              width={125}
-//              height={38}
-//            />
-//          </div>
-//        </div>
-
-//        {/* Menu Desktop */}
-//        <nav className="lg:flex space-x-5 font-medium text-sm font-poppins">
-//          <Link
-//            href="/"
-//            className="hover:text-blue-600 transition-colors duration-200"
-//          >
-//            Beranda
-//          </Link>
-//          <Link
-//            href="/tentang"
-//            className="hover:text-blue-600 transition-colors duration-200"
-//          >
-//            Tentang MAVOKA
-//          </Link>
-//          <Link
-//            href="/lowongan"
-//            className="hover:text-blue-600 transition-colors duration-200"
-//          >
-//            Cari Lowongan
-//          </Link>
-//          <Link
-//            href="/perusahaan"
-//            className="hover:text-blue-600 transition-colors duration-200"
-//          >
-//            Perusahaan
-//          </Link>
-//          <Link
-//            href="/pelatihan"
-//            className="hover:text-blue-600 transition-colors duration-200"
-//          >
-//            Lembaga Pelatihan
-//          </Link>
-//          <Link
-//            href="/sekolah"
-//            className="hover:text-blue-600 transition-colors duration-200"
-//          >
-//            Sekolah
-//          </Link>
-//        </nav>
-
-//        {/* Tombol Desktop */}
-//        <div className="lg:flex items-center space-x-1.5">
-//          <button
-//            onClick={() => router.push("/login")}
-//            className="bg-[#0F67B1] text-white hover:bg-opacity-70 transition"
-//          >
-//            Masuk
-//          </button>
-
-//          <div className="w-[1.5px] h-7 bg-black" />
-
-//          <button
-//            onClick={() => router.push("/registrasi")}
-//            className="border hover:bg-gray-100 border-[#0F67B1] text-[#0F67B1]"
-//          >
-//            Daftar
-//          </button>
-//        </div>
-//      </div>
-//    </header>
-//  );
-//}
-
 "use client";
 
 import Image from "next/image";
@@ -103,15 +10,31 @@ export default function HeaderHome() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Tutup dropdown saat pindah halaman
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
+  function navLink(path: string, label: string) {
+    const isActive =
+      path === "/"
+        ? pathname === "/" // khusus beranda exact match
+        : pathname.startsWith(path); // selain itu, aktif juga kalau sub-route
+
+    return (
+      <Link
+        href={path}
+        className={`transition-colors duration-200 ${
+          isActive ? "text-[#0F67B1]" : "hover:text-[#0F67B1]"
+        }`}
+      >
+        {label}
+      </Link>
+    );
+  }
+
   return (
     <header className="w-full bg-white shadow-md">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 tablet:px-10 desktop:px-[70px] py-0 h-16">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/img/logo-fit-academy.png"
@@ -134,15 +57,14 @@ export default function HeaderHome() {
 
         {/* Menu Desktop */}
         <nav className="hidden desktop:flex space-x-5 font-medium text-sm font-poppins">
-          <Link href="/" className="hover:text-blue-600 transition-colors duration-200">Beranda</Link>
-          <Link href="/tentang" className="hover:text-blue-600 transition-colors duration-200">Tentang MAVOKA</Link>
-          <Link href="/lowongan" className="hover:text-blue-600 transition-colors duration-200">Cari Lowongan</Link>
-          <Link href="/perusahaan" className="hover:text-blue-600 transition-colors duration-200">Perusahaan</Link>
-          <Link href="/pelatihan" className="hover:text-blue-600 transition-colors duration-200">Lembaga Pelatihan</Link>
-          <Link href="/sekolah" className="hover:text-blue-600 transition-colors duration-200">Sekolah</Link>
+          {navLink("/", "Beranda")}
+          {navLink("/tentang", "Tentang MAVOKA")}
+          {navLink("/lowongan", "Cari Lowongan")}
+          {navLink("/perusahaan", "Perusahaan")}
+          {navLink("/pelatihan", "Lembaga Pelatihan")}
+          {navLink("/sekolah", "Sekolah")}
         </nav>
 
-        {/* Tombol Desktop (DESAIN ASLI – tidak diubah) */}
         <div className="hidden desktop:flex items-center space-x-1.5">
           <button
             onClick={() => router.push("/login")}
@@ -191,15 +113,57 @@ export default function HeaderHome() {
       </div>
 
       {/* Dropdown untuk tablet & mobile */}
-      <div className={`desktop:hidden ${open ? "block" : "hidden"} border-t border-black/10 bg-white shadow-sm`}>
+      <div
+        className={`desktop:hidden ${
+          open ? "block" : "hidden"
+        } border-t border-black/10 bg-white shadow-sm`}
+      >
         <div className="mx-auto max-w-screen-xl px-4 tablet:px-10 desktop:px-[70px] py-3">
           <div className="flex flex-col gap-2 py-2 text-sm font-medium font-poppins">
-            <Link href="/" className="rounded-lg px-2 py-2 hover:bg-slate-50">Beranda</Link>
-            <Link href="/tentang" className="rounded-lg px-2 py-2 hover:bg-slate-50">Tentang MAVOKA</Link>
-            <Link href="/lowongan" className="rounded-lg px-2 py-2 hover:bg-slate-50">Cari Lowongan</Link>
-            <Link href="/perusahaan" className="rounded-lg px-2 py-2 hover:bg-slate-50">Perusahaan</Link>
-            <Link href="/pelatihan" className="rounded-lg px-2 py-2 hover:bg-slate-50">Lembaga Pelatihan</Link>
-            <Link href="/sekolah" className="rounded-lg px-2 py-2 hover:bg-slate-50">Sekolah</Link>
+            <Link
+              href="/"
+              className={`rounded-lg px-2 py-2 ${
+                pathname === "/" ? "text-[#0F67B1]" : "hover:bg-slate-50"
+              }`}
+            >
+              Beranda
+            </Link>
+
+            <Link
+              href="/tentang"
+              className={`rounded-lg px-2 py-2 ${
+                pathname.startsWith("/tentang")
+                  ? "text-[#0F67B1]"
+                  : "hover:bg-slate-50"
+              }`}
+            >
+              Tentang MAVOKA
+            </Link>
+
+            <Link
+              href="/lowongan"
+              className="rounded-lg px-2 py-2 hover:bg-slate-50"
+            >
+              Cari Lowongan
+            </Link>
+            <Link
+              href="/perusahaan"
+              className="rounded-lg px-2 py-2 hover:bg-slate-50"
+            >
+              Perusahaan
+            </Link>
+            <Link
+              href="/pelatihan"
+              className="rounded-lg px-2 py-2 hover:bg-slate-50"
+            >
+              Lembaga Pelatihan
+            </Link>
+            <Link
+              href="/sekolah"
+              className="rounded-lg px-2 py-2 hover:bg-slate-50"
+            >
+              Sekolah
+            </Link>
 
             {/* Mobile: tombol muncul di dropdown (DESAIN ASLI) */}
             <div className="mt-2 flex gap-2 tablet:hidden">
