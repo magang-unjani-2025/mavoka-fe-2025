@@ -56,8 +56,8 @@ export default function Footer() {
                   <div>
                     <h3 className="text-black font-semibold mb-4 tablet:mb-6">Quick link</h3>
                     <ul className="space-y-2 text-black text-sm">
-                      <li><a href="#">Beranda</a></li>
-                      <li><a href="#">Tentang MAVOKA</a></li>
+                      <li><a href="/">Beranda</a></li>
+                      <li><a href="/tentang-mavoka">Tentang MAVOKA</a></li>
                       <li><a href="#">Cari lowongan</a></li>
                       <li><a href="#">Perusahaan</a></li>
                       <li><a href="#">Lembaga Pelatihan</a></li>

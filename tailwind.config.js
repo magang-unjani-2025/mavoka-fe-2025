@@ -58,7 +58,10 @@ module.exports = {
 			mobile: "393px",
 			tablet: "744px",
 			desktop: "1024px",
-      }
+      },
+	  maxWidth: {
+        content: "1440px",
+      },
   	}
   },
   plugins: [

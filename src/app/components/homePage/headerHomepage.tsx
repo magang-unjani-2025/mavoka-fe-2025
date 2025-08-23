@@ -33,7 +33,7 @@ export default function HeaderHome() {
   }
 
   return (
-    <header className="w-full bg-white shadow-md">
+    <header className="w-full bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 tablet:px-10 desktop:px-[70px] py-0 h-16">
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -58,9 +58,9 @@ export default function HeaderHome() {
         {/* Menu Desktop */}
         <nav className="hidden desktop:flex space-x-5 font-medium text-sm font-poppins">
           {navLink("/", "Beranda")}
-          {navLink("/tentang", "Tentang MAVOKA")}
+          {navLink("/tentang-mavoka", "Tentang MAVOKA")}
           {navLink("/lowongan", "Cari Lowongan")}
-          {navLink("/perusahaan", "Perusahaan")}
+          {navLink("/list-perusahaan", "Perusahaan")}
           {navLink("/pelatihan", "Lembaga Pelatihan")}
           {navLink("/sekolah", "Sekolah")}
         </nav>
@@ -130,7 +130,7 @@ export default function HeaderHome() {
             </Link>
 
             <Link
-              href="/tentang"
+              href="/tentang-mavoka"
               className={`rounded-lg px-2 py-2 ${
                 pathname.startsWith("/tentang")
                   ? "text-[#0F67B1]"
@@ -147,7 +147,7 @@ export default function HeaderHome() {
               Cari Lowongan
             </Link>
             <Link
-              href="/perusahaan"
+              href="/list-perusahaan"
               className="rounded-lg px-2 py-2 hover:bg-slate-50"
             >
               Perusahaan

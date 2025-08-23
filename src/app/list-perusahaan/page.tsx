@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import HeaderHome from "@/app/components/homePage/headerHomepage";
 import SearchBar from "@/app/components/homePage/listPerusahaan/SearchBar";
-import Footer from "@/app/components/homePage/footer";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -19,7 +18,6 @@ export default function HomePage() {
         console.log("Search value:", value);
       }} />
 
-      <Footer />
     </>
   );
 }
