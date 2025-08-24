@@ -52,12 +52,12 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       { name: "Dashboard", href: "/dashboard-admin", icon: <Home size={20} /> },
       {
         name: "Kelola Akun",
-        href: "/dashboard-admin/users",
+        href: "/kelola-akun",
         icon: <Users size={20} />,
       },
       {
         name: "Laporan Umum",
-        href: "/dashboard-admin/reports",
+        href: "/laporan-umum",
         icon: <FileText size={20} />,
       },
     ],
@@ -156,6 +156,8 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         const isActive =
           item.href === "/pengaturan/data-diri"
             ? pathname.startsWith("/pengaturan")
+            : item.href.startsWith("/laporan-umum")
+            ? pathname.startsWith("/laporan-umum")
             : pathname === item.href;
 
         return (

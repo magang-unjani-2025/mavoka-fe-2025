@@ -69,8 +69,9 @@ export default function Footer() {
                   <div>
                     <h3 className="text-black font-semibold mb-4 tablet:mb-6">Help</h3>
                     <ul className="space-y-2 text-black text-sm">
-                      <li><a href="#">Customer Support</a></li>
-                      <li><a href="#">Privacy Policy</a></li>
+                      <li><a href="customer-support">Customer Support</a></li>
+                      <li><a href="privacy-policy">Privacy Policy</a></li>
+                      <li><a href="faq">FAQ</a></li>
                     </ul>
                   </div>
 
