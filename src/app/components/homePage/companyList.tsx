@@ -17,7 +17,8 @@ export default function CompanyList() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/user/show-akun/perusahaan");
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+        const response = await fetch(`${API_BASE_URL}/api/user/show-akun/perusahaan`);
         const json = await response.json();
         const verified = json.data.filter((item: Perusahaan) => item.status_verifikasi === "Terverifikasi");
         setCompanies(verified);
