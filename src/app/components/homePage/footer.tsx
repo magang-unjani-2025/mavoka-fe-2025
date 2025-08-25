@@ -57,11 +57,11 @@ export default function Footer() {
                     <h3 className="text-black font-semibold mb-4 tablet:mb-6">Quick link</h3>
                     <ul className="space-y-2 text-black text-sm">
                       <li><a href="/">Beranda</a></li>
-                      <li><a href="/tentang-mavoka">Tentang MAVOKA</a></li>
-                      <li><a href="#">Cari lowongan</a></li>
-                      <li><a href="#">Perusahaan</a></li>
-                      <li><a href="#">Lembaga Pelatihan</a></li>
-                      <li><a href="#">Sekolah</a></li>
+                      <li><a href="tentang-mavoka">Tentang MAVOKA</a></li>
+                      <li><a href="cari-lowongan">Cari lowongan</a></li>
+                      <li><a href="list-perusahaan">Perusahaan</a></li>
+                      <li><a href="lpk">Lembaga Pelatihan</a></li>
+                      <li><a href="sekolah">Sekolah</a></li>
                     </ul>
                   </div>
 
