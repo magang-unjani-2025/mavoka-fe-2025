@@ -1,7 +1,11 @@
 import axios from "axios";
 import { RegisterSekolah, RegisterSiswa, RegisterPerusahaan, RegisterLembaga, Login } from "@/types/user";
 
-const API_BASE_URL = "http://localhost:8000/api/user";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+API_BASE_URL = `${API_BASE_URL}/api/user`;
+
+console.log(API_BASE_URL); // Output: http://localhost:8000/api/user
+
 
 export const registerSekolah = (data: RegisterSekolah) => {
   return axios.post(`${API_BASE_URL}/register/sekolah`, data);
