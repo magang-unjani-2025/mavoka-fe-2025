@@ -6,8 +6,8 @@ import { TentangMavokaSection } from "@/app/components/homePage/tentang-kami/tex
 import { CardGrid } from "@/app/components/homePage/tentang-kami/infoCardSection";
 import { SejarahMavoka } from "../components/homePage/tentang-kami/sejarah";
 import { VisiMisi } from "../components/homePage/tentang-kami/visiMisi";
-import { CaraMendaftar } from "@/app/components/homePage/tentang-kami/caraMendaftar";
-import { FAQ } from "@/app/components/homePage/tentang-kami/faq";
+//import { CaraMendaftar } from "@/app/components/homePage/tentang-kami/caraMendaftar";
+//import { FAQ } from "@/app/components/homePage/tentang-kami/faq";
 import Footer from "@/app/components/homePage/footer";
 
 export default function TentangMavokaPage() {
@@ -28,10 +28,10 @@ export default function TentangMavokaPage() {
         <SejarahMavoka />
         <hr className="border-gray-300 max-w-[1000px] mx-auto" />
         <VisiMisi />
-        <hr className="border-gray-300 max-w-[1000px] mx-auto" />
+        {/*<hr className="border-gray-300 max-w-[1000px] mx-auto" />
         <CaraMendaftar />
         <hr className="border-gray-300 max-w-[1000px] mx-auto" />
-        <FAQ />
+        <FAQ />*/}
       </main>
       <Footer />
     </>

@@ -17,7 +17,6 @@ export default function CariLowonganPage() {
       <SearchLowonganBar />
       <CariLowonganResult />
       <Footer />
-      {/* Card-card lowongan nanti di sini */}
     </>
   );
 }

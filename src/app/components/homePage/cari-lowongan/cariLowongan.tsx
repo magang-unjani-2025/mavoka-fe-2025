@@ -64,8 +64,6 @@ useEffect(() => {
   fetchJobs();
 }, [searchParams]); // ✅ tambahkan ini agar filtering reaktif terhadap URL query
 
-
-
   const totalItems = jobs?.length || 0;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentJobs = jobs?.slice(startIndex, startIndex + itemsPerPage) || [];
