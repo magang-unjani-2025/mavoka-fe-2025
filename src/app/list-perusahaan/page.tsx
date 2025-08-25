@@ -5,6 +5,7 @@ import HeaderHome from "@/app/components/homePage/headerHomepage";
 import PerusahaanList from "@/app/components/homePage/listPerusahaan/companyList";
 import "aos/dist/aos.css";
 import Footer from "../components/homePage/footer";
+import { Suspense } from 'react';
 
 export default function HomePage() {
   const router = useRouter();
@@ -12,7 +13,9 @@ export default function HomePage() {
     <>
       <HeaderHome />
       <main>
-        <PerusahaanList />
+	<Suspense fallback={<div>Loading...</div>}>
+       	  <PerusahaanList />
+	</Suspense>
       </main>
       <Footer />
 

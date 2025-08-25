@@ -4,6 +4,7 @@ import HeaderHome from "../components/homePage/headerHomepage";
 import { SearchLowonganBar } from "@/app/components/homePage/cari-lowongan/SearchLowonganBar";
 import CariLowonganResult from "../components/homePage/cari-lowongan/cariLowongan";
 import Footer from "../components/homePage/footer";
+import { Suspense } from 'react';
 
 export default function CariLowonganPage() {
   return (
@@ -14,8 +15,12 @@ export default function CariLowonganPage() {
           Temukan Tempat Magang <br /> Impianmu di sini
         </h2>
       </section>
-      <SearchLowonganBar />
-      <CariLowonganResult />
+      <Suspense fallback={<div>Loading search...</div>}>
+        <SearchLowonganBar />
+      </Suspense>
+      <Suspense fallback={<div>Loading results...</div>}>
+        <CariLowonganResult />
+      </Suspense>
       <Footer />
     </>
   );
