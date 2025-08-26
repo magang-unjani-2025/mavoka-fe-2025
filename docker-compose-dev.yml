@@ -1,0 +1,25 @@
+name: mavoka-fe-2025-dev
+
+services:
+  app:
+    container_name: mavoka-fe-2025-dev
+    image: mavoka-fe-2025-dev-img:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    labels:
+      project: mavoka-fe-2025
+      environment: dev
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: 0.1
+          memory: 256M
+    networks:
+      mavoka_dev:
+        ipv4_address: 10.30.0.2
+
+networks:
+  mavoka_dev:
+    external: true
