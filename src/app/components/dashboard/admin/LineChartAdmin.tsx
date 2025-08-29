@@ -145,7 +145,7 @@ export default function LineChartAdmin() {
 
         <div className="flex gap-2">
           <select
-            className="border px-3 py-1 rounded-md text-sm text-[#0F67B1] border-[#0F67B1]"
+            className="border px-3 py-1 rounded-md text-sm sm:text-xs md:text-sm text-[#0F67B1] border-[#0F67B1]"
             value={xAxisType}
             onChange={(e) => setXAxisType(e.target.value as "month" | "year")}
           >
@@ -155,7 +155,7 @@ export default function LineChartAdmin() {
 
           {xAxisType === "month" && (
             <select
-              className="border px-3 py-1 rounded-md text-sm text-[#0F67B1] border-[#0F67B1]"
+              className="border px-3 py-1 rounded-md text-sm sm:text-xs md:text-sm text-[#0F67B1] border-[#0F67B1]"
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
             >
@@ -175,7 +175,30 @@ export default function LineChartAdmin() {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend verticalAlign="top" align="right" />
+          <Legend
+            verticalAlign="top"
+            align="right"
+            content={(props) => {
+              const { payload = [] } = props; 
+              return (
+                <ul className="flex flex-wrap gap-2 text-[10px] sm:text-xs md:text-sm">
+                  {payload.map((entry: any, index: number) => (
+                    <li
+                      key={`item-${index}`}
+                      className="flex items-center gap-1"
+                    >
+                      <span
+                        className="inline-block w-3 h-1 rounded"
+                        style={{ backgroundColor: entry.color }}
+                      />
+                      {entry.value}
+                    </li>
+                  ))}
+                </ul>
+              );
+            }}
+          />
+
           <Line
             type="monotone"
             dataKey="perusahaan"

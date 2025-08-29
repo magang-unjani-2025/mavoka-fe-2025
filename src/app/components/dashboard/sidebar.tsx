@@ -254,14 +254,6 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           }
         />
         {renderMenuList()}
-        <ConfirmLogoutDialog
-          open={logoutOpen}
-          onClose={() => setLogoutOpen(false)}
-          onConfirm={() => {
-            setLogoutOpen(false);
-            handleLogout();
-          }}
-        />
       </aside>
 
       <button
@@ -299,6 +291,19 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           </aside>
         </>
       )}
+
+      {logoutOpen && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"></div>
+      )}
+
+      <ConfirmLogoutDialog
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={() => {
+          setLogoutOpen(false);
+          handleLogout();
+        }}
+      />
     </>
   );
 }

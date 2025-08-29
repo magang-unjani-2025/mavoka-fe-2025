@@ -21,7 +21,7 @@ export default function FeedbackForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white border border-gray-300 rounded-xl p-6 mt-8 shadow-md">
-      <h2 className="text-lg font-semibold mb-2">Kirin Pesan Masukan</h2>
+      <h2 className="text-lg font-semibold mb-2">Kirim Pesan Masukan</h2>
       <p className="text-sm text-gray-600 mb-4">
         Pesan yang anda kirim sangat berarti untuk pengembangan layanan MAVOKA! Terima Kasih
       </p>

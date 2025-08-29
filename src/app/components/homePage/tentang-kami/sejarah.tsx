@@ -4,7 +4,7 @@ import { Container } from "@/app/components/Container";
 
 export function SejarahMavoka() {
   return (
-    <section className="py-12 bg-white">
+    <section id="sejarah" className="py-12 bg-white">
       <Container>
         <div className="flex flex-col-reverse lg:flex-row items-center gap-[101px]">
           {/* Teks di kiri */}
