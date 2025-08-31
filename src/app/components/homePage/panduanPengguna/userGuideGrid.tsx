@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Container } from "@/app/components/Container";
-
-export type RoleKey = "perusahaan" | "lpk" | "sekolah" | "siswa";
+import type { RoleKey } from "@/types/panduan";
 
 const roles: Array<{ key: RoleKey; label: string }> = [
   { key: "perusahaan", label: "Perusahaan" },
@@ -19,28 +18,16 @@ export function UserGuidesGrid() {
           Panduan Pengguna
         </h3>
 
-        {/* Mobile 1 kolom, Tablet+Desktop 2 kolom */}
+        {/* mobile: 1 kolom; tablet & desktop: 2 kolom */}
         <div className="grid gap-4 grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-2">
           {roles.map((r) => (
             <Link
               key={r.key}
-              href={`/panduan/${r.key}`}
-              className="group flex items-center justify-between rounded-lg border border-black/10 bg-white px-4 py-3 transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0F67B1]"
-            >
+              href={`/panduan-pengguna/${r.key}`}
+              className="group flex items-center justify-between rounded-lg border border-black/10 bg-white px-4 py-3 transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0F67B1]">
               <span className="truncate">{r.label}</span>
-              <svg
-                viewBox="0 0 24 24"
-                className="size-5 shrink-0 transition group-hover:translate-x-0.5"
-                aria-hidden="true"
-              >
-                <path
-                  d="M9 18l6-6-6-6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+              <svg viewBox="0 0 24 24" className="size-5 shrink-0">
+                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
           ))}
