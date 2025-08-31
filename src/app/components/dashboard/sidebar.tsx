@@ -153,12 +153,17 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
   const renderMenuList = () => (
     <nav className="mt-6 flex-1 flex flex-col space-y-3">
       {menus[role].map((item) => {
-        const isActive =
-          item.href === "/pengaturan/data-diri"
-            ? pathname.startsWith("/pengaturan")
-            : item.href.startsWith("/laporan-umum")
-            ? pathname.startsWith("/laporan-umum")
-            : pathname === item.href;
+        let isActive = false;
+
+        if (item.href === "/pengaturan-sekolah") {
+          isActive = pathname.startsWith("/pengaturan-sekolah");
+        } else if (item.href === "/pengaturan") {
+          isActive = pathname === "/pengaturan";
+        } else if (item.href === "/laporan-umum") {
+          isActive = pathname.startsWith("/laporan-umum");
+        } else {
+          isActive = pathname === item.href;
+        }
 
         return (
           <Link
@@ -193,6 +198,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           </Link>
         );
       })}
+
       <button
         type="button"
         onClick={() => setLogoutOpen(true)}

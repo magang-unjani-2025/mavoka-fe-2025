@@ -6,12 +6,14 @@ const roleMapping: Record<string, RoleType> = {
   perusahaan: "Perusahaan",
   sekolah: "Sekolah",
   lembaga: "Lembaga Pelatihan",
+  "lembaga pelatihan": "Lembaga Pelatihan",
   siswa: "Siswa",
 };
 
 export default function LaporanDetail({ params }: { params: { role: string } }) {
   const { role } = params;
-  const mappedRole = roleMapping[role.toLowerCase()] || "Sekolah";
+  const decodedRole = decodeURIComponent(role).toLowerCase();
+  const mappedRole = roleMapping[decodedRole] || "Sekolah";
 
   return (
     <DashboardLayout role="admin">

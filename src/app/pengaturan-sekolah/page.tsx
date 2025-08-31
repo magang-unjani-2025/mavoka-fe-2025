@@ -8,8 +8,8 @@ export default function ProfilePage() {
   const [form, setForm] = useState({
     nama_sekolah: "SMK Negeri 1 Yogyakarta",
     npsn: "20404180",
-    email: "smk1yogyakarta@yahoo.com",
-    phone: "(0274) 512148",
+    email: "smk1yogyakarta@gmail.com",
+    phone: "08123456789",
     website: "https://mail.smk1yogyayess.sch.id",
     address:
       "Jl. Kemetiran Kidul 35, Kecamatan Gedongtengen, Kota Yogyakarta, D.I. Yogyakarta.",

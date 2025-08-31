@@ -8,12 +8,11 @@ export default function PengaturanLayout({ children }: { children: React.ReactNo
 
   const tabs = [
     { href: "/pengaturan-sekolah", label: "Data Sekolah" },
-    { href: "/pengaturan/akun", label: "Akun" },
-    { href: "/pengaturan/sekolah", label: "Sekolah" },
+    { href: "/pengaturan-sekolah/akun-sekolah", label: "Akun Sekolah" },
   ];
 
   return (
-    <DashboardLayout2 role="siswa">
+    <DashboardLayout2 role="sekolah">
       <div className="flex flex-col h-full p-6">
         <div className="flex border-b border-gray-300 bg-white shrink-0">
           {tabs.map((tab) => (
