@@ -9,7 +9,7 @@ export default function FAQPage() {
     <>
       <HeaderHome />
        <HeroFaq
-        title="FAQ"
+        title="Panduan & FAQ"
         imageSrc="/img/GAMBAR-PERUSAHAAN.png" // pastikan ada gambar ini di public/images
       />
       <UserGuidesGrid />
