@@ -119,7 +119,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pengaturan",
-        href: "/dashboard-sekolah/pengaturan",
+        href: "/pengaturan-sekolah",
         icon: <MdOutlineSettings size={20} />,
       },
     ],
