@@ -32,7 +32,10 @@ export default function HeaderHome() {
 
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 tablet:px-10 desktop:px-[70px] h-16">
+      <div
+        className="mx-auto w-full max-w-content flex items-center justify-between h-16 
+  px-5 tablet:px-10 desktop:px-[70px]"
+      >
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/img/logo-fit-academy.png"
@@ -80,8 +83,7 @@ export default function HeaderHome() {
           </button>
         </div>
 
-        {/* Hamburger tablet & mobile */}
-        <div className="flex items-center gap-3 desktop:hidden">
+        <div className="flex items-center desktop:hidden">
           <button
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -100,7 +102,7 @@ export default function HeaderHome() {
         }`}
       >
         <div className="bg-white shadow-xl border-t border-black/10">
-          <div className="mx-auto max-w-screen-xl px-4 tablet:px-10 desktop:px-[70px] py-4 max-h-[calc(100vh-4rem)] overflow-auto">
+          <div className="mx-auto w-full max-w-content px-5 tablet:px-10 desktop:px-[70px] py-4 max-h-[calc(100vh-4rem)] overflow-auto">
             <div className="flex flex-col gap-2 py-2 text-sm font-medium font-poppins">
               <Link
                 href="/"
@@ -124,25 +126,41 @@ export default function HeaderHome() {
 
               <Link
                 href="/lowongan"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/lowongan")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-slate-50"
+                }`}
               >
                 Cari Lowongan
               </Link>
               <Link
                 href="/list-perusahaan"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/list-perusahaan")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-slate-50"
+                }`}
               >
                 Perusahaan
               </Link>
               <Link
                 href="/lpk"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/lpk")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-slate-50"
+                }`}
               >
                 Lembaga Pelatihan
               </Link>
               <Link
                 href="/sekolah"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/sekolah")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-slate-50"
+                }`}
               >
                 Sekolah
               </Link>

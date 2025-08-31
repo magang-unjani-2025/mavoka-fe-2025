@@ -16,7 +16,7 @@ type HeroFaqProps = {
 };
 
 export function HeroFaq({
-  title = "FAQ",
+  title = "Panduan & FAQ",
   imageSrc = "/images/faq-hero.jpg",
   imageAlt = "FAQ hero background",
   as: Tag = "section",
@@ -49,8 +49,7 @@ export function HeroFaq({
 
       <Container className="absolute inset-0">
         <div className="grid h-full place-items-center">
-          <h1 className="text-white tracking-tight text-center font-bold
-                         text-3xl tablet:text-4xl desktop:text-5xl">
+          <h1 className="text-white tracking-tight text-center ">
             {title}
           </h1>
         </div>

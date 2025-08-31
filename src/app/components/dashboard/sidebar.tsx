@@ -127,7 +127,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       { name: "Dashboard", href: "/dashboard-siswa", icon: <Home size={20} /> },
       {
         name: "Pengajuan Magang",
-        href: "/pengajuan-magang",
+        href: "/dashboard-siswa/pengajuan-magang",
         icon: <HiOutlineBriefcase size={20} />,
       },
       {
