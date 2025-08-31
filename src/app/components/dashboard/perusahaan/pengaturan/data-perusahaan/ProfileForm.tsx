@@ -1,4 +1,5 @@
 import InputField from "./InputField";
+import TextareaField from "./TextareaField";
 import SelectField from "./SelectField";
 
 interface ProfileFormProps {
@@ -18,56 +19,35 @@ export default function ProfileForm({ form, handleChange }: ProfileFormProps) {
       {fieldWrapper(
         <InputField
           label="Nama Lengkap"
-          name="fullName"
-          value={form.fullName}
+          name="nama_perusahaan"
+          value={form.nama_perusahaan}
           onChange={handleChange}
-          disabled={true}
-        />,
-        2
-      )}
-      {fieldWrapper(
-        <InputField
-          label="Email"
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="Contoh: Lisaaja@gmail.com"
           disabled={true}
         />,
         2
       )}
 
       {fieldWrapper(
-        <SelectField
-          label="Jenis Kelamin"
-          name="gender"
-          value={form.gender}
-          onChange={handleChange}
-          options={["Perempuan", "Laki-laki"]}
-        />,
-        1
-      )}
-      {fieldWrapper(
         <InputField
-          label="Tanggal Lahir"
-          name="birthDate"
-          type="date"
-          value={form.birthDate}
-          onChange={handleChange}
-        />,
-        1
-      )}
-
-      {fieldWrapper(
-        <InputField
-          label="Nomor Handphone"
-          name="phone"
-          value={form.phone}
+          label="Bidang Usaha"
+          name="bidang_usaha"
+          value={form.bidang_usaha}
           onChange={handleChange}
         />,
         2
       )}
+
+      {fieldWrapper(
+        <TextareaField
+          label="Deskripsi Perusahaan"
+          name="deskripsi_perusahaan"
+          value={form.deskripsi_perusahaan}
+          onChange={handleChange}
+          placeholder="Tuliskan deskripsi perusahaan..."
+        />,
+        2
+      )}
+
       {fieldWrapper(
         <InputField
           label="Alamat"
@@ -84,7 +64,7 @@ export default function ProfileForm({ form, handleChange }: ProfileFormProps) {
           name="city"
           value={form.city}
           onChange={handleChange}
-          options={["Bandung", "Semarang", "Surabaya",]}
+          options={["Bandung", "Semarang", "Surabaya"]}
         />,
         1
       )}
@@ -97,6 +77,29 @@ export default function ProfileForm({ form, handleChange }: ProfileFormProps) {
           options={["Jawa Barat", "Jawa Tengah", "Jawa Timur"]}
         />,
         1
+      )}
+
+      {fieldWrapper(
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="Contoh: Lisaaja@gmail.com"
+          disabled={true}
+        />,
+        2
+      )}
+
+      {fieldWrapper(
+        <InputField
+          label="Nomor Handphone"
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+        />,
+        2
       )}
     </form>
   );

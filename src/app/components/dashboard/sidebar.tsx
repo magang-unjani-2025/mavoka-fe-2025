@@ -11,6 +11,7 @@ import {
   HiOutlineClipboardList,
 } from "react-icons/hi";
 import { MdOutlineSettings } from "react-icons/md";
+import { LuNotepadText } from "react-icons/lu";
 import * as React from "react";
 import ConfirmLogoutDialog from "./popupLogout";
 import { useMedia } from "./useMedia";
@@ -68,14 +69,24 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         icon: <Home size={20} />,
       },
       {
-        name: "Lowongan",
-        href: "/dashboard-perusahaan/jobs",
+        name: "Upload Lowongan",
+        href: "/jobs",
         icon: <FileText size={20} />,
       },
       {
         name: "Pelamar",
-        href: "/dashboard-perusahaan/applicants",
+        href: "/applicants",
         icon: <Users size={20} />,
+      },
+      {
+        name: "Monitoring",
+        href: "/monitoring",
+        icon: <LuNotepadText size={20} />,
+      },
+      {
+        name: "Pengaturan",
+        href: "/pengaturan-perusahaan",
+        icon: <MdOutlineSettings size={20} />,
       },
     ],
     lpk: [
@@ -161,6 +172,8 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           isActive = pathname === "/pengaturan";
         } else if (item.href === "/laporan-umum") {
           isActive = pathname.startsWith("/laporan-umum");
+        } else if (item.href === "/pengaturan-perusahaan") {
+          isActive = pathname.startsWith("/pengaturan-perusahaan");
         } else {
           isActive = pathname === item.href;
         }
