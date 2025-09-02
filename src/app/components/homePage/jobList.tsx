@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import JobCard from "./jobCard";
 import { ArrowRight } from "lucide-react";
 import { TampilAllLowongan } from "@/lib/api-lowongan";
+import { Container } from "@/app/components/Container"; // ✅ import Container
 
 type Job = {
   id: number;
@@ -38,37 +39,45 @@ export default function JobList() {
   }, []);
 
   return (
-    <section className="max-w-6xl mx-auto mt-10 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">
-          Daftar <span className="text-blue-600">Lowongan</span>
-        </h2>
-        <a href="/jobs" className="text-blue-600 hover:underline flex items-center gap-1 text-sm">
-          Lihat semua lowongan <ArrowRight size={20} />
-        </a>
-      </div>
-
-      {loading ? (
-        <p>Memuat lowongan...</p>
-      ) : (
-        <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
-          {jobs.slice(0, 8).map((job) => (
-            <JobCard
-              key={job.id}
-              companyLogo={job.perusahaan.logo_perusahaan ?? null}
-              title={job.judul_lowongan}
-              company={job.perusahaan.nama_perusahaan}
-              location={job.lokasi_penempatan}
-              positions={job.kuota}
-              closingDate={new Date(job.deadline_lamaran).toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            />
-          ))}
+    <section className="mt-10">
+      <Container>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold">
+            Daftar <span className="text-blue-600">Lowongan</span>
+          </h2>
+          <a
+            href="/jobs"
+            className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
+          >
+            Lihat semua lowongan <ArrowRight size={20} />
+          </a>
         </div>
-      )}
+
+        {loading ? (
+          <p>Memuat lowongan...</p>
+        ) : (
+          <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
+            {jobs.slice(0, 8).map((job) => (
+              <JobCard
+                key={job.id}
+                companyLogo={job.perusahaan.logo_perusahaan ?? null}
+                title={job.judul_lowongan}
+                company={job.perusahaan.nama_perusahaan}
+                location={job.lokasi_penempatan}
+                positions={job.kuota}
+                closingDate={new Date(job.deadline_lamaran).toLocaleDateString(
+                  "id-ID",
+                  {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  }
+                )}
+              />
+            ))}
+          </div>
+        )}
+      </Container>
     </section>
   );
 }
