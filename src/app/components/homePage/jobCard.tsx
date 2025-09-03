@@ -20,12 +20,17 @@ export default function JobCard({
   closingDate,
 }: JobCardProps) {
   const router = useRouter();
+
   return (
-    <div className="border p-4 shadow-md hover:shadow-lg transition cursor-pointer">
-      <h3 className="text-xl text-[#25324B]">{title}</h3>
+    <div className="border p-4 shadow-md hover:shadow-lg transition cursor-pointer h-full flex flex-col">
+      {/* Konten atas (boleh panjang, akan membungkus) */}
+      <h3 className="text-xl text-[#25324B] font-semibold whitespace-normal break-words">
+        {title}
+      </h3>
       <p className="text-xs text-[#AA999F] font-semibold mb-2">
         {positions} Posisi
       </p>
+
       <div className="w-12 h-12 overflow-hidden flex items-center justify-center mb-2">
         {companyLogo ? (
           <img
@@ -38,10 +43,16 @@ export default function JobCard({
         )}
       </div>
 
-      <p className="text-[#C7C9D9]">
-        {company} – {location}
+      <p className="text-[#8C90A4] whitespace-normal break-words">
+        <span className="font-medium text-[#5A607F]">{company}</span>
+        {" — "}
+        {location}
       </p>
 
+      {/* Spacer: dorong footer ke bawah agar sejajar antar card */}
+      <div className="mt-auto" />
+
+      {/* Footer (selalu sejajar) */}
       <hr className="border-gray-200 mb-3" />
 
       <div className="bg-[#F9F9F9] rounded-md px-3 py-2">
@@ -51,14 +62,12 @@ export default function JobCard({
         </p>
       </div>
 
-      <div className="flex justify-center w-full">
-        <button
-          onClick={() => router.push("/jobs/email-marketing")}
-          className="bg-[#0F67B1] text-white font-medium w-full shadow-md hover:opacity-90 transition mt-3 flex items-center justify-center gap-2"
-        >
-          Lihat Detail <ArrowRight size={20} />
-        </button>
-      </div>
+      <button
+        onClick={() => router.push("/jobs/email-marketing")}
+        className="bg-[#0F67B1] text-white font-medium w-full shadow-md hover:opacity-90 transition mt-3 flex items-center justify-center gap-2 py-2 rounded-md"
+      >
+        Lihat Detail <ArrowRight size={20} />
+      </button>
     </div>
   );
 }
