@@ -4,7 +4,6 @@ import {
   HiAcademicCap,
   HiUserGroup,
 } from "react-icons/hi";
-import { Container } from "@/app/components/Container"; // ✅ pakai Container
 
 function formatCount(count: number, minValue?: number) {
   return minValue && count >= minValue ? `${minValue}+` : `${count}`;
@@ -48,7 +47,6 @@ export default function StatsSection({
 
   return (
     <section className="mt-10">
-      <Container>
         <div className="relative overflow-hidden rounded-[15px] bg-[#0F67B1] p-6 tablet:p-8 text-white">
           {/* Dekorasi: tampil hanya di desktop */}
           <svg
@@ -130,7 +128,6 @@ export default function StatsSection({
             ))}
           </div>
         </div>
-      </Container>
     </section>
   );
 }

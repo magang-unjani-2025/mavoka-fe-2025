@@ -26,7 +26,7 @@ function useBreakpoint() {
 
 export default function TrainingCarousel() {
   const trainingCenters = [
-    { logo: "", name: "Vayond" },
+    { logo: "", name: "Vayond"},
     { logo: "", name: "Indobot Academy" },
     { logo: "", name: "Koding Next" },
     { logo: "", name: "Adirim" },
@@ -42,7 +42,7 @@ export default function TrainingCarousel() {
   const breakpoint = useBreakpoint();
 
   const getVisibleLogos = () => {
-    let range = 4; // default desktop
+    let range = 4; //dekstop
     if (breakpoint === "tablet") range = 2;
     if (breakpoint === "mobile") range = 1;
 
@@ -129,14 +129,13 @@ export default function TrainingCarousel() {
         </p>
 
         <div
-          className="flex gap-6 justify-center overflow-visible select-none"
+          className="flex gap-8 justify-center overflow-visible select-none"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           style={{
             padding: "20px 0",
             minHeight: "140px",
-            transform: `translateX(-${currentIndex * 2}px)`,
           }}
         >
           {getVisibleLogos().map((center, idx) => (

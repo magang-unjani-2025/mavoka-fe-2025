@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Container } from "@/app/components/Container";
 
 export default function HeaderHome() {
   const router = useRouter();
@@ -22,8 +23,8 @@ export default function HeaderHome() {
       <Link
         href={path}
         className={`transition-colors duration-200 ${
-          isActive ? "text-[#0F67B1]" : "hover:text-[#0F67B1]"
-        }`}
+          isActive ? "text-[#0F67B1]" : "hover:text-[#0F67B1]"}
+        `}
       >
         {label}
       </Link>
@@ -32,10 +33,7 @@ export default function HeaderHome() {
 
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
-      <div
-        className="mx-auto w-full max-w-content flex items-center justify-between h-16 
-  px-5 tablet:px-10 desktop:px-[70px]"
-      >
+      <Container className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/img/logo-fit-academy.png"
@@ -83,6 +81,7 @@ export default function HeaderHome() {
           </button>
         </div>
 
+        {/* Toggle Mobile */}
         <div className="flex items-center desktop:hidden">
           <button
             aria-label="Toggle menu"
@@ -93,16 +92,16 @@ export default function HeaderHome() {
             <Hamburger open={open} />
           </button>
         </div>
-      </div>
+      </Container>
 
-      {/* ===== Dropdown (tanpa blur/hitam) ===== */}
+      {/* Dropdown Mobile */}
       <div
         className={`desktop:hidden ${
           open ? "fixed inset-x-0 top-16 z-50" : "hidden"
         }`}
       >
         <div className="bg-white shadow-xl border-t border-black/10">
-          <div className="mx-auto w-full max-w-content px-5 tablet:px-10 desktop:px-[70px] py-4 max-h-[calc(100vh-4rem)] overflow-auto">
+          <Container className="py-4 max-h-[calc(100vh-4rem)] overflow-auto">
             <div className="flex flex-col gap-2 py-2 text-sm font-medium font-poppins">
               <Link
                 href="/"
@@ -112,7 +111,6 @@ export default function HeaderHome() {
               >
                 Beranda
               </Link>
-
               <Link
                 href="/tentang-mavoka"
                 className={`rounded-lg px-2 py-2 ${
@@ -123,7 +121,6 @@ export default function HeaderHome() {
               >
                 Tentang MAVOKA
               </Link>
-
               <Link
                 href="/lowongan"
                 className={`rounded-lg px-2 py-2 ${
@@ -181,7 +178,7 @@ export default function HeaderHome() {
                 </button>
               </div>
             </div>
-          </div>
+          </Container>
         </div>
       </div>
     </header>

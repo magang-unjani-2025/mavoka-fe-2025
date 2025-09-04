@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CompanyCard from "./companyCard";
 import { ArrowRight } from "lucide-react";
-import { Container } from "@/app/components/Container"; // ✅ pakai Container
+import { Container } from "@/app/components/Container";
 
 type Perusahaan = {
   id: number;

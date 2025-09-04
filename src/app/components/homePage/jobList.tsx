@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import JobCard from "./jobCard";
 import { ArrowRight } from "lucide-react";
 import { TampilAllLowongan } from "@/lib/api-lowongan";
-import { Container } from "@/app/components/Container"; // ✅ import Container
+import { Container } from "@/app/components/Container";
 
 type Job = {
   id: number;

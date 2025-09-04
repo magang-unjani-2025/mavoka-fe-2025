@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { HiUser } from "react-icons/hi";
-import { Container } from "@/app/components/Container"; // ✅ pakai Container
+import { Container } from "@/app/components/Container";
 
 export default function SmkLogoMarquee() {
   const smkLogos = [
@@ -25,7 +25,7 @@ export default function SmkLogoMarquee() {
       </Container>
 
       <div className="w-full bg-blue-100 py-8">
-        <Container fullWidth>
+        <Container>
           <div className="overflow-hidden w-full">
             <div className="flex gap-8 tablet:gap-12 animate-marquee hover:[animation-play-state:paused]">
               {logos.map((item, idx) => (
