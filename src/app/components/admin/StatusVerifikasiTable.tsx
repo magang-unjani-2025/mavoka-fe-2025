@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 
 interface UserData {
-  no: number;
   tanggal: string;
   username: string;
   email: string;
@@ -14,7 +13,6 @@ interface UserData {
 
 const initialData: UserData[] = [
   {
-    no: 1,
     tanggal: "14/07/2026",
     username: "Inkaofficial",
     email: "Inkajkt@inka.co.id",
@@ -23,7 +21,6 @@ const initialData: UserData[] = [
     label: "Belum",
   },
   {
-    no: 2,
     tanggal: "14/07/2026",
     username: "Mandiri Tbk",
     email: "Mandiricare@bankmandiri.co.id",
@@ -32,7 +29,6 @@ const initialData: UserData[] = [
     label: "Belum",
   },
   {
-    no: 3,
     tanggal: "14/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -41,7 +37,6 @@ const initialData: UserData[] = [
     label: "Belum",
   },
   {
-    no: 4,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -50,7 +45,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 5,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -59,7 +53,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 6,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -68,7 +61,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 7,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -77,7 +69,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 8,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -86,7 +77,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 9,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -95,7 +85,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 10,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -104,7 +93,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 14,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -113,7 +101,6 @@ const initialData: UserData[] = [
     label: "Sudah",
   },
   {
-    no: 15,
     tanggal: "13/07/2026",
     username: "SMKN1Yogyakarta",
     email: "smknegerilyogya@gmail.com",
@@ -189,11 +176,16 @@ export default function StatusVerifikasiTable() {
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item) => (
-              <tr key={item.no} className="hover:bg-gray-50 text-xs text-center">
-                <td className="px-4 py-2 border-t">{item.no}</td>
+            {currentData.map((item, index) => (
+              <tr
+                key={startIndex + index}
+                className="hover:bg-gray-50 text-xs text-center"
+              >
+                <td className="px-4 py-2 border-t">{startIndex + index + 1}</td>
                 <td className="px-4 py-2 border-t">{item.tanggal}</td>
-                <td className="px-4 py-2 border-t text-left">{item.username}</td>
+                <td className="px-4 py-2 border-t text-left">
+                  {item.username}
+                </td>
                 <td className="px-4 py-2 border-t text-left">{item.email}</td>
                 <td className="px-4 py-2 border-t">
                   <a
@@ -250,7 +242,7 @@ export default function StatusVerifikasiTable() {
         </table>
       </div>
 
-      <div className="py-2 px-3 flex items-center gap-4 mt-4 text-xs text-white bg-[#0F67B1] rounded-b-xl justify-end">
+      <div className="py-2 px-3 flex items-center gap-4 mt-4 text-xs rounded-b-xl justify-end">
         <div className="flex items-center gap-2">
           <span>Rows per page:</span>
           <select

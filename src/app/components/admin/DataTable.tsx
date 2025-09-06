@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 export type RoleType = "Lembaga Pelatihan" | "Sekolah" | "Perusahaan" | "Siswa";
 
 interface TableData {
-  no: number;
   col1: string;
   col2: string;
   col3?: string;
@@ -24,7 +23,6 @@ interface DataTableProps {
 const dataByRole: Record<RoleType, TableData[]> = {
   "Lembaga Pelatihan": [
     {
-      no: 1,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -33,7 +31,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 2,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -42,7 +39,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 3,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -51,7 +47,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 4,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -60,7 +55,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 5,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -69,7 +63,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 6,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -78,7 +71,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 7,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -87,7 +79,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 8,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -96,7 +87,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 9,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -105,7 +95,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 10,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -114,7 +103,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 11,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -123,7 +111,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 12,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -132,7 +119,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 13,
       col1: "Bank Mandiri KC Yogyakarta",
       col2: "Inkajkt@inka.Co.id",
       col3: "Kategori LP",
@@ -141,7 +127,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 14,
       col1: "Grand Mercure Solo Baru",
       col2: "gm@hotel.com",
       col3: "Hotel Training",
@@ -152,7 +137,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
   ],
   Sekolah: [
     {
-      no: 1,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -160,16 +144,14 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 2,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
       col4: "98",
-      
+
       year: "2025",
     },
     {
-      no: 3,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -177,7 +159,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 4,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -185,7 +166,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 5,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -193,7 +173,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 6,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -201,7 +180,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 7,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -209,7 +187,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 8,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -217,7 +194,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 9,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -225,7 +201,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 10,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -233,7 +208,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 11,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -241,7 +215,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 12,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -249,7 +222,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 13,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -257,7 +229,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 14,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -265,7 +236,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 15,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -273,7 +243,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 16,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -281,7 +250,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 17,
       col1: "SMKN 1 Yogyakarta",
       col2: "smkn1@gmail.com",
       col3: "987654321",
@@ -289,7 +257,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 18,
       col1: "SMAN 5 Jakarta",
       col2: "sman5@gmail.com",
       col3: "123456789",
@@ -299,7 +266,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
   ],
   Perusahaan: [
     {
-      no: 1,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -308,7 +274,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 2,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -317,7 +282,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 3,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -326,7 +290,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 4,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -335,7 +298,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 5,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -344,7 +306,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 6,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -353,7 +314,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 7,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -362,7 +322,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 8,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -371,7 +330,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 9,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -380,7 +338,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 10,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -389,7 +346,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 11,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -398,7 +354,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 12,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -407,7 +362,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 13,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -416,7 +370,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 14,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -425,7 +378,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 15,
       col1: "PT INKA",
       col2: "contact@inka.co.id",
       col3: "Transportasi",
@@ -434,7 +386,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 16,
       col1: "Bank Mandiri",
       col2: "mandiri@bank.co.id",
       col3: "Perbankan",
@@ -445,7 +396,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
   ],
   Siswa: [
     {
-      no: 1,
       col1: "Andi Pratama",
       col2: "andi@gmail.com",
       col3: "RPL",
@@ -453,7 +403,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 2,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -461,7 +410,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 3,
       col1: "Andi Pratama",
       col2: "andi@gmail.com",
       col3: "RPL",
@@ -469,7 +417,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 4,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -477,7 +424,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2025",
     },
     {
-      no: 5,
       col1: "Andi Pratama",
       col2: "andi@gmail.com",
       col3: "RPL",
@@ -485,7 +431,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 6,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -493,7 +438,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 7,
       col1: "Andi Pratama",
       col2: "andi@gmail.com",
       col3: "RPL",
@@ -501,7 +445,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 8,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -509,7 +452,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2026",
     },
     {
-      no: 9,
       col1: "Andi Pratama",
       col2: "andi@gmail.com",
       col3: "RPL",
@@ -517,7 +459,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 10,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -525,7 +466,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 11,
       col1: "Andi Pratama",
       col2: "andi@gmail.com",
       col3: "RPL",
@@ -533,7 +473,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 12,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -541,7 +480,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 13,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -549,7 +487,6 @@ const dataByRole: Record<RoleType, TableData[]> = {
       year: "2027",
     },
     {
-      no: 14,
       col1: "Budi Santoso",
       col2: "budi@gmail.com",
       col3: "Multimedia",
@@ -672,11 +609,15 @@ export default function DataTable({ role }: DataTableProps) {
             <tbody>
               {currentData.length > 0 ? (
                 currentData.map((item, index) => (
-                  <tr key={item.no} className="hover:bg-gray-50 text-xs text-center">
-                    <td className="px-4 py-2 border-t">
-                      {startIndex + index + 1}
+                  <tr
+                    key={startIndex + index}
+                    className="hover:bg-gray-50 text-xs text-center"
+                  >
+                    <td className="px-4 py-2 border-t">{index + 1}</td>
+
+                    <td className="px-4 py-2 border-t text-left">
+                      {item.col1}
                     </td>
-                    <td className="px-4 py-2 border-t text-left">{item.col1}</td>
                     <td className="px-4 py-2 border-t underline">
                       {item.col2}
                     </td>
@@ -706,7 +647,7 @@ export default function DataTable({ role }: DataTableProps) {
         </div>
 
         {/* Pagination */}
-        <div className="py-2 px-3 flex items-center gap-4 mt-4 text-xs text-white bg-[#0F67B1] rounded-b-xl justify-end">
+        <div className="py-2 px-3 flex items-center gap-4 mt-4 text-xs rounded-b-xl justify-end">
           <div className="flex items-center gap-2">
             <span>Rows per page:</span>
             <select

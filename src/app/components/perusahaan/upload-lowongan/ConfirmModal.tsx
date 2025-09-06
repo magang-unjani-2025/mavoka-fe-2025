@@ -1,18 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { FiLogOut } from "react-icons/fi"; 
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  message?: string;
 };
 
-export default function ConfirmLogoutDialog({
+export default function ConfirmModal({
   open,
   onClose,
   onConfirm,
+  message = "Apakah Anda yakin?",
 }: Props) {
   React.useEffect(() => {
     if (!open) return;
@@ -25,31 +26,30 @@ export default function ConfirmLogoutDialog({
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       <div className="absolute inset-0 flex items-center justify-center p-4">
         <div
           role="dialog"
           aria-modal="true"
-          className="w-full max-w-md rounded-xl border-4 border-[#0F67B1] bg-white shadow-xl"
+          className="w-full max-w-md rounded-2xl border-4 border-[#0F67B1] bg-white shadow-xl"
         >
           <div className="p-8 text-center">
-            <div className="flex justify-center mb-4">
-              <FiLogOut className="text-[#BA0000]" size={48} />
-            </div>
-
-            <p className="font-semibold text-[#858585]">Apakah Anda Yakin Ingin Keluar ?</p>
+            <p>{message}</p>
 
             <div className="mt-8 flex items-center justify-center gap-5">
               <button
                 onClick={onClose}
-                className="flex items-center justify-center h-11 w-48 rounded-md border border-[#0F67B1] text-[#0F67B1] hover:bg-gray-100 font-semibold transition"
+                className="flex items-center justify-center px-5 py-2 rounded-md border border-[#0F67B1] text-[#0F67B1] font-semibold transition hover:bg-[#0F67B1]/10"
               >
                 Tidak
               </button>
               <button
                 onClick={onConfirm}
-                className="flex items-center justify-center h-11 w-36 rounded-md text-white bg-red-500 font-semibold hover:bg-red-600 transition"
+                className="flex items-center justify-center px-5 py-2 rounded-md bg-[#0F67B1] text-white font-semibold hover:bg-[#0c599b] transition"
               >
                 Ya
               </button>

@@ -70,7 +70,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Upload Lowongan",
-        href: "/jobs",
+        href: "/upload-lowongan",
         icon: <FileText size={20} />,
       },
       {
@@ -93,17 +93,17 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       { name: "Beranda", href: "/dashboard-lpk", icon: <Home size={20} /> },
       {
         name: "Upload Pelatihan",
-        href: "/dashboard-lpk/pelatihan",
+        href: "/upload-pelatihan",
         icon: <HiOutlineDocumentAdd size={20} />,
       },
       {
         name: "Penilaian Siswa",
-        href: "/dashboard-lpk/penilaian",
+        href: "/penilaian",
         icon: <HiOutlineClipboardList size={20} />,
       },
       {
         name: "Pengaturan",
-        href: "/dashboard-sekolah/pengaturan",
+        href: "/pengaturan-lpk",
         icon: <MdOutlineSettings size={20} />,
       },
     ],
@@ -148,7 +148,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pengaturan",
-        href: "/pengaturan/data-diri",
+        href: "/pengaturan",
         icon: <MdOutlineSettings size={20} />,
       },
     ],
@@ -169,11 +169,15 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         if (item.href === "/pengaturan-sekolah") {
           isActive = pathname.startsWith("/pengaturan-sekolah");
         } else if (item.href === "/pengaturan") {
-          isActive = pathname === "/pengaturan";
+          isActive = pathname.startsWith("/pengaturan");
         } else if (item.href === "/laporan-umum") {
           isActive = pathname.startsWith("/laporan-umum");
         } else if (item.href === "/pengaturan-perusahaan") {
           isActive = pathname.startsWith("/pengaturan-perusahaan");
+        } else if (item.href === "/upload-lowongan") {
+          isActive = pathname.startsWith("/upload-lowongan");
+        } else if (item.href === "/upload-pelatihan") {
+          isActive = pathname.startsWith("/upload-pelatihan");
         } else {
           isActive = pathname === item.href;
         }
