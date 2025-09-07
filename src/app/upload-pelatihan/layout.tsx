@@ -50,7 +50,7 @@ export default function UploadPelatihanLayout({
             </div>
 
             <Link
-              href="/upload-Pelatihan/Pelatihan-baru"
+              href="/upload-pelatihan/pelatihan-baru"
               className="px-4 py-2 rounded-lg bg-[#0F67B1] text-white font-medium hover:bg-[#0d5692] transition"
             >
               + Buat Pelatihan Baru

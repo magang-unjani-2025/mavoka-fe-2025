@@ -4,7 +4,7 @@ import TableLowonganTerpasang from "@/app/components/upload-lowongan-pelatihan/T
 export default function ProfilePage() {
   return (
     <div className="p-4">
-      <TableLowonganTerpasang role="perusahaan" />
+      <TableLowonganTerpasang role="lpk" />
     </div>
   );
 }

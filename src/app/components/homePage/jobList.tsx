@@ -60,6 +60,7 @@ export default function JobList() {
             {jobs.slice(0, 8).map((job) => (
               <JobCard
                 key={job.id}
+                id={job.id}
                 companyLogo={job.perusahaan.logo_perusahaan ?? null}
                 title={job.judul_lowongan}
                 company={job.perusahaan.nama_perusahaan}

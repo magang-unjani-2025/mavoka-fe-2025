@@ -68,7 +68,7 @@ export default function LpkList() {
     if (!q) return data;
     const s = q.toLowerCase();
     return data.filter((d) =>
-      [d.name, d.address, d.website ?? ""].some((v) => v.toLowerCase().includes(s))
+      [d.name, d.address, d.web_lembaga ?? ""].some((v) => v.toLowerCase().includes(s))
     );
   }, [data, q]);
 

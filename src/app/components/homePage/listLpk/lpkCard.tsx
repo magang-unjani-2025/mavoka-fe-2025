@@ -15,7 +15,7 @@ export default function LpkCard({ data }: Props) {
     router.push(data.slug ? `/lpk/${data.slug}` : `/lpk/${data.id}`);
   }, [router, data.slug, data.id]);
 
-  const websiteHost = data.website?.replace(/^https?:\/\//i, "");
+  const websiteHost = data.web_lembaga?.replace(/^https?:\/\//i, "");
 
   return (
     <article
@@ -75,13 +75,13 @@ export default function LpkCard({ data }: Props) {
         </div>
 
         {/* Website */}
-        {data.website && (
+        {data.web_lembaga && (
           <div className="mt-2 flex items-start gap-2 text-[#94A3B8]">
             <span className="mt-[2px]" aria-hidden>
               <HiOutlineLink size={18} />
             </span>
             <a
-              href={data.website}
+              href={data.web_lembaga}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[13px] text-[#94A3B8] hover:underline truncate max-w-[260px]"

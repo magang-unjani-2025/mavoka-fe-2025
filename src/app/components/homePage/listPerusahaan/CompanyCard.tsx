@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Company } from "@/types/company";
 
-const LOGO_H = 72; // px tinggi area logo
+const LOGO_H = 72;
 
 type Props = { data: Company };
 
@@ -14,7 +14,7 @@ export default function CompanyCard({ data }: Props) {
   const router = useRouter();
   const goDetail = useCallback(() => {
     router.push(
-      data.slug ? `/perusahaan/${data.slug}` : `/perusahaan/${data.id}`
+      data.slug ? `/list-perusahaan/${data.slug}` : `/list-perusahaan/${data.id}`
     );
   }, [router, data.slug, data.id]);
 

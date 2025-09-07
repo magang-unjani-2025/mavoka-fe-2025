@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { HiUser } from "react-icons/hi";
 
 type JobCardProps = {
+  id: number | string; // ⬅️ tambahin id
   companyLogo: string | null;
   title: string;
   company: string;
@@ -12,6 +13,7 @@ type JobCardProps = {
 };
 
 export default function JobCard({
+  id,
   companyLogo,
   title,
   company,
@@ -23,7 +25,6 @@ export default function JobCard({
 
   return (
     <div className="border p-4 shadow-md hover:shadow-lg transition cursor-pointer h-full flex flex-col">
-      {/* Konten atas (boleh panjang, akan membungkus) */}
       <h3 className="text-xl text-[#25324B] font-semibold whitespace-normal break-words">
         {title}
       </h3>
@@ -49,10 +50,8 @@ export default function JobCard({
         {location}
       </p>
 
-      {/* Spacer: dorong footer ke bawah agar sejajar antar card */}
       <div className="mt-auto" />
 
-      {/* Footer (selalu sejajar) */}
       <hr className="border-gray-200 mb-3" />
 
       <div className="bg-[#F9F9F9] rounded-md px-3 py-2">
@@ -63,7 +62,7 @@ export default function JobCard({
       </div>
 
       <button
-        onClick={() => router.push("/jobs/email-marketing")}
+        onClick={() => router.push(`/lowongan/${id}`)}
         className="bg-[#0F67B1] text-white font-medium w-full shadow-md hover:opacity-90 transition mt-3 flex items-center justify-center gap-2 py-2 rounded-md"
       >
         Lihat Detail <ArrowRight size={20} />
