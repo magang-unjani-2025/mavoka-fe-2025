@@ -75,7 +75,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pelamar",
-        href: "/applicants",
+        href: "/dashboard-perusahaan/pelamar",
         icon: <Users size={20} />,
       },
       {
@@ -115,7 +115,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Unggah Data Siswa",
-        href: "/dashboard-sekolah/unggah-data",
+        href: "/dashboard-sekolah/unggah-data-siswa",
         icon: <Users size={20} />,
       },
       {
