@@ -12,6 +12,7 @@ import {
 } from "react-icons/hi";
 import { MdOutlineSettings } from "react-icons/md";
 import { LuNotepadText } from "react-icons/lu";
+import { GrDocumentUpload } from "react-icons/gr";
 import * as React from "react";
 import ConfirmLogoutDialog from "./popupLogout";
 import { useMedia } from "./useMedia";
@@ -145,6 +146,11 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         name: "Pelaksanaan Magang",
         href: "/pelaksanaan-magang",
         icon: <HiOutlineBookOpen size={20} />,
+      },
+            {
+        name: "Laporan & Evaluasi",
+        href: "/laporan-evaluasi",
+        icon: <GrDocumentUpload size={20} />,
       },
       {
         name: "Pengaturan",
