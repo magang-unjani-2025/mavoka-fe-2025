@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { fetchApplicantById } from "@/lib/mock-pelamar";
 import type { Applicant } from "@/types/pelamar";
+import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";
 
 export default function PelamarDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,11 +29,12 @@ export default function PelamarDetailPage() {
   }, [id]);
 
   return (
+    <DashboardLayout2>
     <div className="w-full">
       {/* Back */}
       <button
         onClick={() => router.push(backHref)}
-        className="mb-3 inline-flex items-center gap-2 text-gray-700 hover:underline"
+        className="mb-3 inline-flex items-center shadow-none gap-2 text-gray-700 hover:underline"
       >
         <span className="text-lg">←</span> Kembali
       </button>
@@ -75,6 +77,7 @@ export default function PelamarDetailPage() {
         )}
       </div>
     </div>
+    </DashboardLayout2>
   );
 }
 

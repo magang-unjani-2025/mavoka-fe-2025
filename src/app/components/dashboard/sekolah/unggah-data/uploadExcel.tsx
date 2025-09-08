@@ -227,7 +227,7 @@ const UploadExcel: React.FC = () => {
         }}
         title="Berhasil"
         message="Data Siswa yang Anda inputkan berhasil diunggah!"
-        autoCloseMs={1500} // ⬅️ auto close ~200 ms
+        duration={2500} // ⬅️ auto close ~200 ms
         // primaryText tidak diisi -> tidak ada tombol
       />
     </div>

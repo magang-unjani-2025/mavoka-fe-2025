@@ -14,20 +14,36 @@ import SuccessModal from "@/app/components/registrasi/PopupBerhasil";
 
 export default function PelamarListPage() {
   const {
-    loading, positions, items, total,
-    page, perPage, totalPages, setPage, setPerPage,
-    posisiId, status, setFilterPosisi, setFilterStatus,
-    onInterview, onAccept, onReject,
+    loading,
+    positions,
+    items,
+    total,
+    page,
+    perPage,
+    totalPages,
+    setPage,
+    setPerPage,
+    posisiId,
+    status,
+    setFilterPosisi,
+    setFilterStatus,
+    onInterview,
+    onAccept,
+    onReject,
   } = useApplicants();
 
   const search = useSearchParams();
   const buildDetailHref = (id: string) => {
     const qs = search.toString();
-    return qs ? `/dashboard-perusahaan/pelamar/${id}?${qs}` : `/dashboard-perusahaan/pelamar/${id}`;
+    return qs
+      ? `/dashboard-perusahaan/pelamar/${id}?${qs}`
+      : `/dashboard-perusahaan/pelamar/${id}`;
   };
 
   const [openInterview, setOpenInterview] = useState(false);
-  const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
+  const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(
+    null
+  );
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -56,12 +72,17 @@ export default function PelamarListPage() {
     setSuccessOpen(true);
   }
 
+  // ...imports & state tetap
+
   return (
     <DashboardLayout2>
       <div className="w-full">
-        <h1 className="mb-4 text-2xl font-semibold text-gray-900">Data Pelamar Magang</h1>
+        <h1 className="mb-4 text-2xl font-semibold text-gray-900">
+          Data Pelamar Magang
+        </h1>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          {/* Filter TETAP di luar area scroll */}
           <Filter
             positions={positions}
             posisiId={posisiId}
@@ -70,7 +91,14 @@ export default function PelamarListPage() {
             onChangeStatus={setFilterStatus}
           />
 
-          <div className="rounded-xl border border-gray-200 p-3">
+          {/* ===== Area scroll khusus tabel ===== */}
+          <div
+            className="mt-3 overflow-auto rounded-xl"
+            style={{
+              // atur tinggi viewport tabel; silakan sesuaikan angka di bawah jika layout-mu beda
+              maxHeight: "calc(100vh - 280px)",
+            }}
+          >
             {loading ? (
               <div className="p-6 text-center text-gray-500">Memuat data…</div>
             ) : (
@@ -83,17 +111,16 @@ export default function PelamarListPage() {
               />
             )}
           </div>
+          {/* ===== END area scroll ===== */}
 
-<TablePager
-  page={page}
-  totalPages={totalPages}
-  onPageChange={setPage}
-  perPage={perPage}
-  onPerPageChange={setPerPage}
-  total={total}
-  itemLabel="pelamar"
-/>
-
+          {/* Pager di luar area scroll (tetap terlihat) */}
+          <TablePager
+            page={page}
+            totalPages={totalPages}
+            onPageChange={(p) => setPage(p)} // bungkus biar paramnya number
+            perPage={perPage}
+            onPerPageChange={(n) => setPerPage(n)} // bungkus juga
+          />
         </div>
 
         <InterviewModal
@@ -102,13 +129,12 @@ export default function PelamarListPage() {
           applicant={selectedApplicant}
           onSubmit={handleInterviewSubmit}
         />
-
         <SuccessModal
           open={successOpen}
           title="Berhasil"
           message={successMsg}
           onClose={() => setSuccessOpen(false)}
-          autoCloseMs={1800}
+          duration={1800}
         />
       </div>
     </DashboardLayout2>

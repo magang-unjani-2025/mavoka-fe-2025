@@ -75,7 +75,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pelamar",
-        href: "/applicants",
+        href: "/dashboard-perusahaan/pelamar",
         icon: <Users size={20} />,
       },
       {

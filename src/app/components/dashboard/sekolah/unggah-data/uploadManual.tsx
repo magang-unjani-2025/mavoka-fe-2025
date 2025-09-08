@@ -173,7 +173,7 @@ const UploadManual: React.FC = () => {
         }}
         title="Berhasil"
         message="Data Siswa yang Anda inputkan berhasil diunggah!"
-        autoCloseMs={1500} // ⬅️ sama seperti Excel
+        duration={2500} // ⬅️ sama seperti Excel
         // primaryText tidak diisi → tidak menampilkan tombol
       />
     </div>

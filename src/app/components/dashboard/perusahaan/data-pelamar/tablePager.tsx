@@ -9,9 +9,6 @@ type Props = {
   perPage: number;
   onPerPageChange: (n: number) => void;
   perPageOptions?: number[];
-
-  total?: number; // opsional: tampilkan total item
-  itemLabel?: string; // mis. "pelamar"
 };
 
 export default function TablePager({
@@ -21,8 +18,6 @@ export default function TablePager({
   perPage,
   onPerPageChange,
   perPageOptions = [5, 10, 20, 50],
-  total,
-  itemLabel = "item",
 }: Props) {
   // windowed pages: 1 ... p-1 p p+1 ... last
   const pages: (number | "...")[] = [];
@@ -37,8 +32,8 @@ export default function TablePager({
   if (totalPages > 1) pages.push(totalPages);
 
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-      {/* Rows per page */}
+    <div className="mt-4 flex items-center justify-end gap-4">
+      {/* Rows per page (compact) */}
       <div className="flex items-center gap-2 text-sm">
         <span className="text-gray-600">Rows per page:</span>
         <select
@@ -52,23 +47,20 @@ export default function TablePager({
             </option>
           ))}
         </select>
-        {typeof total === "number" && (
-          <span className="ml-2 text-xs text-gray-500">
-            Total: {total} {itemLabel}
-          </span>
-        )}
       </div>
 
-      {/* Pagination */}
+      {/* Pagination (muncul hanya jika >1 halaman) */}
       {totalPages > 1 && (
         <div className="flex items-center gap-2">
           <button
             className="rounded-md border px-3 py-2 text-sm disabled:opacity-50"
             disabled={page === 1}
             onClick={() => onPageChange(Math.max(1, page - 1))}
+            aria-label="Sebelumnya"
           >
             ‹
           </button>
+
           {pages.map((p, i) =>
             p === "..." ? (
               <span key={`e${i}`} className="px-2 text-gray-400">
@@ -86,10 +78,12 @@ export default function TablePager({
               </button>
             )
           )}
+
           <button
             className="rounded-md border px-3 py-2 text-sm disabled:opacity-50"
             disabled={page === totalPages}
             onClick={() => onPageChange(Math.min(totalPages, page + 1))}
+            aria-label="Berikutnya"
           >
             ›
           </button>

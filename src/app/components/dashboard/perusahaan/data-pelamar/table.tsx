@@ -15,49 +15,97 @@ type Props = {
 export default function Table({ data, onInterviewClick, onAccept, onReject, buildDetailHref }: Props) {
   const router = useRouter();
 
+  const headers = [
+    "NO",
+    "NAMA SISWA",
+    "POSISI",
+    "ASAL SEKOLAH",
+    "JURUSAN",
+    "EMAIL",
+    "CV",
+    "TRANSKRIP NILAI",
+    "DETAIL",
+    "STATUS",
+    "AKSI",
+  ];
+
+  // Ukuran kolom agar tombol & ikon gak tumpah
+  const colClasses = [
+    "w-12",           // NO
+    "w-56",           // NAMA
+    "w-56",           // POSISI
+    "w-52",           // ASAL SEKOLAH
+    "w-60",           // JURUSAN
+    "w-64",           // EMAIL
+    "w-16",           // CV
+    "w-28",           // TRANSKRIP
+    "w-28 whitespace-nowrap", // DETAIL
+    "w-36 whitespace-nowrap", // STATUS
+    "w-[210px] whitespace-nowrap", // AKSI (2 tombol @ w-24 + gap)
+  ];
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[1400px] table-auto border-separate border-spacing-y-3">
+    <div className="min-w-full">
+      <table className="sticky top-0 z-10 w-full min-w-[1200px] table-fixed border-collapse">
         <thead>
-          <tr className="bg-blue-700 text-left text-white">
-            {["NO","NAMA SISWA","POSISI","ASAL SEKOLAH","JURUSAN","EMAIL","CV","TRANSKRIP NILAI","DETAIL","STATUS","AKSI"]
-              .map((h, i) => <th key={i} className="px-4 py-3 text-sm font-semibold">{h}</th>)}
+          <tr className="text-center text-white">
+            {headers.map((h, i) => (
+              <th
+                key={h}
+                className={`bg-[#0F67B1] px-4 py-3 text-xs font-bold ${colClasses[i]} ${
+                  i === 0 ? "rounded-tl-[5px]" : ""
+                } ${i === headers.length - 1 ? "rounded-tr-[5px]" : ""}`}
+              >
+                {h}
+              </th>
+            ))}
           </tr>
         </thead>
+
         <tbody>
           {data.map((a, idx) => (
-            <tr key={a.id} className="rounded-lg bg-white shadow-sm">
-              <td className="px-4 py-4 text-sm text-gray-700">{idx + 1}</td>
-              <td className="px-4 py-4 text-sm capitalize">{a.nama}</td>
-              <td className="px-4 py-4 text-sm capitalize">{a.posisi}</td>
-              <td className="px-4 py-4 text-sm">{a.asalSekolah}</td>
-              <td className="px-4 py-4 text-sm">{a.jurusan}</td>
-              <td className="px-4 py-4 text-sm break-words">{a.email}</td>
+            <tr key={a.id} className="border-b text-xs text-center hover:bg-gray-50 last:border-b-0">
+              <td className="px-4 py-4 text-center text-gray-700">{idx + 1}</td>
+              <td className="px-4 py-4 capitalize">{a.nama}</td>
+              <td className="px-4 py-4 capitalize">{a.posisi}</td>
+              <td className="px-4 py-4">{a.asalSekolah}</td>
+              <td className="px-4 py-4">{a.jurusan}</td>
+              <td className="px-4 py-4 break-words">{a.email}</td>
 
-              <td className="px-4 py-4">
-                <PdfButton title="Lihat CV" url={a.cvUrl} />
-              </td>
-              <td className="px-4 py-4">
-                <PdfButton title="Lihat Transkrip" url={a.transkripUrl} />
+              {/* CV */}
+              <td className="px-4 py-4 text-center">
+                {a.cvUrl ? <PdfButton title="Lihat CV" url={a.cvUrl} /> : <span className="text-gray-400">—</span>}
               </td>
 
-              <td className="px-4 py-4">
-                <button
-                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              {/* Transkrip */}
+              <td className="px-4 py-4 text-center">
+                {a.transkripUrl ? (
+                  <PdfButton title="Lihat Transkrip" url={a.transkripUrl} />
+                ) : (
+                  <span className="text-gray-400">—</span>
+                )}
+              </td>
+
+              {/* Detail */}
+              <td className="px-4 py-4 text-center whitespace-nowrap">
+                <PillButton
+                  label="Detail"
                   onClick={() => {
                     const href = buildDetailHref
                       ? buildDetailHref(a.id)
                       : `/dashboard-perusahaan/pelamar/${a.id}`;
                     router.push(href);
                   }}
-                >
-                  Detail
-                </button>
+                />
               </td>
 
-              <td className="px-4 py-4"><StatusChip status={a.status} /></td>
+              {/* Status */}
+              <td className="px-4 py-4 text-center whitespace-nowrap">
+                <StatusChip status={a.status} />
+              </td>
 
-              <td className="px-4 py-4">
+              {/* Aksi - dua tombol dengan lebar & tinggi seragam */}
+              <td className="px-4 py-4 text-center">
                 <ActionButtons
                   applicant={a}
                   onInterviewClick={onInterviewClick}
@@ -73,7 +121,22 @@ export default function Table({ data, onInterviewClick, onAccept, onReject, buil
   );
 }
 
-/* ======= sub-komponen lokal (disatukan di file ini) ======= */
+/* ===== Sub-komponen lokal ===== */
+
+// === ganti PillButton lama ===
+function PillButton({ label, onClick }: { label: string; onClick?: () => void }) {
+  return (
+    <button
+      className="inline-flex h-9 w-24 items-center justify-center whitespace-nowrap rounded-[25px]
+                 bg-[#2563EB] text-xs font-semibold leading-none text-white shadow-sm
+                 hover:brightness-110 active:scale-[.99]"
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+}
+
 
 function StatusChip({ status }: { status: ApplicantStatus }) {
   const map: Record<ApplicantStatus, string> = {
@@ -83,7 +146,10 @@ function StatusChip({ status }: { status: ApplicantStatus }) {
     ditolak: "bg-red-100 text-red-700",
   };
   const label: Record<ApplicantStatus, string> = {
-    lamar: "Lamar", wawancara: "Interview", diterima: "Diterima", ditolak: "Ditolak",
+    lamar: "Lamar",
+    wawancara: "Wawancara",
+    diterima: "Diterima",
+    ditolak: "Ditolak",
   };
   return (
     <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${map[status]}`}>
@@ -93,25 +159,29 @@ function StatusChip({ status }: { status: ApplicantStatus }) {
 }
 
 function PdfButton({ url, title = "Buka PDF" }: { url?: string; title?: string }) {
-  const clickable = !!url;
+  if (!url) return <span className="text-gray-400">—</span>;
+
   return (
-    <button
-      type="button"
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
       title={title}
       aria-label={title}
-      disabled={!clickable}
-      onClick={() => url && window.open(url, "_blank")}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-red-50 active:scale-95 ${
-        clickable ? "" : "opacity-50"
-      }`}
+      className="inline-flex h-8 w-8 items-center justify-center bg-transparent"
+      // bg-transparent mencegah kotak putih dari style global
     >
-      <BiSolidFilePdf size={22} className="text-red-600" />
-    </button>
+      {/* pakai warna inline agar tidak ketimpa utility/global css */}
+      <BiSolidFilePdf size={22} style={{ color: "rgb(220, 38, 38)" }} />
+    </a>
   );
 }
 
 function ActionButtons({
-  applicant, onInterviewClick, onAccept, onReject,
+  applicant,
+  onInterviewClick,
+  onAccept,
+  onReject,
 }: {
   applicant: Applicant;
   onInterviewClick: (a: Applicant) => void;
@@ -119,34 +189,45 @@ function ActionButtons({
   onReject: (id: string) => void;
 }) {
   const s = applicant.status;
-  const Btn = ({
-    children, color, onClick,
-  }: { children: React.ReactNode; color: "green" | "red"; onClick: () => void }) => (
-    <button
-      className={`rounded-md px-3 py-2 text-sm text-white hover:brightness-110 ${
-        color === "green" ? "bg-green-600" : "bg-red-600"
-      }`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
+
+// === ganti Btn di dalam ActionButtons ===
+const Btn = ({
+  children,
+  color,
+  onClick,
+}: {
+  children: React.ReactNode;
+  color: "green" | "red";
+  onClick: () => void;
+}) => (
+  <button
+    className={`inline-flex h-9 w-24 items-center justify-center whitespace-nowrap
+                rounded-md text-xs font-semibold leading-none text-white
+                ${color === "green" ? "bg-green-600 hover:brightness-110" : "bg-red-600 hover:brightness-110"}`}
+    onClick={onClick}
+  >
+    {children}
+  </button>
+);
+
 
   if (s === "lamar") {
     return (
-      <div className="flex gap-2">
-        <Btn color="green" onClick={() => onInterviewClick(applicant)}>Interview</Btn>
+      <div className="flex justify-center gap-2 whitespace-nowrap">
+        <Btn color="green" onClick={() => onInterviewClick(applicant)}>
+          Wawancara
+        </Btn>
         <Btn color="red" onClick={() => onReject(applicant.id)}>Tolak</Btn>
       </div>
     );
   }
   if (s === "wawancara") {
     return (
-      <div className="flex gap-2">
+      <div className="flex justify-center gap-2 whitespace-nowrap">
         <Btn color="green" onClick={() => onAccept(applicant.id)}>Terima</Btn>
         <Btn color="red" onClick={() => onReject(applicant.id)}>Tolak</Btn>
       </div>
     );
   }
-  return <div className="text-gray-400">—</div>;
+  return <div className="text-center text-gray-400">—</div>;
 }

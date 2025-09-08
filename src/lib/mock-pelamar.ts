@@ -1,3 +1,4 @@
+// src/lib/pelamar.tsx
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import type {
@@ -8,8 +9,8 @@ import type {
 } from "@/types/pelamar";
 
 /* =========================
-   Toggle sumber data
-   (ubah ke true saat endpoint BE siap)
+   Toggle sumber data (mock vs API)
+   Set .env: NEXT_PUBLIC_USE_API=true saat BE siap
 ========================= */
 const USE_API = process.env.NEXT_PUBLIC_USE_API === "true";
 
@@ -17,23 +18,30 @@ const USE_API = process.env.NEXT_PUBLIC_USE_API === "true";
    MOCK DATA (sementara)
 ========================= */
 let _positions: Position[] = [
-  { id: "p1", name: "administrasi perkantoran" },
-  { id: "p2", name: "desain grafis" },
-  { id: "p3", name: "front-end developer" },
+  { id: "p1", name: "Administrasi Perkantoran" },
+  { id: "p2", name: "Desain Grafis" },
+  { id: "p3", name: "Front-End Developer" },
 ];
 
-let _applicants: Applicant[] = Array.from({ length: 37 }).map((_, i) => ({
-  id: String(i + 1),
-  nama: i % 3 === 0 ? "lisa mariana" : i % 3 === 1 ? "budi setiawan" : "siti amalia",
-  posisiId: _positions[i % _positions.length].id,
-  posisi: _positions[i % _positions.length].name,
-  asalSekolah: "SMKN 1 YOGYAKARTA",
-  jurusan: "otomatisasi dan tata kelola perkantoran",
-  email: (i % 3 === 0 ? "lisa" : i % 3 === 1 ? "budi" : "siti") + "@gmail.com",
-  cvUrl: "/files/sample-cv.pdf",
-  transkripUrl: "/files/sample-transkrip.pdf",
-  status: (["lamar", "wawancara", "diterima", "ditolak"] as ApplicantStatus[])[i % 4],
-}));
+let _applicants: Applicant[] = Array.from({ length: 24 }).map((_, i) => {
+  const pos = _positions[i % _positions.length];
+  const nama = i % 3 === 0 ? "Lisa Mariana" : i % 3 === 1 ? "Budi Setiawan" : "Siti Amalia";
+  const email = i % 3 === 0 ? "lisa@gmail.com" : i % 3 === 1 ? "budi@gmail.com" : "siti@gmail.com";
+  const status: ApplicantStatus = (["lamar", "wawancara", "diterima", "ditolak"] as ApplicantStatus[])[i % 4];
+  return {
+    id: String(i + 1),
+    nama,
+    posisiId: pos.id,
+    posisi: pos.name,
+    asalSekolah: "SMKN 1 YOGYAKARTA",
+    jurusan: "otomatisasi dan tata kelola perkantoran",
+    email,
+    cvUrl: "/files/sample-cv.pdf",
+    transkripUrl: "/files/sample-transkrip.pdf",
+    status,
+  };
+});
+
 const _interviewNotes: Record<string, InterviewPayload> = {};
 
 const mock = {
@@ -59,7 +67,6 @@ const mock = {
 
 /* =========================
    API adapter (isi endpoint BE kamu di sini)
-   Contoh pakai fetch biar nol-dependency.
 ========================= */
 const api = {
   async getPositions(): Promise<Position[]> {
@@ -97,7 +104,7 @@ const api = {
 const ds = USE_API ? api : mock;
 
 /* =========================
-   Hook utama
+   Hook utama + sorting aturan khusus
 ========================= */
 export function useApplicants() {
   const [allApplicants, setAllApplicants] = useState<Applicant[]>([]);
@@ -110,6 +117,10 @@ export function useApplicants() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
 
+  // urutan stabil per grup status
+  const [orderSeq, setOrderSeq] = useState<Record<string, number>>({});
+  const [seqCounter, setSeqCounter] = useState(0);
+
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -117,15 +128,34 @@ export function useApplicants() {
         const [pos, apps] = await Promise.all([ds.getPositions(), ds.getApplicants()]);
         setPositions(pos);
         setAllApplicants(apps);
+        setOrderSeq(Object.fromEntries(apps.map((a, i) => [a.id, i]))); // urutan awal = urutan datang
+        setSeqCounter(apps.length);
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
+  const statusRank: Record<ApplicantStatus, number> = {
+    lamar: 0,
+    wawancara: 1,
+    diterima: 2,
+    ditolak: 3,
+  };
+
+  // sort: grup status (lamar→wawancara→diterima→ditolak), dalam grup pakai orderSeq
+  const sortedAll = useMemo(() => {
+    return [...allApplicants].sort((a, b) => {
+      const r = statusRank[a.status] - statusRank[b.status];
+      if (r !== 0) return r;
+      return (orderSeq[a.id] ?? 0) - (orderSeq[b.id] ?? 0);
+    });
+  }, [allApplicants, orderSeq]);
+
+  // filter di atas hasil sorting
   const filtered = useMemo(
-    () => allApplicants.filter((a) => (!posisiId || a.posisiId === posisiId) && (!status || a.status === status)),
-    [allApplicants, posisiId, status]
+    () => sortedAll.filter((a) => (!posisiId || a.posisiId === posisiId) && (!status || a.status === status)),
+    [sortedAll, posisiId, status]
   );
 
   const total = filtered.length;
@@ -136,17 +166,30 @@ export function useApplicants() {
     return filtered.slice(start, start + perPage);
   }, [filtered, pageSafe, perPage]);
 
+  // helper untuk menaruh item "paling bawah" di grup barunya
+  function bumpToBottom(id: string) {
+    setOrderSeq((prev) => ({ ...prev, [id]: seqCounter + 1 }));
+    setSeqCounter((c) => c + 1);
+  }
+
+  // actions
   async function onInterview(id: string, payload: InterviewPayload) {
     const updated = await ds.scheduleInterview(id, payload);
-    if (updated) setAllApplicants((prev) => prev.map((a) => (a.id === id ? updated : a)));
+    if (!updated) return;
+    setAllApplicants((prev) => prev.map((a) => (a.id === id ? updated : a)));
+    bumpToBottom(id);
   }
   async function onAccept(id: string) {
     const updated = await ds.updateStatus(id, "diterima");
-    if (updated) setAllApplicants((prev) => prev.map((a) => (a.id === id ? updated : a)));
+    if (!updated) return;
+    setAllApplicants((prev) => prev.map((a) => (a.id === id ? updated : a)));
+    bumpToBottom(id);
   }
   async function onReject(id: string) {
     const updated = await ds.updateStatus(id, "ditolak");
-    if (updated) setAllApplicants((prev) => prev.map((a) => (a.id === id ? updated : a)));
+    if (!updated) return;
+    setAllApplicants((prev) => prev.map((a) => (a.id === id ? updated : a)));
+    bumpToBottom(id);
   }
 
   return {
@@ -175,17 +218,15 @@ export function useApplicants() {
   };
 }
 
-// --- Helper untuk halaman detail ---
+/* =========================
+   Helpers untuk halaman detail
+========================= */
 export async function fetchApplicantById(id: string) {
-  // pakai data source yang sama (mock/API)
-  const list = await (process.env.NEXT_PUBLIC_USE_API === "true" ? api.getApplicants() : mock.getApplicants());
+  const list = await (USE_API ? api.getApplicants() : mock.getApplicants());
   return list.find((a) => a.id === id) ?? null;
 }
 
 export async function updateApplicantStatus(id: string, status: ApplicantStatus) {
-  const res = await (process.env.NEXT_PUBLIC_USE_API === "true"
-    ? api.updateStatus(id, status)
-    : mock.updateStatus(id, status));
+  const res = await (USE_API ? api.updateStatus(id, status) : mock.updateStatus(id, status));
   return res;
 }
-
