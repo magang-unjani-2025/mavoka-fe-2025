@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import ProfileHeader from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileHeader";
-import ProfileAvatar from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileAvatar";
+import ProfileAvatar from "@/app/components/pengaturan-profil/data-akun/ProfileAvatar";
 import ProfileView from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileView";
 import ProfileForm from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileForm";
 import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";

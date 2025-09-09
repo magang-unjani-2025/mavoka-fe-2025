@@ -47,7 +47,7 @@ export default function InputPassword({
           onClick={() => setShowPassword((prev) => !prev)}
           className="shadow-none absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-600"
         >
-          {showPassword ? <FaEyeSlash /> : <FaEye />}
+          {showPassword ? <FaEye /> : <FaEyeSlash />}
         </button>
       </div>
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}

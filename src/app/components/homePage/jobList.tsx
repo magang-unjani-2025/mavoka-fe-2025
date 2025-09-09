@@ -43,11 +43,11 @@ export default function JobList() {
       <Container>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">
-            Daftar <span className="text-blue-600">Lowongan</span>
+            Daftar <span className="text-[#0F67B1]">Lowongan</span>
           </h2>
           <a
-            href="/jobs"
-            className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
+            href="/lowongan"
+            className="text-[#0F67B1] hover:underline flex items-center gap-1 text-sm"
           >
             Lihat semua lowongan <ArrowRight size={20} />
           </a>

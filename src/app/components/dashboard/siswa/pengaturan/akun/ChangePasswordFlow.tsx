@@ -57,10 +57,8 @@ export default function ChangePasswordFlow({
         title="Berhasil"
         message="Kata sandi Anda berhasil diperbaharui!"
         onClose={() => {
-          setShowSuccess(false);
           onCancel();
         }}
-        showCloseIcon
       />
     </>
   );

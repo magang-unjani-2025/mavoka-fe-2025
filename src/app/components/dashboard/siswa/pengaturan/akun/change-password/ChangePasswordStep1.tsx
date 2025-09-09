@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PiLockKey } from "react-icons/pi";
-import { HiEye, HiEyeOff } from "react-icons/hi";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 interface ChangePasswordStep1Props {
   oldPassword: string;
@@ -32,7 +32,7 @@ export default function ChangePasswordStep1({
           placeholder="Kata Sandi Lama"
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
-          className="border rounded px-10 py-2 w-full text-sm placeholder-gray-400"
+          className="border rounded px-10 py-2 w-full text-xs placeholder-gray-400"
         />
 
         <button
@@ -40,7 +40,7 @@ export default function ChangePasswordStep1({
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-black shadow-none border-none"
         >
-          {showPassword ? <HiEyeOff /> : <HiEye />}
+          {showPassword ? <FaEye /> : <FaEyeSlash />}
         </button>
       </div>
 

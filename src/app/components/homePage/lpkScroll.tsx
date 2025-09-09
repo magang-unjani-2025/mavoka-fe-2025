@@ -93,7 +93,7 @@ export default function TrainingCarousel() {
       <Container className="text-center">
         <h2 className="text-xl font-semibold mb-2">Lembaga Pelatihan</h2>
 
-        <div className="flex justify-center my-3">
+        {/* <div className="flex justify-center my-3">
           <svg
             width="59"
             height="9"
@@ -122,7 +122,7 @@ export default function TrainingCarousel() {
               </linearGradient>
             </defs>
           </svg>
-        </div>
+        </div> */}
 
         <p className="text-sm text-gray-600 mb-8">
           MAVOKA bekerja sama dengan berbagai lembaga pelatihan
@@ -146,7 +146,7 @@ export default function TrainingCarousel() {
               }`}
             >
               <div
-                className="rounded-full border-2 border-blue-400 flex items-center justify-center bg-white"
+                className="rounded-full border-2 border-[#0F67B1] flex items-center justify-center bg-white"
                 style={{ width: "90px", height: "90px" }}
               >
                 {center.logo ? (
