@@ -21,12 +21,12 @@ export default function DashboardPerusahaan() {
       }}
     >
       {/* Section Top Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
         {stats.map((stat, index) => (
           <DashboardTopCard key={index} stat={stat} />
         ))}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center px-6">
         <div className="md:col-span-2 h-full">
           <LowonganTerpasang className="h-full" />
         </div>

@@ -29,7 +29,7 @@ export default function UploadLowonganLayout({
       {isLowonganBaruPage ? (
         <div className="p-6">{children}</div>
       ) : (
-        <div className="flex flex-col h-full p-4">
+        <div className="flex flex-col h-full p-6">
           <h3 className="mb-5">Lowongan Perusahaan</h3>
 
           <div className="flex items-center justify-between bg-white shrink-0">

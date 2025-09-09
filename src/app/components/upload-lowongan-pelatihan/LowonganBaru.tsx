@@ -118,7 +118,7 @@ export default function LowonganBaru({ role }: { role: Role }) {
         Kembali
       </button>
 
-      <div className="w-full bg-white p-8 rounded-lg">
+      <div className="w-full bg-white p-4 rounded-lg">
         <h3 className="font-semibold mb-1">
           {role === "perusahaan" ? "Data Lowongan" : "Data Pelatihan"}
         </h3>

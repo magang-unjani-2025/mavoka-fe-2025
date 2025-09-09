@@ -69,6 +69,35 @@ export default function DetailDescription({
         </div>
       )}
 
+      {type === "sekolah" && (email || address) && (
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <BiSolidContact className="text-[#0F67B1] text-xl" />
+            <h2 className="font-bold text-lg">Informasi Kontak</h2>
+          </div>
+          <div className="flex flex-col tablet:flex-row gap-10 text-gray-700">
+            {email && (
+              <div className="flex items-start gap-2 flex-1">
+                <HiOutlineMail className="text-[#0F67B1] text-lg mt-1" />
+                <div>
+                  <p>Email</p>
+                  <p className="font-semibold">{email}</p>
+                </div>
+              </div>
+            )}
+            {address && (
+              <div className="flex items-start gap-2 flex-1">
+                <HiOutlineLocationMarker className="text-[#0F67B1] text-lg mt-1" />
+                <div>
+                  <p>Alamat</p>
+                  <p className="font-semibold">{address}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {type === "lowongan" && (deadline_lamaran || address) && (
         <div>
           <div className="flex items-center gap-2 mb-4">

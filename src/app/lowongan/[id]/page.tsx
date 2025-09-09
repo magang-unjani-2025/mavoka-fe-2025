@@ -131,7 +131,7 @@ export default function DetailLowonganPage() {
             </>
           ) : (
             <p className="col-span-full text-center text-gray-500 mt-5">
-              Belum ada lowongan dari perusahaan ini
+              Belum ada lowongan lain dari perusahaan ini
             </p>
           )}
         </Container>

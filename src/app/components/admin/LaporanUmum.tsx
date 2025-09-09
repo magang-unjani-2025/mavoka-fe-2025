@@ -66,7 +66,7 @@ export default function LaporanUmum() {
             </thead>
             <tbody>
               {data.map((item) => (
-                <tr key={item.no} className="hover:bg-gray-50 text-sm">
+                <tr key={item.no} className="hover:bg-gray-100 text-sm">
                   <td
                     className="px-4 py-2 border-t text-center cursor-pointer"
                     onClick={() => router.push(`/laporan-umum/${item.role}`)}
@@ -74,7 +74,7 @@ export default function LaporanUmum() {
                     {item.no}
                   </td>
                   <td
-                    className="px-4 py-2 border-t cursor-pointer"
+                    className="px-4 py-2 border-t cursor-pointer  hover:underline"
                     onClick={() => router.push(`/laporan-umum/${item.role}`)}
                   >
                     {item.name}
@@ -85,7 +85,7 @@ export default function LaporanUmum() {
                         className="bg-[#CDFFCD] hover:bg-green-200 text-[#007F00] border border-[#007F00] px-3 py-1 rounded text-xs"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleOpenModal(item.role); // 🔥 Buka modal
+                          handleOpenModal(item.role);
                         }}
                       >
                         <FaRegFileExcel className="inline mr-1" />

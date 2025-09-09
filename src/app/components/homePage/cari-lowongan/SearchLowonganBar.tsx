@@ -38,21 +38,21 @@ export function SearchLowonganBar() {
     jurusan: false,
   });
 
-useEffect(() => {
-  TampilAllLowongan().then((res) => {
-    const rawData = res?.data;
-    if (!Array.isArray(rawData)) return;
+  useEffect(() => {
+    TampilAllLowongan().then((res) => {
+      const rawData = res?.data;
+      if (!Array.isArray(rawData)) return;
 
-    setLowongan(rawData);
+      setLowongan(rawData);
 
-    setSuggestions({
-      posisi: unique(rawData.map((d) => d.posisi)),
-      perusahaan: unique(rawData.map((d) => d.perusahaan)),
-      lokasi: unique(rawData.map((d) => d.lokasi_penempatan)),
-      jurusan: unique(rawData.map((d) => d.jurusan || "")), // aman kalau jurusan undefined
+      setSuggestions({
+        posisi: unique(rawData.map((d) => d.posisi)),
+        perusahaan: unique(rawData.map((d) => d.perusahaan)),
+        lokasi: unique(rawData.map((d) => d.lokasi_penempatan)),
+        jurusan: unique(rawData.map((d) => d.jurusan || "")), // aman kalau jurusan undefined
+      });
     });
-  });
-}, []);
+  }, []);
 
   function unique(arr: string[]) {
     return Array.from(new Set(arr.filter(Boolean)));
@@ -68,19 +68,18 @@ useEffect(() => {
     setShowDropdown((prev) => ({ ...prev, [field]: false }));
   }
 
-function handleClear(field: keyof typeof form) {
-  const updatedForm = { ...form, [field]: "" };
-  setForm(updatedForm);
-  setShowDropdown((prev) => ({ ...prev, [field]: false }));
+  function handleClear(field: keyof typeof form) {
+    const updatedForm = { ...form, [field]: "" };
+    setForm(updatedForm);
+    setShowDropdown((prev) => ({ ...prev, [field]: false }));
 
-  // update query string juga agar data langsung berubah
-  const query = new URLSearchParams();
-  Object.entries(updatedForm).forEach(([key, value]) => {
-    if (value) query.set(key, value);
-  });
-  router.push("/lowongan?" + query.toString());
-}
-
+    // update query string juga agar data langsung berubah
+    const query = new URLSearchParams();
+    Object.entries(updatedForm).forEach(([key, value]) => {
+      if (value) query.set(key, value);
+    });
+    router.push("/lowongan?" + query.toString());
+  }
 
   function handleSearch() {
     const query = new URLSearchParams();
@@ -101,7 +100,9 @@ function handleClear(field: keyof typeof form) {
           onFocus={() =>
             setShowDropdown((prev) => ({ ...prev, [field]: true }))
           }
-          className="w-full min-w-0 h-[35px] text-sm py-2 px-3 border border-[#E3E3E3] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full min-w-0 h-[35px] text-sm py-2 px-3 border border-[#E3E3E3] rounded-[5px] 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 
+             placeholder:text-gray-400 text-black"
         />
 
         {form[field] && (
@@ -136,26 +137,24 @@ function handleClear(field: keyof typeof form) {
     );
   }
 
-return (
-  <Container className="py-2 flex justify-center">
-    <div className="w-full max-w-[1024px] border border-[#D9D9D9] rounded-[10px] shadow px-6 py-5 overflow-hidden">
-      <div className="flex flex-wrap tablet:flex-nowrap items-center justify-between gap-3">
-        <div className="flex flex-1 gap-3 flex-wrap tablet:flex-nowrap">
-          {renderInput("posisi", "Posisi")}
-          {renderInput("perusahaan", "Perusahaan")}
-          {renderInput("lokasi", "Lokasi")}
-          {renderInput("jurusan", "Jurusan")}
+  return (
+    <Container className="py-2">
+      <div className="w-full border border-[#D9D9D9] rounded-[10px] shadow px-6 py-5 overflow-hidden">
+        <div className="flex flex-wrap tablet:flex-nowrap items-center justify-between gap-3">
+          <div className="flex flex-1 gap-3 flex-wrap tablet:flex-nowrap">
+            {renderInput("posisi", "Posisi")}
+            {renderInput("perusahaan", "Perusahaan")}
+            {renderInput("lokasi", "Lokasi")}
+            {renderInput("jurusan", "Jurusan")}
+          </div>
+          <button
+            onClick={handleSearch}
+            className="flex-shrink-0 bg-[#0F67B1] hover:bg-[#0F67B1]/80 text-white rounded-[8px] w-[55px] h-[55px] flex items-center justify-center"
+          >
+            <BiSearchAlt size={50} />
+          </button>
         </div>
-        <button
-          onClick={handleSearch}
-          className="flex-shrink-0 bg-[#0F67B1] hover:bg-[#0F67B1]/80 text-white rounded-[8px] w-[45px] h-[45px] flex items-center justify-center"
-        >
-          <BiSearchAlt size={50} />
-        </button>
       </div>
-    </div>
-  </Container>
-);
-
-
+    </Container>
+  );
 }

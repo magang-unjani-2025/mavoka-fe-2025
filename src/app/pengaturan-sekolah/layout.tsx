@@ -13,7 +13,7 @@ export default function PengaturanLayout({ children }: { children: React.ReactNo
 
   return (
     <DashboardLayout2 role="sekolah">
-      <div className="flex flex-col h-full p-4">
+      <div className="flex flex-col h-full p-6">
         <div className="flex border-b border-gray-300 bg-white shrink-0">
           {tabs.map((tab) => (
             <Link

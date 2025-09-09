@@ -14,7 +14,9 @@ export default function CompanyCard({ data }: Props) {
   const router = useRouter();
   const goDetail = useCallback(() => {
     router.push(
-      data.slug ? `/list-perusahaan/${data.slug}` : `/list-perusahaan/${data.id}`
+      data.slug
+        ? `/list-perusahaan/${data.slug}`
+        : `/list-perusahaan/${data.id}`
     );
   }, [router, data.slug, data.id]);
 
@@ -24,7 +26,7 @@ export default function CompanyCard({ data }: Props) {
       <div className="relative grid place-items-center px-4 pt-6 pb-4">
         <div className="relative w-full" style={{ height: LOGO_H }}>
           <Image
-            src={data.logoUrl}
+            src={data.logoUrl || "/placeholder-logo.png"} // fallback logo
             alt={`${data.name} logo`}
             fill
             className="object-contain"

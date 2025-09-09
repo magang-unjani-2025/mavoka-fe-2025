@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { PiLockKey } from "react-icons/pi";
-import { HiEye, HiEyeOff } from "react-icons/hi";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 interface ChangePasswordStep2Props {
   newPassword: string;
@@ -34,14 +34,14 @@ export default function ChangePasswordStep2({
           placeholder="Kata Sandi Baru"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-          className="border rounded px-10 py-2 w-full text-sm placeholder-gray-400"
+          className="border rounded px-10 py-2 w-full text-xs placeholder-gray-400"
         />
         <button
           type="button"
           onClick={() => setShowNewPassword((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-black shadow-none rounded-none"
         >
-          {showNewPassword ? <HiEyeOff /> : <HiEye />}
+          {showNewPassword ? <FaEye /> : <FaEyeSlash />}
         </button>
       </div>
 
@@ -52,14 +52,14 @@ export default function ChangePasswordStep2({
           placeholder="Konfirmasi Kata Sandi Baru"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border rounded px-10 py-2 w-full text-sm placeholder-gray-400"
+          className="border rounded px-10 py-2 w-full text-xs placeholder-gray-400"
         />
         <button
           type="button"
           onClick={() => setShowConfirmPassword((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-black shadow-none rounded-none"
         >
-          {showConfirmPassword ? <HiEyeOff /> : <HiEye />}
+          {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
         </button>
       </div>
 

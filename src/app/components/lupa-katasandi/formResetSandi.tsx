@@ -87,8 +87,7 @@ export default function FormResetPassword() {
         open={open}
         title="Berhasil"
         message={<>Kata sandi Anda berhasil diperbarui!</>}
-        primaryText="Lanjutkan" // 👉 tombol muncul
-        onClose={handleClose} // klik tombol → router.replace('/login')
+        onClose={handleClose}
       />
     </>
   );

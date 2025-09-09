@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import ProfileHeader from "@/app/components/dashboard/sekolah/pengaturan/data-sekolah/ProfileHeader";
-import ProfileAvatar from "@/app/components/dashboard/sekolah/pengaturan/data-sekolah/ProfileAvatar";
-import TampilProfil from "@/app/components/dashboard/sekolah/pengaturan/data-sekolah/TampilProfil";
+import ProfileHeader from "@/app/components/pengaturan-profil/data-akun/ProfileHeader";
+import ProfileAvatar from "@/app/components/pengaturan-profil/data-akun/ProfileAvatar";
+import TampilProfil from "@/app/components/pengaturan-profil/data-akun/TampilProfil";
 
 export default function ProfilePage() {
   const [form, setForm] = useState({
