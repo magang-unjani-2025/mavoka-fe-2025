@@ -12,7 +12,10 @@ export default function UploadPelatihanLayout({
 
   const tabs = [
     { href: "/upload-pelatihan", label: "Draft" },
-    { href: "/upload-pelatihan/pelatihan-terpasang", label: "Pelatihan Terpasang" },
+    {
+      href: "/upload-pelatihan/pelatihan-terpasang",
+      label: "Pelatihan Terpasang",
+    },
   ];
 
   const isPelatihanBaruPage = pathname === "/upload-pelatihan/pelatihan-baru";
@@ -21,8 +24,8 @@ export default function UploadPelatihanLayout({
     <DashboardLayout2
       role="lpk"
       user={{
-        fullName: "Kepala LPK",
-        orgName: "LPK XYZ",
+        fullName: "Fitacademy x Fitinline",
+        orgName: "Fitacademy",
         profilePic: "",
       }}
     >

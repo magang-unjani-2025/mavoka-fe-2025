@@ -10,9 +10,9 @@ export default function AkunPage() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [form, setForm] = useState({
-    username: "Fitinline",
-    email: "Fitinline@gmail.com",
-    password: "Fitinline12345",
+    username: "Fitacademy x Fitinline",
+    email: "fitacademy@gmail.com",
+    password: "Fitacademy12345",
   });
 
   return (

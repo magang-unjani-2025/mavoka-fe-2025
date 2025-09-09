@@ -1,59 +1,58 @@
 "use client";
-import { useState } from "react";
-import ProfileHeader from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileHeader";
+import { useState, useEffect } from "react";
+import ProfileHeader from "@/app/components/pengaturan-profil/data-akun/ProfileHeader";
 import ProfileAvatar from "@/app/components/pengaturan-profil/data-akun/ProfileAvatar";
-import ProfileView from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileView";
-import ProfileForm from "@/app/components/dashboard/perusahaan/pengaturan/data-perusahaan/ProfileForm";
-import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";
+import TampilProfil from "@/app/components/pengaturan-profil/data-akun/TampilProfil";
 
-export default function DataPerusahaanPage() {
-  const [isEditing, setIsEditing] = useState(false);
+type Role = "sekolah" | "perusahaan" | "lpk" | "siswa";
+
+export default function ProfilePage() {
+  const [role, setRole] = useState<Role>("perusahaan");
   const [form, setForm] = useState({
     nama_perusahaan: "Fitinline",
     profilePic: "",
-    email: "fitinline@gmail.com",
     bidang_usaha: "Teknologi",
-    deskripsi_perusahaan: "Perusahaan yang bergerak di bidang teknologi",
+    deskripsi_usaha: "Perusahaan yang bergerak di bidang teknologi",
+    email: "fitinline@gmail.com",
     phone: "0821345566",
+    website: "fitinline.com",
     address: "Gamping",
-    city: "Sleman",
-    province: "Daerah Istimewa Yogyakarta",
+    penanggung_jawab: "Lele",
   });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        if (parsed.role) setRole(parsed.role as Role);
+      } catch (e) {
+        console.error("Gagal parse user:", e);
+      }
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <>
-      <ProfileHeader onEdit={() => setIsEditing(true)} />
-      <ProfileAvatar src={form.profilePic} name={form.nama_perusahaan} />
+    <div className="bg-white p-6 rounded-lg shadow">
+      <ProfileHeader role={role} />
 
-      {!isEditing && <ProfileView form={form} />}
+      <div className="flex justify-center mb-6">
+        <ProfileAvatar
+          src={form.profilePic}
+          name={
+            form.nama_perusahaan
+          }
+        />
+      </div>
 
-      {isEditing && (
-        <>
-          <ProfileForm form={form} handleChange={handleChange} />
-          <div className="flex justify-end gap-3 mt-6">
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="px-4 py-2 rounded border border-gray-300 text-gray-600 hover:bg-gray-100"
-            >
-              Batal
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="px-4 py-2 rounded bg-[#0F67B1] text-white hover:opacity-70"
-            >
-              Simpan
-            </button>
-          </div>
-        </>
-      )}
-    </>
+      <TampilProfil form={form} handleChange={handleChange} />
+    </div>
   );
 }
