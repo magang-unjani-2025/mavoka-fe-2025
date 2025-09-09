@@ -8,6 +8,7 @@ import {
   StatistikSekolah,
   StatistikSiswa,
 } from "@/lib/api-statistik";
+import { Container } from "@/app/components/Container";
 
 export default function StatsSectionWrapper() {
   const [data, setData] = useState({
@@ -43,5 +44,9 @@ export default function StatsSectionWrapper() {
     fetchAll();
   }, []);
 
-  return <StatsSection {...data} />;
+  return (
+    <Container className="py-8">
+      <StatsSection {...data} />
+    </Container>
+  );
 }

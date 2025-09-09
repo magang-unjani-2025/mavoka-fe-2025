@@ -84,7 +84,7 @@ export default function ProfileForm({ form, handleChange }: ProfileFormProps) {
           name="city"
           value={form.city}
           onChange={handleChange}
-          options={["Bojonggede", "Yogyakarta", "Bandung"]}
+          options={["Bandung", "Semarang", "Surabaya",]}
         />,
         1
       )}
@@ -94,7 +94,7 @@ export default function ProfileForm({ form, handleChange }: ProfileFormProps) {
           name="province"
           value={form.province}
           onChange={handleChange}
-          options={["Jawa Bagian Barat", "Jawa Tengah", "Jawa Timur"]}
+          options={["Jawa Barat", "Jawa Tengah", "Jawa Timur"]}
         />,
         1
       )}

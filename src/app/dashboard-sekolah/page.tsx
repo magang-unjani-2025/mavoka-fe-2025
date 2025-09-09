@@ -11,10 +11,9 @@ export default function DashboardSekolah() {
         fullName: "Kepala Sekolah",
         orgName: "SMKN 1 Yogyakarta",
         profilePic: "",
-        
       }}
     >
-      <div className="mt-6">
+      <div className="p-6">
         <LineChartCard datasets={sekolahDatasets} defaultYear={2026} />
       </div>
     </DashboardLayout2>

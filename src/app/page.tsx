@@ -6,7 +6,6 @@ import HeaderHome from "@/app/components/homePage/headerHomepage";
 import HeroSection from "@/app/components/homePage/heroSection";
 import JobList from "@/app/components/homePage/jobList";
 import CompanyList from "@/app/components/homePage/companyList";
-import StatsSection from "@/app/components/homePage/grafik";
 import TrainingCarousel from "@/app/components/homePage/lpkScroll";
 import SmkLogoMarquee from "./components/homePage/smkScroll";
 import Footer from "./components/homePage/footer";
@@ -35,9 +34,6 @@ export default function HomePage() {
 
       <SmkLogoMarquee />
       <Footer />
-
-      {/* Initialize AOS after the components are rendered */}
-      {/* Komponen berikutnya: JobList, CompanySection, dst */}
     </>
   );
 }

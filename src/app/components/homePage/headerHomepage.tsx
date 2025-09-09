@@ -3,16 +3,47 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { Container } from "@/app/components/Container";
+import { HiUser } from "react-icons/hi";
+
+type User = {
+  id: number | string;
+  username: string;
+  email: string;
+  role: string;
+  name: string;
+  avatar: string;
+};
 
 export default function HeaderHome() {
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function navLink(path: string, label: string) {
     const isActive =
@@ -30,9 +61,34 @@ export default function HeaderHome() {
     );
   }
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    router.push("/");
+  }
+
+  function getDashboardPath(role: string) {
+    switch (role) {
+      case "siswa":
+        return "/dashboard-siswa";
+      case "sekolah":
+        return "/dashboard-sekolah";
+      case "perusahaan":
+        return "/dashboard-perusahaan";
+      case "lpk":
+        return "/dashboard-lpk";
+      case "admin":
+        return "/dashboard-admin";
+      default:
+        return "/";
+    }
+  }
+
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 tablet:px-10 desktop:px-[70px] h-16">
+      <Container className="flex items-center justify-between h-16">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/img/logo-fit-academy.png"
@@ -64,24 +120,66 @@ export default function HeaderHome() {
         </nav>
 
         {/* Buttons Desktop */}
-        <div className="hidden desktop:flex items-center space-x-1.5">
-          <button
-            onClick={() => router.push("/login")}
-            className="bg-[#0F67B1] text-white hover:bg-opacity-70 transition px-4 py-2 rounded-md"
-          >
-            Masuk
-          </button>
-          <div className="w-[1.5px] h-7 bg-black" />
-          <button
-            onClick={() => router.push("/registrasi")}
-            className="border hover:bg-gray-100 border-[#0F67B1] text-[#0F67B1] px-4 py-2 rounded-md"
-          >
-            Daftar
-          </button>
+        <div className="hidden desktop:flex items-center space-x-3">
+          {!user ? (
+            <>
+              <button
+                onClick={() => router.push("/login")}
+                className="bg-[#0F67B1] text-white hover:bg-opacity-70 transition px-4 py-2 rounded-md"
+              >
+                Masuk
+              </button>
+              <div className="w-[1.5px] h-7 bg-black" />
+              <button
+                onClick={() => router.push("/registrasi")}
+                className="border hover:bg-gray-100 border-[#0F67B1] text-[#0F67B1] px-4 py-2 rounded-md"
+              >
+                Daftar
+              </button>
+            </>
+          ) : (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen((s) => !s)}
+                className="flex items-center gap-2 focus:outline-none shadow-none bg-none"
+              >
+                {user.avatar && user.avatar.trim() !== "" ? (
+                  <Image
+                    src={user.avatar}
+                    alt={user.name}
+                    width={35}
+                    height={35}
+                    className="rounded-full object-cover text-xs"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+                    <HiUser className="text-xl" />
+                  </div>
+                )}
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 w-48 p-2 bg-white border rounded-md shadow-lg z-50">
+                  <Link
+                    href={getDashboardPath(user.role)}
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg " 
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg"
+                  >
+                    Keluar
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Hamburger tablet & mobile */}
-        <div className="flex items-center gap-3 desktop:hidden">
+        {/* Toggle Mobile */}
+        <div className="flex items-center desktop:hidden">
           <button
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -91,79 +189,130 @@ export default function HeaderHome() {
             <Hamburger open={open} />
           </button>
         </div>
-      </div>
+      </Container>
 
-      {/* ===== Dropdown (tanpa blur/hitam) ===== */}
+      {/* Dropdown Mobile */}
       <div
         className={`desktop:hidden ${
           open ? "fixed inset-x-0 top-16 z-50" : "hidden"
         }`}
       >
         <div className="bg-white shadow-xl border-t border-black/10">
-          <div className="mx-auto max-w-screen-xl px-4 tablet:px-10 desktop:px-[70px] py-4 max-h-[calc(100vh-4rem)] overflow-auto">
+          <Container className="py-4 max-h-[calc(100vh-4rem)] overflow-auto">
             <div className="flex flex-col gap-2 py-2 text-sm font-medium font-poppins">
               <Link
                 href="/"
                 className={`rounded-lg px-2 py-2 ${
-                  pathname === "/" ? "text-[#0F67B1]" : "hover:bg-slate-50"
+                  pathname === "/" ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
               >
                 Beranda
               </Link>
-
               <Link
                 href="/tentang-mavoka"
                 className={`rounded-lg px-2 py-2 ${
                   pathname.startsWith("/tentang")
                     ? "text-[#0F67B1]"
-                    : "hover:bg-slate-50"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 Tentang MAVOKA
               </Link>
-
               <Link
                 href="/lowongan"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/lowongan")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 Cari Lowongan
               </Link>
               <Link
                 href="/list-perusahaan"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/list-perusahaan")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 Perusahaan
               </Link>
               <Link
                 href="/lpk"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/lpk")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 Lembaga Pelatihan
               </Link>
               <Link
                 href="/sekolah"
-                className="rounded-lg px-2 py-2 hover:bg-slate-50"
+                className={`rounded-lg px-2 py-2 ${
+                  pathname.startsWith("/sekolah")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 Sekolah
               </Link>
 
-              {/* Tombol login/daftar */}
+              {/* Tombol login/daftar atau avatar di mobile */}
               <div className="mt-3 flex flex-col gap-3">
-                <button
-                  onClick={() => router.push("/login")}
-                  className="w-full h-10 rounded-md bg-[#0F67B1] text-white hover:bg-opacity-80 transition"
-                >
-                  Masuk
-                </button>
-                <button
-                  onClick={() => router.push("/registrasi")}
-                  className="w-full h-10 rounded-md border border-[#0F67B1] text-[#0F67B1] hover:bg-gray-50 transition"
-                >
-                  Daftar
-                </button>
+                {!user ? (
+                  <>
+                    <button
+                      onClick={() => router.push("/login")}
+                      className="w-full h-10 rounded-md bg-[#0F67B1] text-white hover:bg-opacity-80 transition"
+                    >
+                      Masuk
+                    </button>
+                    <button
+                      onClick={() => router.push("/registrasi")}
+                      className="w-full h-10 rounded-md border border-[#0F67B1] text-[#0F67B1] hover:bg-gray-50 transition"
+                    >
+                      Daftar
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-3 px-2">
+                      {user.avatar && user.avatar.trim() !== "" ? (
+                        <Image
+                          src={user.avatar}
+                          alt={user.name}
+                          width={40}
+                          height={40}
+                          className="rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+                          <HiUser className="text-xl" />
+                        </div>
+                      )}
+                      <span className="font-medium">
+                        {user.name}
+                      </span>
+                    </div>
+                    <Link
+                      href={getDashboardPath(user.role)}
+                      className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg"
+                    >
+                      Keluar
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+          </Container>
         </div>
       </div>
     </header>

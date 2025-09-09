@@ -1,5 +1,5 @@
-import { UserGuidesGrid } from "@/app/components/homePage/panduanPengguna/userGuideGrid";
+//import { UserGuidesGrid } from "@/app/components/homePage/panduanPengguna/userGuideGrid";
 
-export default function PanduanPage() {
-  return <UserGuidesGrid />;
-}
+//export default function PanduanPage() {
+//  return <UserGuidesGrid />;
+//}

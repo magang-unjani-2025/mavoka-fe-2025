@@ -1,29 +1,37 @@
 "use client";
 import Image from "next/image";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { Container } from "@/app/components/Container"; // ✅ pakai Container
 
 export default function Footer() {
   return (
-    <footer className="">
-      {/* Bagian utama */}
+    <footer>
       <div className="bg-[#D9ECFB]">
-        <div className="mx-auto w-full max-w-[1440px] py-8 tablet:py-10 desktop:py-12 px-4 tablet:px-10 desktop:px-[70px]">
-          
-          {/* DESKTOP: flex kiri-kanan. MOBILE/TABLET: stack */}
+        <Container className="py-8">
           <div className="flex flex-col desktop:flex-row desktop:items-start desktop:justify-between gap-10">
-            
-            {/* Logo + Deskripsi (center di mobile/tablet, kiri di desktop) */}
+            {/* Kiri */}
             <div className="max-w-[520px] text-center tablet:mx-auto desktop:text-left">
               <div className="flex items-center justify-center desktop:justify-start gap-2">
-                <Image src="/img/logo-fit-academy.png" alt="FitAcademy" width={55} height={56} />
-                <Image src="/img/logo-mavoka.png" alt="Mavoka" width={125} height={38} className="-mt-2" />
+                <Image
+                  src="/img/logo-fit-academy.png"
+                  alt="FitAcademy"
+                  width={55}
+                  height={56}
+                />
+                <Image
+                  src="/img/logo-mavoka.png"
+                  alt="Mavoka"
+                  width={125}
+                  height={38}
+                  className="-mt-2"
+                />
               </div>
 
-              <p className="text-black text-sm mt-4 mb-6">
-                MAVOKA platform pemagangan terintegrasi untuk siswa SMK di seluruh Indonesia.
+              <p className="text-black mt-4 mb-6">
+                MAVOKA platform pemagangan terintegrasi <br /> untuk siswa SMK
+                di seluruh Indonesia.
               </p>
 
-              {/* Ikon Sosial */}
               <div className="flex justify-center desktop:justify-start gap-3">
                 {[
                   { Icon: Facebook, href: "#" },
@@ -41,61 +49,75 @@ export default function Footer() {
                 ))}
               </div>
             </div>
+                
+            <div className="w-full desktop:flex-1 desktop:flex desktop:justify-end">
+              <div className="grid grid-cols-2 tablet:grid-cols-3 gap-8 desktop:gap-12 text-left">
+                <div>
+                  <h3 className="text-black font-semibold mb-4 tablet:mb-6">
+                    Tautan Cepat
+                  </h3>
+                  <ul className="space-y-2 text-black text-sm">
+                    <li>
+                      <a href="/">Beranda</a>
+                    </li>
+                    <li>
+                      <a href="/tentang-mavoka">Tentang MAVOKA</a>
+                    </li>
+                    <li>
+                      <a href="/cari-lowongan">Cari lowongan</a>
+                    </li>
+                    <li>
+                      <a href="/list-perusahaan">Perusahaan</a>
+                    </li>
+                    <li>
+                      <a href="/lpk">Lembaga Pelatihan</a>
+                    </li>
+                    <li>
+                      <a href="/sekolah">Sekolah</a>
+                    </li>
+                  </ul>
+                </div>
 
-            {/* Link & Alamat */}
-            <div className="w-full desktop:flex-1 desktop:max-w-[720px] desktop:justify-end desktop:flex">
-              <div className="w-full desktop:w-auto">
-                {/* 
-                  Mobile: 2 kolom (Quick link & Help), Alamat turun (full) 
-                  Tablet: 3 kolom sejajar
-                  Desktop: 3 kolom rapat di kanan
-                */}
-                <div className="grid grid-cols-2 tablet:grid-cols-3 gap-8 desktop:gap-12 text-left desktop:justify-items-end">
-                  
-                  {/* Quick link */}
-                  <div>
-                    <h3 className="text-black font-semibold mb-4 tablet:mb-6">Quick link</h3>
-                    <ul className="space-y-2 text-black text-sm">
-                      <li><a href="/">Beranda</a></li>
-                      <li><a href="tentang-mavoka">Tentang MAVOKA</a></li>
-                      <li><a href="cari-lowongan">Cari lowongan</a></li>
-                      <li><a href="list-perusahaan">Perusahaan</a></li>
-                      <li><a href="lpk">Lembaga Pelatihan</a></li>
-                      <li><a href="sekolah">Sekolah</a></li>
-                    </ul>
-                  </div>
+                <div>
+                  <h3 className="text-black font-semibold mb-4 tablet:mb-6">
+                    Pusat Bantuan
+                  </h3>
+                  <ul className="space-y-2 text-black text-sm">
+                    <li>
+                      <a href="/customer-support">Dukungan Pelanggan</a>
+                    </li>
+                    <li>
+                      <a href="/privacy-policy">Kebijakan Privasi</a>
+                    </li>
+                    <li>
+                      <a href="/faq">Panduan & FAQ</a>
+                    </li>
+                  </ul>
+                </div>
 
-                  {/* Help */}
-                  <div>
-                    <h3 className="text-black font-semibold mb-4 tablet:mb-6">Help</h3>
-                    <ul className="space-y-2 text-black text-sm">
-                      <li><a href="customer-support">Customer Support</a></li>
-                      <li><a href="privacy-policy">Privacy Policy</a></li>
-                      <li><a href="faq">FAQ</a></li>
-                    </ul>
-                  </div>
-
-                  {/* Alamat: full width di mobile (col-span-2), sejajar di tablet/desktop */}
-                  <div className="col-span-2 tablet:col-span-1 max-w-[320px]">
-                    <h3 className="text-black font-semibold mb-4 tablet:mb-6">Alamat Kami</h3>
-                    <p className="text-black text-sm">
-                      Jl. Kembang Baru No.10 55281<br />
-                      Maguwoharjo<br />
-                      Daerah Istimewa Yogyakarta
-                    </p>
-                  </div>
+                <div className="col-span-2 tablet:col-span-1">
+                  <h3 className="text-black font-semibold mb-4 tablet:mb-6">
+                    Alamat Kami
+                  </h3>
+                  <p className="text-black text-sm">
+                    Jl. Kembang Baru No.10 55281
+                    <br />
+                    Maguwoharjo
+                    <br />
+                    Daerah Istimewa Yogyakarta
+                  </p>
                 </div>
               </div>
             </div>
-
           </div>
-        </div>
+        </Container>
       </div>
 
-      {/* Copyright */}
       <div
         className="text-white text-sm py-3 text-center"
-        style={{ background: "linear-gradient(135deg, #52E5E7 2%, #130CB7 98%)" }}
+        style={{
+          background: "linear-gradient(135deg, #52E5E7 2%, #130CB7 98%)",
+        }}
       >
         © Copyright 2025, All Rights Reserved by Fitinline
       </div>

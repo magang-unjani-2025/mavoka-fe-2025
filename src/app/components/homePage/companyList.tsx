@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import CompanyCard from "./companyCard";
 import { ArrowRight } from "lucide-react";
+import { Container } from "@/app/components/Container";
 
 type Perusahaan = {
   id: number;
@@ -20,7 +21,9 @@ export default function CompanyList() {
         const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
         const response = await fetch(`${API_BASE_URL}/api/user/show-akun/perusahaan`);
         const json = await response.json();
-        const verified = json.data.filter((item: Perusahaan) => item.status_verifikasi === "Terverifikasi");
+        const verified = json.data.filter(
+          (item: Perusahaan) => item.status_verifikasi === "Terverifikasi"
+        );
         setCompanies(verified);
       } catch (error) {
         console.error("Gagal mengambil data perusahaan:", error);
@@ -32,14 +35,17 @@ export default function CompanyList() {
 
   return (
     <section className="bg-blue-100 py-10">
-      <div className="max-w-[1154px] mx-auto px-6">
+      <Container>
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">
-            List <span className="text-blue-700">Perusahaan</span>
+            List <span className="text-[#0F67B1]">Perusahaan</span>
           </h2>
 
-          <a href="/list-perusahaan" className="text-blue-600 hover:underline flex items-center gap-1">
+          <a
+            href="/list-perusahaan"
+            className="text-[#0F67B1] hover:underline flex items-center gap-1"
+          >
             Lihat semua lowongan <ArrowRight size={20} />
           </a>
         </div>
@@ -51,11 +57,11 @@ export default function CompanyList() {
               key={company.id}
               logo={company.logo_perusahaan || null}
               name={company.nama_perusahaan}
-              detailLink={`/company/${company.nama_perusahaan.toLowerCase().replace(/\s+/g, "-")}`}
+              detailLink={`/list-perusahaan/${company.id}`}
             />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

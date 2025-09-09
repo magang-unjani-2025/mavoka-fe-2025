@@ -14,8 +14,8 @@ export default function DashboardLpk() {
     <DashboardLayout2
       role="lpk"
       user={{
-        fullName: "Kepala LPK",
-        orgName: "LPK XYZ",
+        fullName: "Fitacademy x Fitinline",
+        orgName: "Fitacademy",
         profilePic: "",
       }}
     >

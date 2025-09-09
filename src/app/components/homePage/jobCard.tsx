@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { HiUser } from "react-icons/hi";
 
 type JobCardProps = {
+  id: number | string; // ⬅️ tambahin id
   companyLogo: string | null;
   title: string;
   company: string;
@@ -12,6 +13,7 @@ type JobCardProps = {
 };
 
 export default function JobCard({
+  id,
   companyLogo,
   title,
   company,
@@ -20,12 +22,16 @@ export default function JobCard({
   closingDate,
 }: JobCardProps) {
   const router = useRouter();
+
   return (
-    <div className="border p-4 shadow-md hover:shadow-lg transition cursor-pointer">
-      <h3 className="text-xl text-[#25324B]">{title}</h3>
+    <div className="border p-4 shadow-md hover:shadow-lg transition cursor-pointer h-full flex flex-col">
+      <h3 className="text-xl text-[#25324B] font-semibold whitespace-normal break-words">
+        {title}
+      </h3>
       <p className="text-xs text-[#AA999F] font-semibold mb-2">
         {positions} Posisi
       </p>
+
       <div className="w-12 h-12 overflow-hidden flex items-center justify-center mb-2">
         {companyLogo ? (
           <img
@@ -38,9 +44,13 @@ export default function JobCard({
         )}
       </div>
 
-      <p className="text-[#C7C9D9]">
-        {company} – {location}
+      <p className="text-[#8C90A4] whitespace-normal break-words">
+        <span className="font-medium text-[#5A607F]">{company}</span>
+        {" — "}
+        {location}
       </p>
+
+      <div className="mt-auto" />
 
       <hr className="border-gray-200 mb-3" />
 
@@ -51,14 +61,12 @@ export default function JobCard({
         </p>
       </div>
 
-      <div className="flex justify-center w-full">
-        <button
-          onClick={() => router.push("/jobs/email-marketing")}
-          className="bg-[#0F67B1] text-white font-medium w-full shadow-md hover:opacity-90 transition mt-3 flex items-center justify-center gap-2"
-        >
-          Lihat Detail <ArrowRight size={20} />
-        </button>
-      </div>
+      <button
+        onClick={() => router.push(`/lowongan/${id}`)}
+        className="bg-[#0F67B1] text-white font-medium w-full shadow-md hover:opacity-90 transition mt-3 flex items-center justify-center gap-2 py-2 rounded-md"
+      >
+        Lihat Detail <ArrowRight size={20} />
+      </button>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
   HiOutlineClipboardList,
 } from "react-icons/hi";
 import { MdOutlineSettings } from "react-icons/md";
+import { LuNotepadText } from "react-icons/lu";
 import * as React from "react";
 import ConfirmLogoutDialog from "./popupLogout";
 import { useMedia } from "./useMedia";
@@ -68,31 +69,41 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
         icon: <Home size={20} />,
       },
       {
-        name: "Lowongan",
-        href: "/dashboard-perusahaan/jobs",
+        name: "Upload Lowongan",
+        href: "/upload-lowongan",
         icon: <FileText size={20} />,
       },
       {
         name: "Pelamar",
-        href: "/dashboard-perusahaan/applicants",
+        href: "/dashboard-perusahaan/pelamar",
         icon: <Users size={20} />,
+      },
+      {
+        name: "Monitoring",
+        href: "/monitoring",
+        icon: <LuNotepadText size={20} />,
+      },
+      {
+        name: "Pengaturan",
+        href: "/pengaturan-perusahaan",
+        icon: <MdOutlineSettings size={20} />,
       },
     ],
     lpk: [
       { name: "Beranda", href: "/dashboard-lpk", icon: <Home size={20} /> },
       {
         name: "Upload Pelatihan",
-        href: "/dashboard-lpk/pelatihan",
+        href: "/upload-pelatihan",
         icon: <HiOutlineDocumentAdd size={20} />,
       },
       {
         name: "Penilaian Siswa",
-        href: "/dashboard-lpk/penilaian",
+        href: "/penilaian",
         icon: <HiOutlineClipboardList size={20} />,
       },
       {
         name: "Pengaturan",
-        href: "/dashboard-sekolah/pengaturan",
+        href: "/pengaturan-lpk",
         icon: <MdOutlineSettings size={20} />,
       },
     ],
@@ -104,7 +115,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Unggah Data Siswa",
-        href: "/dashboard-sekolah/unggah-data",
+        href: "/dashboard-sekolah/unggah-data-siswa",
         icon: <Users size={20} />,
       },
       {
@@ -119,7 +130,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pengaturan",
-        href: "/dashboard-sekolah/pengaturan",
+        href: "/pengaturan-sekolah",
         icon: <MdOutlineSettings size={20} />,
       },
     ],
@@ -127,7 +138,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       { name: "Dashboard", href: "/dashboard-siswa", icon: <Home size={20} /> },
       {
         name: "Pengajuan Magang",
-        href: "/pengajuan-magang",
+        href: "/dashboard-siswa/pengajuan-magang",
         icon: <HiOutlineBriefcase size={20} />,
       },
       {
@@ -137,7 +148,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
       },
       {
         name: "Pengaturan",
-        href: "/pengaturan/data-diri",
+        href: "/pengaturan",
         icon: <MdOutlineSettings size={20} />,
       },
     ],
@@ -153,12 +164,23 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
   const renderMenuList = () => (
     <nav className="mt-6 flex-1 flex flex-col space-y-3">
       {menus[role].map((item) => {
-        const isActive =
-          item.href === "/pengaturan/data-diri"
-            ? pathname.startsWith("/pengaturan")
-            : item.href.startsWith("/laporan-umum")
-            ? pathname.startsWith("/laporan-umum")
-            : pathname === item.href;
+        let isActive = false;
+
+        if (item.href === "/pengaturan-sekolah") {
+          isActive = pathname.startsWith("/pengaturan-sekolah");
+        } else if (item.href === "/pengaturan") {
+          isActive = pathname.startsWith("/pengaturan");
+        } else if (item.href === "/laporan-umum") {
+          isActive = pathname.startsWith("/laporan-umum");
+        } else if (item.href === "/pengaturan-perusahaan") {
+          isActive = pathname.startsWith("/pengaturan-perusahaan");
+        } else if (item.href === "/upload-lowongan") {
+          isActive = pathname.startsWith("/upload-lowongan");
+        } else if (item.href === "/upload-pelatihan") {
+          isActive = pathname.startsWith("/upload-pelatihan");
+        } else {
+          isActive = pathname === item.href;
+        }
 
         return (
           <Link
@@ -193,6 +215,7 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           </Link>
         );
       })}
+
       <button
         type="button"
         onClick={() => setLogoutOpen(true)}
@@ -254,14 +277,6 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           }
         />
         {renderMenuList()}
-        <ConfirmLogoutDialog
-          open={logoutOpen}
-          onClose={() => setLogoutOpen(false)}
-          onConfirm={() => {
-            setLogoutOpen(false);
-            handleLogout();
-          }}
-        />
       </aside>
 
       <button
@@ -299,6 +314,19 @@ export default function Sidebar({ role, isOpen, setIsOpen }: SidebarProps) {
           </aside>
         </>
       )}
+
+      {logoutOpen && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"></div>
+      )}
+
+      <ConfirmLogoutDialog
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={() => {
+          setLogoutOpen(false);
+          handleLogout();
+        }}
+      />
     </>
   );
 }

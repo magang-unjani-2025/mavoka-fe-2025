@@ -30,39 +30,39 @@ export default function CariLowonganResult() {
   const currentPage = Number(searchParams.get("page") || 1);
   const itemsPerPage = 20;
 
-useEffect(() => {
-  const fetchJobs = async () => {
-    try {
-      const rawData = await TampilAllLowongan();
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const rawData = await TampilAllLowongan();
 
-      const posisi = searchParams.get("posisi")?.toLowerCase() || "";
-      const perusahaan = searchParams.get("perusahaan")?.toLowerCase() || "";
-      const lokasi = searchParams.get("lokasi")?.toLowerCase() || "";
-      const jurusan = searchParams.get("jurusan")?.toLowerCase() || "";
+        const posisi = searchParams.get("posisi")?.toLowerCase() || "";
+        const perusahaan = searchParams.get("perusahaan")?.toLowerCase() || "";
+        const lokasi = searchParams.get("lokasi")?.toLowerCase() || "";
+        const jurusan = searchParams.get("jurusan")?.toLowerCase() || "";
 
-      const filtered = rawData.filter((job: any) => {
-        return (
-          (!posisi || job.posisi?.toLowerCase().includes(posisi)) &&
-          (!perusahaan ||
-            job.perusahaan?.nama_perusahaan
-              ?.toLowerCase()
-              .includes(perusahaan)) &&
-          (!lokasi ||
-            job.lokasi_penempatan?.toLowerCase().includes(lokasi)) &&
-          (!jurusan || job.jurusan?.toLowerCase().includes(jurusan))
-        );
-      });
+        const filtered = rawData.filter((job: any) => {
+          return (
+            (!posisi || job.posisi?.toLowerCase().includes(posisi)) &&
+            (!perusahaan ||
+              job.perusahaan?.nama_perusahaan
+                ?.toLowerCase()
+                .includes(perusahaan)) &&
+            (!lokasi ||
+              job.lokasi_penempatan?.toLowerCase().includes(lokasi)) &&
+            (!jurusan || job.jurusan?.toLowerCase().includes(jurusan))
+          );
+        });
 
-      setJobs(filtered);
-    } catch (err) {
-      console.error("Gagal fetch lowongan:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setJobs(filtered);
+      } catch (err) {
+        console.error("Gagal fetch lowongan:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchJobs();
-}, [searchParams]); // ✅ tambahkan ini agar filtering reaktif terhadap URL query
+    fetchJobs();
+  }, [searchParams]); // ✅ tambahkan ini agar filtering reaktif terhadap URL query
 
   const totalItems = jobs?.length || 0;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -90,6 +90,7 @@ useEffect(() => {
             {currentJobs.map((job) => (
               <JobCard
                 key={job.id}
+                id={job.id}
                 companyLogo={job.perusahaan.logo_perusahaan}
                 title={job.judul_lowongan}
                 company={job.perusahaan.nama_perusahaan}

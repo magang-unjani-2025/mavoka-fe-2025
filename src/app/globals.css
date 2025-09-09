@@ -43,6 +43,7 @@
 
   label {
     @apply text-sm text-black; 
+    /* 14 */
   }
 
   button {

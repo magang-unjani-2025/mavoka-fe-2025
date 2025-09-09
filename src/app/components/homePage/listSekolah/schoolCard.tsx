@@ -22,10 +22,10 @@ export default function SchoolCard({ data }: Props) {
   const openWebsite = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (data.website)
-        window.open(data.website, "_blank", "noopener,noreferrer");
+      if (data.web_sekolah)
+        window.open(data.web_sekolah, "_blank", "noopener,noreferrer");
     },
-    [data.website]
+    [data.web_sekolah]
   );
 
   return (
@@ -75,20 +75,20 @@ export default function SchoolCard({ data }: Props) {
             </div>
           )}
 
-          {/* Website */}
-          {/* Website */}
-          {data.website && (
+          {/* web_sekolah */}
+          {/* web_sekolah */}
+          {data.web_sekolah && (
             <div className="mt-2 flex items-start gap-2 text-[#94A3B8]">
               <span className="mt-[2px]" aria-hidden>
                 <HiOutlineLink size={18} />
               </span>
               <a
-                href={data.website}
+                href={data.web_sekolah}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[13px] text-[#94A3B8] hover:underline truncate max-w-[240px]"
               >
-                {data.website}
+                {data.web_sekolah}
               </a>
             </div>
           )}
