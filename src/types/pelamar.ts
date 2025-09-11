@@ -17,6 +17,11 @@ export type Applicant = {
   cvUrl?: string;
   transkripUrl?: string;
   status: ApplicantStatus;
+
+  fotoUrl?: string;
+  nisn?: string;
+  noHp?: string;
+  alamat?: string;
 };
 
 export type InterviewPayload = {

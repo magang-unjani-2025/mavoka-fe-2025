@@ -39,6 +39,12 @@ let _applicants: Applicant[] = Array.from({ length: 24 }).map((_, i) => {
     cvUrl: "/files/sample-cv.pdf",
     transkripUrl: "/files/sample-transkrip.pdf",
     status,
+
+     fotoUrl: undefined,
+    nisn: `21356456${(i % 10)}`,
+    noHp: "0821345566",
+    alamat:
+      "Jl. Melati No. 12, RT 04/RW 02, Kel. Ngupasan, Kec. Gondomanan, Kota Yogyakarta, DI Yogyakarta 55271",
   };
 });
 
