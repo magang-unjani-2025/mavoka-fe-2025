@@ -42,16 +42,16 @@ export default function ConfirmLogoutDialog({
 
             <div className="mt-8 flex items-center justify-center gap-5">
               <button
-                onClick={onClose}
-                className="flex items-center justify-center h-11 w-48 rounded-md border border-[#0F67B1] text-[#0F67B1] hover:bg-gray-100 font-semibold transition"
-              >
-                Tidak
-              </button>
-              <button
                 onClick={onConfirm}
-                className="flex items-center justify-center h-11 w-36 rounded-md text-white bg-red-500 font-semibold hover:bg-red-600 transition"
+                className="flex items-center justify-center h-11 w-36 rounded-md text-white bg-[#BA0000] font-semibold hover:bg-red-800 transition"
               >
                 Ya
+              </button>
+              <button
+                onClick={onClose}
+                className="flex items-center justify-center h-11 w-48 rounded-md bg-[#0F67B1] text-white hover:bg-[#0F67B1]/80 font-semibold transition"
+              >
+                Tidak
               </button>
             </div>
           </div>

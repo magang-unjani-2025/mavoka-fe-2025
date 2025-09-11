@@ -40,12 +40,12 @@ export default function CompanyList() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">
-            List <span className="text-blue-700">Perusahaan</span>
+            List <span className="text-[#0F67B1]">Perusahaan</span>
           </h2>
 
           <a
             href="/list-perusahaan"
-            className="text-blue-600 hover:underline flex items-center gap-1"
+            className="text-[#0F67B1] hover:underline flex items-center gap-1"
           >
             Lihat semua lowongan <ArrowRight size={20} />
           </a>
@@ -58,9 +58,7 @@ export default function CompanyList() {
               key={company.id}
               logo={company.logo_perusahaan || null}
               name={company.nama_perusahaan}
-              detailLink={`/company/${company.nama_perusahaan
-                .toLowerCase()
-                .replace(/\s+/g, "-")}`}
+              detailLink={`/list-perusahaan/${company.id}`}
             />
           ))}
         </div>

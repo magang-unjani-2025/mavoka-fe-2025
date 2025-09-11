@@ -1,6 +1,6 @@
 export default function CardUtama() {
   return (
-    <div className="flex-1 mr-5 ml-5 h-full p-6">
+    <div className="flex-1 h-full p-6">
       <div className="bg-white rounded-lg shadow p-10 h-full flex flex-col items-start justify-start">
         <h1 className="font-bold text-[#0F67B1]">
           SELAMAT DATANG <span className="text-black">Siswa</span>

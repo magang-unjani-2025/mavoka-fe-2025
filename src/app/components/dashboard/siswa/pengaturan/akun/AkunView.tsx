@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoIosArrowForward } from "react-icons/io";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import EditUsernameModal from "./EditUsernameModal";
 
 interface AkunViewProps {
@@ -33,13 +33,13 @@ export default function AkunView({ form, setForm, onChangePassword }: AkunViewPr
       icon: (
         <div className="flex items-center gap-2">
           {showPassword ? (
-            <FiEyeOff
+            <FaEye
               size={20}
               className="text-gray-600 cursor-pointer"
               onClick={() => setShowPassword(false)}
             />
           ) : (
-            <FiEye
+            <FaEyeSlash
               size={20}
               className="text-gray-600 cursor-pointer"
               onClick={() => setShowPassword(true)}

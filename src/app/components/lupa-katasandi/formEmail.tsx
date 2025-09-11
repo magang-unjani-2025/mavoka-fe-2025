@@ -23,18 +23,19 @@ export default function FormLupaSandi() {
     setOpen(true); // tampilkan popup sukses
   };
 
-const handleClose = () => {
-  setOpen(false);
-  router.push(
-    `/lupa-kataSandi/otp-lupaSandi?email=${encodeURIComponent(email)}`
-  );
-};
-
+  const handleClose = () => {
+    setOpen(false);
+    router.push(
+      `/lupa-kataSandi/otp-lupaSandi?email=${encodeURIComponent(email)}`
+    );
+  };
 
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <h2 className="text-xl font-bold text-center text-black">Lupa Kata sandi</h2>
+        <h2 className="text-xl font-bold text-center text-black">
+          Lupa Kata sandi
+        </h2>
         <p className="text-sm text-center text-gray-400">
           Masukan email Anda untuk memverifikasi proses
         </p>
@@ -50,12 +51,15 @@ const handleClose = () => {
           />
         </div>
 
-        <Button type="submit" className="w-full rounded-full" disabled={sending}>
+        <Button
+          type="submit"
+          className="w-full rounded-full"
+          disabled={sending}
+        >
           {sending ? "Mengirim..." : "Kirim"}
         </Button>
       </form>
-
-      {/*<SuccessModal
+      <SuccessModal
         open={open}
         title="Berhasil"
         message={
@@ -66,20 +70,7 @@ const handleClose = () => {
           </>
         }
         onClose={handleClose}
-      />*/}
-      <SuccessModal
-  open={open}
-  title="Berhasil"
-  message={
-    <>
-      Selamat kode sudah dikirim ke email Anda.
-      <br />Silakan periksa email Anda.
-    </>
-  }
-  showCloseIcon  // tampilkan ikon silang saja
-  onClose={handleClose} // menutup → push ke /lupa-kataSandi/otp?email=...
-/>
-
+      />
     </>
   );
 }

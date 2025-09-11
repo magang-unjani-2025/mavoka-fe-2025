@@ -122,7 +122,7 @@ export default function FormOtpLupa() {
         Tidak menerima kode?{" "}
         <button
           type="button"
-          className="text-[#0F67B1] font-semibold hover:underline"
+          className="text-[#0F67B1] font-semibold hover:underline bg-none border-none p-0 shadow-none"
           onClick={() => alert("Kode dikirim ulang")}
         >
           Kirim Ulang
