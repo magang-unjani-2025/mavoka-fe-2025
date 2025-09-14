@@ -76,10 +76,10 @@ export default function PelamarListPage() {
 
   return (
     <DashboardLayout2>
-      <div className="w-full">
-        <h1 className="mb-4 text-2xl font-semibold text-gray-900">
+      <div className="w-full p-6">
+        <h3 className="mb-4 font-semibold text-gray-900">
           Data Pelamar Magang
-        </h1>
+        </h3>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           {/* Filter TETAP di luar area scroll */}
