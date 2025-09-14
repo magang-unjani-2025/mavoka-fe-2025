@@ -12,8 +12,14 @@ const data = [
   { no: 4, name: "Data Siswa Terdaftar", role: "siswa" },
 ];
 
-// Data untuk modal preview
-const dataByRole: Record<string, any[]> = {
+type Siswa = { nama: string; email: string; sekolah: string };
+type Sekolah = { nama: string; alamat: string; telepon: string };
+type Perusahaan = { nama: string; bidang: string; telepon: string };
+type Lembaga = { nama: string; email: string; telepon: string };
+
+type RoleData = Siswa | Sekolah | Perusahaan | Lembaga;
+
+const dataByRole: Record<string, RoleData[]> = {
   Siswa: [
     { nama: "Andi", email: "andi@mail.com", sekolah: "SMAN 1" },
     { nama: "Budi", email: "budi@mail.com", sekolah: "SMK 2" },
@@ -43,7 +49,7 @@ export default function LaporanUmum() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState("");
-  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<RoleData[]>([]);
 
   const handleOpenModal = (role: string) => {
     setSelectedRole(role);

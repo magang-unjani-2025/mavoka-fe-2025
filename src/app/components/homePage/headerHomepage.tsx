@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { Container } from "@/app/components/Container";
 import { HiUser } from "react-icons/hi";
+import { IoChevronDown } from "react-icons/io5";
 
 type User = {
   id: number | string;
@@ -141,8 +142,9 @@ export default function HeaderHome() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="flex items-center gap-2 focus:outline-none shadow-none bg-none"
+                className="flex items-center gap-4 py-0 px-2 shadow-none border"
               >
+                {/* Avatar */}
                 {user.avatar && user.avatar.trim() !== "" ? (
                   <Image
                     src={user.avatar}
@@ -156,13 +158,21 @@ export default function HeaderHome() {
                     <HiUser className="text-xl" />
                   </div>
                 )}
+
+                <span className="text-sm font-medium">{user.username}</span>
+
+                <IoChevronDown
+                  className={`transition-transform ${
+                    dropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 w-48 p-2 bg-white border rounded-md shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-48 p-2 bg-white border rounded-md shadow-lg z-50">
                   <Link
                     href={getDashboardPath(user.role)}
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg " 
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg "
                   >
                     Dashboard
                   </Link>
@@ -278,7 +288,7 @@ export default function HeaderHome() {
                   </>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-3 px-2">
+                    <div className="flex items-center justify-between py-0 px-2 shadow-none border rounded-[5px] ">
                       {user.avatar && user.avatar.trim() !== "" ? (
                         <Image
                           src={user.avatar}
@@ -292,9 +302,7 @@ export default function HeaderHome() {
                           <HiUser className="text-xl" />
                         </div>
                       )}
-                      <span className="font-medium">
-                        {user.name}
-                      </span>
+                      <span className="font-medium">{user.name}</span>
                     </div>
                     <Link
                       href={getDashboardPath(user.role)}
