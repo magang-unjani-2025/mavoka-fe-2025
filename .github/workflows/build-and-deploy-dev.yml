@@ -1,0 +1,51 @@
+name: Build and Deploy Frontend to Development
+
+on:
+  push:
+    branches: [ 'dev' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Setup Compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Create .env File
+        run: |
+          echo "${{ vars.ENV_DEV }}" > .env.development
+
+      - name: Build Container with Docker Compose
+        run: |
+          docker compose --file docker-compose-dev.yml build --no-cache
+          docker image save mavoka-fe-2025-dev-img:latest --output mavoka-fe-2025-dev-img.tar
+
+      - name: Copy Image with rsync over SSH
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          path: './mavoka-fe-2025-dev-img.tar'
+          remote_path: ${{ secrets.SCP_PATH }}
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT }}
+          remote_user: ${{ secrets.SSH_USERNAME }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy (Development) with SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.SCP_PATH }}
+            git pull origin dev
+            echo "${{ vars.ENV_DEV }}" > .env.development
+            docker compose --file docker-compose-dev.yml down --rmi all
+            docker image load --input mavoka-fe-2025-dev-img.tar
+            docker compose --file docker-compose-dev.yml up --detach

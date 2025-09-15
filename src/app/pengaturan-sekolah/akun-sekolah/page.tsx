@@ -1,9 +1,9 @@
 
 "use client";
 import { useState } from "react";
-import AkunHeader from "@/app/components/dashboard/siswa/pengaturan/akun/AkunHeader";
-import AkunView from "@/app/components/dashboard/siswa/pengaturan/akun/AkunView";
-import ChangePasswordFlow from "@/app/components/dashboard/siswa/pengaturan/akun/ChangePasswordFlow";
+import AkunHeader from "@/app/components/pengaturan-profil/akun/AkunHeader";
+import AkunView from "@/app/components/pengaturan-profil/akun/AkunView";
+import ChangePasswordFlow from "@/app/components/pengaturan-profil/akun/ChangePasswordFlow";
 
 export default function AkunPage() {
   const [activeTab, setActiveTab] = useState("akun");

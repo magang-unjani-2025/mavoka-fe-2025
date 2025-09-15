@@ -1,19 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { FiLogOut } from "react-icons/fi"; 
+import { FiLogOut } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
 };
 
-export default function ConfirmLogoutDialog({
-  open,
-  onClose,
-  onConfirm,
-}: Props) {
+export default function ConfirmLogoutDialog({ open, onClose }: Props) {
+  const router = useRouter();
+
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -22,6 +20,13 @@ export default function ConfirmLogoutDialog({
   }, [open, onClose]);
 
   if (!open) return null;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    router.push("/");
+  };
 
   return (
     <div className="fixed inset-0 z-50">
@@ -38,11 +43,13 @@ export default function ConfirmLogoutDialog({
               <FiLogOut className="text-[#BA0000]" size={48} />
             </div>
 
-            <p className="font-semibold text-[#858585]">Apakah Anda Yakin Ingin Keluar ?</p>
+            <p className="font-semibold text-[#858585]">
+              Apakah Anda Yakin Ingin Keluar ?
+            </p>
 
             <div className="mt-8 flex items-center justify-center gap-5">
               <button
-                onClick={onConfirm}
+                onClick={handleLogout}
                 className="flex items-center justify-center h-11 w-36 rounded-md text-white bg-[#BA0000] font-semibold hover:bg-red-800 transition"
               >
                 Ya

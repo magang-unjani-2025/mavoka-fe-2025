@@ -14,10 +14,14 @@ type Role = "siswa" | "sekolah" | "perusahaan" | "lpk" | "admin";
 type FormValues = {
   username: string;
   password: string;
-  role?: Exclude<Role, "admin">; // role dari select (bukan admin)
+  role?: Exclude<Role, "admin">;
 };
 
-export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) {
+export default function FormLoginMultiRole({
+  fixedRole,
+}: {
+  fixedRole?: Role;
+}) {
   const {
     register,
     handleSubmit,
@@ -45,123 +49,33 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
     }
   }
 
-  //const onSubmit = async (data: FormValues) => {
-  //  // jika fixedRole ada → pakai itu; kalau tidak → pakai dari select
-  //  const hintedRole: Role = (fixedRole ?? data.role) as Role;
-
-  //  const payload: Login = {
-  //    username: data.username,
-  //    password: data.password,
-  //    // tetap boleh kirim ke backend kalau kontrak API kamu butuh,
-  //    // tapi **server** yang harus memutuskan role final
-  //    role: hintedRole as any,
-  //  };
-
-  //  try {
-  //    setLoading(true);
-  //    const res = await login(payload);
-  //    // harapkan backend balikan role final yang valid untuk user tsb
-  //    const serverRole: Role = res?.data?.role ?? hintedRole;
-
-  //    redirectByRole(serverRole);
-  //    reset();
-  //  } catch (err: any) {
-  //    console.error("Login gagal:", err.response?.data || err.message);
-  //    alert("Login gagal. Periksa kembali username, password, dan role Anda.");
-  //  } finally {
-  //    setLoading(false);
-  //  }
-  //};
-
   const onSubmit = async (data: FormValues) => {
-  const hintedRole: Role = (fixedRole ?? data.role) as Role;
+    // jika fixedRole ada → pakai itu; kalau tidak → pakai dari select
+    const hintedRole: Role = (fixedRole ?? data.role) as Role;
 
-  const payload: Login = {
-    username: data.username,
-    password: data.password,
-    role: hintedRole as any,
-  };
+    const payload: Login = {
+      username: data.username,
+      password: data.password,
+      role: hintedRole as any,
+    };
 
-  try {
-    setLoading(true);
-    const res = await login(payload);
+    try {
+      setLoading(true);
+      const res = await login(payload);
+      const serverRole: Role = res?.data?.role ?? hintedRole;
 
-    const d: any = res?.data ?? {};
-    // role dari server kalau ada, fallback ke pilihan
-    const serverRole: Role = (d.role ?? hintedRole) as Role;
-    const token: string | undefined = d.token ?? d.access_token ?? d.jwt;
-
-    // ====== AMBIL ENTITY & ID DARI BERBAGAI BENTUK ======
-    // prioritaskan pembungkus umum; terakhir fallback ke `d` (top-level flat)
-    const entity: any =
-      d.data ??
-      d.user ??
-      d.profile ??
-      d.sekolah ??
-      d.siswa ??
-      d.perusahaan ??
-      d.lpk ??
-      d;
-
-    // kandidat id di berbagai nama field
-    const idCandidate =
-      entity?.id ??
-      entity?.sekolah_id ??
-      entity?.siswa_id ??
-      entity?.perusahaan_id ??
-      entity?.lpk_id ??
-      d?.id; // kalau top-level flat
-
-    const entityId = Number(idCandidate);
-
-    // ====== SIMPAN AUTH & PROFIL RINGKAS (opsional) ======
-    if (token) localStorage.setItem("access_token", token);
-    localStorage.setItem("user_role", serverRole);
-    // simpan entity yang kita pakai (boleh ganti ke 'user' kalau perlu)
-    localStorage.setItem("currentUser", JSON.stringify(entity));
-
-    // bersihkan id lama agar tidak “nyangkut”
-    localStorage.removeItem("siswa_id");
-    localStorage.removeItem("sekolah_id");
-    localStorage.removeItem("perusahaan_id");
-    localStorage.removeItem("lpk_id");
-    localStorage.removeItem("actor");
-
-    if (Number.isFinite(entityId) && entityId > 0) {
-      switch (serverRole) {
-        case "siswa":
-          localStorage.setItem("siswa_id", String(entityId));
-          break;
-        case "sekolah":
-          localStorage.setItem("sekolah_id", String(entityId));
-          break;
-        case "perusahaan":
-          localStorage.setItem("perusahaan_id", String(entityId));
-          break;
-        case "lpk":
-          localStorage.setItem("lpk_id", String(entityId));
-          break;
-      }
-      // penyimpanan seragam untuk komponen generik
-      localStorage.setItem("actor", JSON.stringify({ role: serverRole, id: entityId }));
-    } else {
-      console.warn("Login OK tapi id tidak ditemukan di respons ini:", d);
+      redirectByRole(serverRole);
+      reset();
+    } catch (err: any) {
+      console.error("Login gagal:", err.response?.data || err.message);
+      alert("Login gagal. Periksa kembali username, password, dan role Anda.");
+    } finally {
+      setLoading(false);
     }
-
-    redirectByRole(serverRole);
-    reset();
-  } catch (err: any) {
-    console.error("Login gagal:", err?.response?.data ?? err?.message);
-    alert("Login gagal. Periksa kembali username, password, dan role Anda.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      {/* selector role hanya tampil jika TIDAK fixed */}
       {!fixedRole && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -181,7 +95,7 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
             <option value="lpk">Lembaga Pelatihan</option>
           </select>
           {errors.role && (
-            <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
           )}
         </div>
       )}
@@ -214,7 +128,10 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
       {!fixedRole && (
         <p className="text-xs text-center text-gray-600 mt-2">
           Belum punya akun?{" "}
-          <a href="/registrasi" className="text-[#0F67B1] font-semibold hover:underline text-xs">
+          <a
+            href="/registrasi"
+            className="text-[#0F67B1] font-semibold hover:underline text-xs"
+          >
             Daftar
           </a>
         </p>

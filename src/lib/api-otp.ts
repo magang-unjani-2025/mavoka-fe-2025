@@ -1,5 +1,6 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8000/api/user";
+
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"}/api/user`;
 
 export async function verifyOtp({
   email,
@@ -10,7 +11,7 @@ export async function verifyOtp({
   role: string;
   otp: string;
 }) {
-  const res = await axios.post(`${BASE_URL}/verify-otp/${role}`, {
+  const res = await axios.post(`${API_BASE_URL}/verify-otp/${role}`, {
     email,
     otp,
   });
