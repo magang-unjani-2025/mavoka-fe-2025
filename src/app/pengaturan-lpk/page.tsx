@@ -7,16 +7,17 @@ import TampilProfil from "@/app/components/pengaturan-profil/data-akun/TampilPro
 type Role = "sekolah" | "perusahaan" | "lpk" | "siswa";
 
 export default function ProfilePage() {
-  const [role, setRole] = useState<Role>("sekolah");
+  const [role, setRole] = useState<Role>("lpk");
   const [form, setForm] = useState({
-    nama_sekolah: "SMK Negeri 1 Yogyakarta",
-    npsn: "20404180",
-    email: "smk1yogyakarta@gmail.com",
-    phone: "08123456789",
-    website: "https://mail.smk1yogyayess.sch.id",
-    address:
-      "Jl. Kemetiran Kidul 35, Kecamatan Gedongtengen, Kota Yogyakarta, D.I. Yogyakarta.",
+    nama_lembaga: "Fitacademy x Fitinline",
     profilePic: "",
+    bidang_pelatihan: "Teknologi",
+    deskripsi_lembaga: "Lembaga pelatihan yang bergerak di bidang teknologi",
+    email: "fitacademy@gmail.com",
+    phone: "08111144445555",
+    website: "fitacademy.com",
+    address: "Maguwo",
+    akreditasi: "Baik Sekali",
   });
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function ProfilePage() {
         <ProfileAvatar
           src={form.profilePic}
           name={
-            form.nama_sekolah
+            form.nama_lembaga
           }
         />
       </div>

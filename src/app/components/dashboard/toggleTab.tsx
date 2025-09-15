@@ -8,7 +8,7 @@ export interface TabItem<T extends string = string> {
 }
 
 interface ToggleTabsProps<T extends string = string> {
-  tabs: readonly TabItem<T>[]; // ⬅️ terima readonly array
+  tabs: readonly TabItem<T>[];
   value?: T;
   defaultValue?: T;
   onChange?: (value: T) => void;
@@ -49,7 +49,7 @@ const ToggleTabs = <T extends string = string>({
     if (containerRef.current) ro.observe(containerRef.current);
     btnRefs.forEach((r) => r.current && ro.observe(r.current!));
     return () => ro.disconnect();
-  }, [active, tabs.length]); // eslint-disable-line
+  }, [active, tabs.length]);
 
   const handleClick = (val: T) => {
     if (value === undefined) setInner(val);

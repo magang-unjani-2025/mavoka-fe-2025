@@ -34,17 +34,12 @@ function buildSettingsHref(role: Role) {
   }
 }
 
-export default function DashboardLayout2({
-  children,
-  role: roleProp,
-  user: userProp,
-}: {
+export default function DashboardLayout2({ children, role: roleProp, user: userProp }: {
   children: React.ReactNode;
   role?: Role;
   user?: UserBrief;
 }) {
   const pathname = usePathname();
-
   const role = (roleProp ?? deriveRoleFromPath(pathname) ?? "siswa") as Role;
 
   useEffect(() => {
@@ -55,9 +50,7 @@ export default function DashboardLayout2({
     }
   }, [userProp]);
 
-  const [hydratedUser, setHydratedUser] = useState<UserBrief | undefined>(
-    undefined
-  );
+  const [hydratedUser, setHydratedUser] = useState<UserBrief | undefined>(undefined);
   useEffect(() => {
     if (!userProp) {
       try {
@@ -66,6 +59,7 @@ export default function DashboardLayout2({
       } catch {}
     }
   }, [userProp]);
+
   const safeUser = useMemo<UserBrief>(() => {
     const src = userProp ?? hydratedUser;
     if (src) {
@@ -88,7 +82,7 @@ export default function DashboardLayout2({
   const [isOpen, setIsOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  return (
+return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
         role={role}
@@ -106,15 +100,12 @@ export default function DashboardLayout2({
           profilePic={safeUser.profilePic}
           settingsHref={settingsHref}
           hasNotification
+          onMobileOpen={() => setMobileOpen(true)}  // hanya mobile
+          // ⛔️ Hapus/biarkan tidak dipass: onToggleDesktop
         />
         <main className="flex-1 overflow-y-auto p-2 bg-gray-50">
           {children}
         </main>
-        {/* <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-          <div className="w-full p-6 bg-white rounded-xl shadow-md">
-            {children}
-          </div>
-        </main> */}
       </div>
     </div>
   );

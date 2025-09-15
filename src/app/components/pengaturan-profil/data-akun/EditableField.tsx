@@ -103,8 +103,8 @@ export default function EditableField({
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full text-sm border-[2px] rounded-md px-3 py-2 
-                   focus:border-[#116ACC] focus:ring-5 focus:ring-[#116ACC] outline-none border-[#0F67B1]"
+        className="w-full text-sm border rounded-md px-3 py-2 
+                   focus:border-[#0F67B1] focus:ring-5 focus:ring-[#0F67B1] outline-none border-[#0F67B1]"
       />
     </div>
   );

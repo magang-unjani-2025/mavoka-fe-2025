@@ -14,10 +14,14 @@ type Role = "siswa" | "sekolah" | "perusahaan" | "lpk" | "admin";
 type FormValues = {
   username: string;
   password: string;
-  role?: Exclude<Role, "admin">; // role dari select (bukan admin)
+  role?: Exclude<Role, "admin">;
 };
 
-export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) {
+export default function FormLoginMultiRole({
+  fixedRole,
+}: {
+  fixedRole?: Role;
+}) {
   const {
     register,
     handleSubmit,
@@ -46,24 +50,48 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
   }
 
   const onSubmit = async (data: FormValues) => {
-    // jika fixedRole ada → pakai itu; kalau tidak → pakai dari select
     const hintedRole: Role = (fixedRole ?? data.role) as Role;
 
     const payload: Login = {
       username: data.username,
       password: data.password,
-      // tetap boleh kirim ke backend kalau kontrak API kamu butuh,
-      // tapi **server** yang harus memutuskan role final
       role: hintedRole as any,
     };
 
     try {
       setLoading(true);
+
       const res = await login(payload);
-      // harapkan backend balikan role final yang valid untuk user tsb
+
+      const token = res.data.token;
+      const user = res.data.user;
       const serverRole: Role = res?.data?.role ?? hintedRole;
 
-      redirectByRole(serverRole);
+      const normalizedUser = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: serverRole,
+        name:
+          user.nama_sekolah ||
+          user.nama_perusahaan ||
+          user.nama_siswa ||
+          user.nama_lpk ||
+          user.username,
+        avatar:
+          user.logo_perusahaan || user.foto_siswa || "/img/default-avatar.png",
+      };
+
+      // simpan ke localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(normalizedUser));
+
+      if (serverRole === "admin") {
+        redirectByRole(serverRole);
+      } else {
+        router.push("/");
+      }
+
       reset();
     } catch (err: any) {
       console.error("Login gagal:", err.response?.data || err.message);
@@ -75,7 +103,6 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      {/* selector role hanya tampil jika TIDAK fixed */}
       {!fixedRole && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -95,7 +122,7 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
             <option value="lpk">Lembaga Pelatihan</option>
           </select>
           {errors.role && (
-            <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
           )}
         </div>
       )}
@@ -128,7 +155,10 @@ export default function FormLoginMultiRole({ fixedRole }: { fixedRole?: Role }) 
       {!fixedRole && (
         <p className="text-xs text-center text-gray-600 mt-2">
           Belum punya akun?{" "}
-          <a href="/registrasi" className="text-[#0F67B1] font-semibold hover:underline text-xs">
+          <a
+            href="/registrasi"
+            className="text-[#0F67B1] font-semibold hover:underline text-xs"
+          >
             Daftar
           </a>
         </p>

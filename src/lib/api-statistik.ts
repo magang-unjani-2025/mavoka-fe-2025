@@ -1,42 +1,43 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8000/api/statistik";
+
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"}/api/statistik`;
 
 export async function StatistikPerusahaan() {
-  const res = await axios.get(`${BASE_URL}/perusahaan`);
+  const res = await axios.get(`${API_BASE_URL}/perusahaan`);
   return res.data;
 }
 
 export async function StatistikLpk() {
-  const res = await axios.get(`${BASE_URL}/lpk`);
+  const res = await axios.get(`${API_BASE_URL}/lpk`);
   return res.data;
 }
 
 export async function StatistikSekolah() {
-  const res = await axios.get(`${BASE_URL}/sekolah`);
+  const res = await axios.get(`${API_BASE_URL}/sekolah`);
   return res.data;
 }
 
 export async function StatistikSiswa() {
-  const res = await axios.get(`${BASE_URL}/siswa`);
+  const res = await axios.get(`${API_BASE_URL}/siswa`);
   return res.data;
 }
 
 export async function StatistikPerusahaanBulanan() {
-  const res = await axios.get(`${BASE_URL}/bulanan/perusahaan`);
+  const res = await axios.get(`${API_BASE_URL}/bulanan/perusahaan`);
   return res.data;
 }
 
 export async function StatistikLpkBulanan() {
-  const res = await axios.get(`${BASE_URL}/bulanan/lpk`);
+  const res = await axios.get(`${API_BASE_URL}/bulanan/lpk`);
   return res.data;
 }
 
 export async function StatistikSekolahBulanan() {
-  const res = await axios.get(`${BASE_URL}/bulanan/sekolah`);
+  const res = await axios.get(`${API_BASE_URL}/bulanan/sekolah`);
   return res.data;
 }
 
 export async function StatistikSiswaBulanan() {
-  const res = await axios.get(`${BASE_URL}/bulanan/siswa`);
+  const res = await axios.get(`${API_BASE_URL}/bulanan/siswa`);
   return res.data;
 }
