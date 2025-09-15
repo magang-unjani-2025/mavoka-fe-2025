@@ -50,6 +50,7 @@ export default function FormLoginMultiRole({
   }
 
   const onSubmit = async (data: FormValues) => {
+    // jika fixedRole ada → pakai itu; kalau tidak → pakai dari select
     const hintedRole: Role = (fixedRole ?? data.role) as Role;
 
     const payload: Login = {
@@ -60,38 +61,10 @@ export default function FormLoginMultiRole({
 
     try {
       setLoading(true);
-
       const res = await login(payload);
-
-      const token = res.data.token;
-      const user = res.data.user;
       const serverRole: Role = res?.data?.role ?? hintedRole;
 
-      const normalizedUser = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: serverRole,
-        name:
-          user.nama_sekolah ||
-          user.nama_perusahaan ||
-          user.nama_siswa ||
-          user.nama_lpk ||
-          user.username,
-        avatar:
-          user.logo_perusahaan || user.foto_siswa || "/img/default-avatar.png",
-      };
-
-      // simpan ke localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(normalizedUser));
-
-      if (serverRole === "admin") {
-        redirectByRole(serverRole);
-      } else {
-        router.push("/");
-      }
-
+      redirectByRole(serverRole);
       reset();
     } catch (err: any) {
       console.error("Login gagal:", err.response?.data || err.message);

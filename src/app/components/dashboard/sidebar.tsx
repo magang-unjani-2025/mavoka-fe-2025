@@ -416,7 +416,7 @@ export default function Sidebar({
     siswa: [
       { name: "Dashboard", href: "/dashboard-siswa", icon: <Home size={20} /> },
       { name: "Pengajuan Magang", href: "/dashboard-siswa/pengajuan-magang", icon: <HiOutlineBriefcase size={20} /> },
-      { name: "Laporan & Evaluasi", href: "/laporan-evaluasi", icon: <GrDocumentUpload size={20} /> },
+      { name: "Laporan & Evaluasi", href: "/dashboard-siswa/laporan-evaluasi", icon: <GrDocumentUpload size={20} /> },
       { name: "Pengaturan", href: "/pengaturan", icon: <MdOutlineSettings size={20} /> },
     ],
   };
