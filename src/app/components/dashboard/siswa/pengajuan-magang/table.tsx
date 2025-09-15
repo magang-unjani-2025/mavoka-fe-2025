@@ -116,11 +116,11 @@ export default function StudentApplicationsTable({
 
 function StatusChip({ status }: { status: ApplicationStatus }) {
   const map: Record<ApplicationStatus, string> = {
-    lamar: "bg-gray-100 text-gray-700",
-    wawancara: "bg-yellow-100 text-yellow-800",
-    penawaran: "bg-blue-100 text-blue-700",
-    diterima: "bg-green-100 text-green-700",
-    ditolak: "bg-red-100 text-red-700",
+    lamar: "bg-[#E3E3E3] text-[#646161]",
+    wawancara: "bg-[#FFF0B5] text-[#E57A00]",
+    penawaran: "bg-[#E57A00] text-[#FFF0B5]",
+    diterima: "bg-[#CDFFCD] text-[#007F00]",
+    ditolak: "bg-[#FFE0E0] text-[#D30000]",
   };
   const label: Record<ApplicationStatus, string> = {
     lamar: "Lamar",
