@@ -1,21 +1,39 @@
 "use client";
+
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";
+import ToggleTabs from "@/app/components/dashboard/toggleTab";
 
-export default function UploadLowonganLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import TableDraftLowongan from "@/app/components/upload-lowongan-pelatihan/TableDraftLowongan";
+import TableLowonganTerpasang from "@/app/components/upload-lowongan-pelatihan/TableLowonganTerpasang";
+import LowonganBaru from "@/app/components/upload-lowongan-pelatihan/LowonganBaru";
+import { dummyLowongan } from "@/app/data/dummyLowongan";
+
+const tabs = [
+  { text: "Draft", value: "draft" },
+  { text: "Lowongan Terpasang", value: "terpasang" },
+] as const;
+
+type TabType = (typeof tabs)[number]["value"];
+
+export default function UploadLowonganLayout() {
+  const router = useRouter();
   const pathname = usePathname();
-
-  const tabs = [
-    { href: "/upload-lowongan", label: "Draft" },
-    { href: "/upload-lowongan/lowongan-terpasang", label: "Lowongan Terpasang" },
-  ];
-
+  const searchParams = useSearchParams();
   const isLowonganBaruPage = pathname === "/upload-lowongan/lowongan-baru";
+
+  const currentTab: TabType = useMemo(() => {
+    const q = (searchParams.get("tab") || "draft").toLowerCase();
+    return q === "terpasang" ? "terpasang" : "draft";
+  }, [searchParams]);
+
+  const handleChange = (next: TabType) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", next);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <DashboardLayout2
@@ -27,38 +45,36 @@ export default function UploadLowonganLayout({
       }}
     >
       {isLowonganBaruPage ? (
-        <div className="p-6">{children}</div>
+        <div className="p-6">
+          <LowonganBaru role="perusahaan" />
+        </div>
       ) : (
         <div className="flex flex-col h-full p-6">
           <h3 className="mb-5">Lowongan Perusahaan</h3>
 
           <div className="flex items-center justify-between bg-white shrink-0">
-            <div className="flex border-b border-gray-300">
-              {tabs.map((tab) => (
-                <Link
-                  key={tab.href}
-                  href={tab.href}
-                  className={`px-4 py-2 font-semibold ${
-                    pathname === tab.href
-                      ? "border-b-2 border-[#0F67B1] text-[#0F67B1] bg-[#0F67B1]/5"
-                      : "text-gray-600 hover:text-[#0F67B1]"
-                  }`}
-                >
-                  {tab.label}
-                </Link>
-              ))}
+            <div className="h-10 flex items-center">
+              <ToggleTabs<TabType>
+                tabs={tabs}
+                value={currentTab}
+                onChange={handleChange}
+              />
             </div>
 
             <Link
               href="/upload-lowongan/lowongan-baru"
-              className="px-4 py-2 rounded-lg bg-[#0F67B1] text-white font-medium hover:bg-[#0d5692] transition"
+              className="h-10 inline-flex items-center px-4 rounded-lg bg-[#0F67B1] text-white font-medium hover:bg-[#0d5692] transition"
             >
               + Buat Lowongan Baru
             </Link>
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 mt-5 bg-white h-full">
-            {children}
+            {currentTab === "draft" ? (
+              <TableDraftLowongan role="perusahaan" data={dummyLowongan} />
+            ) : (
+              <TableLowonganTerpasang role="perusahaan" />
+            )}
           </div>
         </div>
       )}

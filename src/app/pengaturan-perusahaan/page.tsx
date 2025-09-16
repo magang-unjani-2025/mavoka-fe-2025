@@ -9,13 +9,13 @@ type Role = "sekolah" | "perusahaan" | "lpk" | "siswa";
 export default function ProfilePage() {
   const [role, setRole] = useState<Role>("perusahaan");
   const [form, setForm] = useState({
-    nama_perusahaan: "Fitinline",
+    nama_perusahaan: "Perusahaan XYZ",
     profilePic: "",
     bidang_usaha: "Teknologi",
     deskripsi_usaha: "Perusahaan yang bergerak di bidang teknologi",
-    email: "fitinline@gmail.com",
+    email: "perusahaanxyz@gmail.com",
     phone: "0821345566",
-    website: "fitinline.com",
+    website: "perusahaanxyz.com",
     address: "Gamping",
     penanggung_jawab: "Lele",
   });

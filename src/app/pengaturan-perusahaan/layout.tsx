@@ -1,37 +1,53 @@
 "use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";
+import ToggleTabs from "@/app/components/dashboard/toggleTab";
 
-export default function PengaturanLayout({ children }: { children: React.ReactNode }) {
+// Import 2 page child
+import DataPerusahaanPage from "@/app/pengaturan-perusahaan/page";
+import AkunPerusahaanPage from "@/app/pengaturan-perusahaan/akun-perusahaan/page";
+
+const tabs = [
+  { text: "Data Perusahaan", value: "data" },
+  { text: "Akun Perusahaan", value: "akun" },
+] as const;
+
+type TabType = (typeof tabs)[number]["value"];
+
+export default function PengaturanLayout() {
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const tabs = [
-    { href: "/pengaturan-perusahaan", label: "Data Perusahaan" },
-    { href: "/pengaturan-perusahaan/akun-perusahaan", label: "Akun Perusahaan" },
-  ];
+  // Ambil tab dari query param, default "data"
+  const currentTab: TabType = useMemo(() => {
+    const q = (searchParams.get("tab") || "data").toLowerCase();
+    return q === "akun" ? "akun" : "data";
+  }, [searchParams]);
+
+  const handleChange = (next: TabType) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", next);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <DashboardLayout2 role="perusahaan">
       <div className="flex flex-col h-full p-6">
-        <div className="flex border-b border-gray-300 bg-white shrink-0">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={`px-4 py-2 font-semibold ${
-                pathname === tab.href
-                  ? "border-b-2 border-[#0F67B1] text-[#0F67B1] bg-[#0F67B1]/5"
-                  : "text-gray-600 hover:text-[#0F67B1]"
-              }`}
-            >
-              {tab.label}
-            </Link>
-          ))}
+        {/* Tabs */}
+        <div className="flex bg-white shrink-0">
+          <ToggleTabs<TabType>
+            tabs={tabs}
+            value={currentTab}
+            onChange={handleChange}
+          />
         </div>
 
+        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 mt-5 bg-white h-full">
-          {children}
+          {currentTab === "data" ? <DataPerusahaanPage /> : <AkunPerusahaanPage />}
         </div>
       </div>
     </DashboardLayout2>

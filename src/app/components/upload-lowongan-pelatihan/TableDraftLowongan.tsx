@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
+import Pagination from "@/app/components/dashboard/Pagination";
 
 interface DataItem {
   id: number;
-  posisi?: string; 
+  posisi?: string;
   namaPelatihan?: string;
   deskripsi: string;
-  kuota?: number; 
+  kuota?: number;
   kategori?: string;
   capaian: string;
   status: "Aktif" | "Tidak";
@@ -30,14 +31,6 @@ export default function TableDraftLowongan({ role, data }: Props) {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = sortedData.slice(startIndex, startIndex + rowsPerPage);
 
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
   return (
     <div className="mb-10">
       <div className="overflow-auto rounded-xl border border-gray-200">
@@ -58,10 +51,7 @@ export default function TableDraftLowongan({ role, data }: Props) {
 
               <th className="px-4 py-3">CAPAIAN PEMBELAJARAN</th>
 
-              {role === "perusahaan" && (
-                <th className="px-4 py-3">STATUS</th>
-              )}
-
+              {role === "perusahaan" && <th className="px-4 py-3">STATUS</th>}
               {role === "perusahaan" && (
                 <th className="px-4 py-3">AKSI STATUS</th>
               )}
@@ -77,9 +67,7 @@ export default function TableDraftLowongan({ role, data }: Props) {
                 <td className="px-4 py-2 border-t text-left">
                   {role === "perusahaan" ? item.posisi : item.namaPelatihan}
                 </td>
-                <td className="px-4 py-2 border-t text-left">
-                  {item.deskripsi}
-                </td>
+                <td className="px-4 py-2 border-t text-left">{item.deskripsi}</td>
 
                 {role === "perusahaan" ? (
                   <td className="px-4 py-2 border-t">{item.kuota}</td>
@@ -90,10 +78,10 @@ export default function TableDraftLowongan({ role, data }: Props) {
                 <td className="px-4 py-2 border-t text-left">{item.capaian}</td>
 
                 {role === "perusahaan" && (
-                  <td className="px-4 py-2 border-t text-center"></td>
+                  <td className="px-4 py-2 border-t text-center">{item.status}</td>
                 )}
                 {role === "perusahaan" && (
-                  <td className="px-4 py-2 border-t text-center"></td>
+                  <td className="px-4 py-2 border-t text-center">-</td>
                 )}
 
                 <td className="px-4 py-2 border-t">
@@ -111,57 +99,18 @@ export default function TableDraftLowongan({ role, data }: Props) {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
-      <div className="py-2 px-3 flex items-center gap-4 mt-2 text-xs rounded-b-xl justify-end">
-        <div className="flex items-center gap-2">
-          <span>Rows per page:</span>
-          <select
-            value={rowsPerPage}
-            onChange={(e) => {
-              setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
-            }}
-            className="text-xs border border-gray-300 rounded px-2 py-1 text-gray-700"
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span>
-            {startIndex + 1}-{Math.min(startIndex + rowsPerPage, data.length)} of{" "}
-            {data.length}
-          </span>
-          <div className="flex gap-2">
-            <button
-              onClick={handlePrev}
-              disabled={currentPage === 1}
-              className={`px-2 py-1 rounded bg-white ${
-                currentPage === 1
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-800 hover:bg-gray-200"
-              }`}
-            >
-              &lt;
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              className={`px-2 py-1 rounded bg-white ${
-                currentPage === totalPages
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-800 hover:bg-gray-200"
-              }`}
-            >
-              &gt;
-            </button>
-          </div>
-        </div>
-      </div>
+      
+      <Pagination
+        page={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        perPage={rowsPerPage}
+        onPerPageChange={(n) => {
+          setRowsPerPage(n);
+          setCurrentPage(1);
+        }}
+        perPageOptions={[5, 10, 20]}
+      />
     </div>
   );
 }
-

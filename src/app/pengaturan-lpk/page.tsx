@@ -6,7 +6,7 @@ import TampilProfil from "@/app/components/pengaturan-profil/data-akun/TampilPro
 
 type Role = "sekolah" | "perusahaan" | "lpk" | "siswa";
 
-export default function ProfilePage() {
+export default function DataLpkPage() {
   const [role, setRole] = useState<Role>("lpk");
   const [form, setForm] = useState({
     nama_lembaga: "Fitacademy x Fitinline",

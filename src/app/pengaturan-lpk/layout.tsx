@@ -1,19 +1,35 @@
 "use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import DashboardLayout2 from "@/app/components/dashboard/DashboardLayout2";
+import ToggleTabs from "@/app/components/dashboard/toggleTab";
 
-export default function PengaturanLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import DataLpkPage from "@/app/pengaturan-lpk/page";
+import AkunLpkPage from "@/app/pengaturan-lpk/akun-lpk/page";
+
+const tabs = [
+  { text: "Data Lembaga", value: "data" },
+  { text: "Akun Lembaga", value: "akun" },
+] as const;
+
+type TabType = (typeof tabs)[number]["value"];
+
+export default function PengaturanLayout() {
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const tabs = [
-    { href: "/pengaturan-lpk", label: "Data Lembaga" },
-    { href: "/pengaturan-lpk/akun-lpk", label: "Akun Lembaga" },
-  ];
+  const currentTab: TabType = useMemo(() => {
+    const q = (searchParams.get("tab") || "data").toLowerCase();
+    return q === "akun" ? "akun" : "data";
+  }, [searchParams]);
+
+  const handleChange = (next: TabType) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", next);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <DashboardLayout2
@@ -25,24 +41,16 @@ export default function PengaturanLayout({
       }}
     >
       <div className="flex flex-col h-full p-6">
-        <div className="flex border-b border-gray-300 bg-white shrink-0">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={`px-4 py-2 font-semibold ${
-                pathname === tab.href
-                  ? "border-b-2 border-[#0F67B1] text-[#0F67B1] bg-[#0F67B1]/5"
-                  : "text-gray-600 hover:text-[#0F67B1]"
-              }`}
-            >
-              {tab.label}
-            </Link>
-          ))}
+        <div className="flex bg-white shrink-0">
+          <ToggleTabs<TabType>
+            tabs={tabs}
+            value={currentTab}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 mt-5 bg-white h-full">
-          {children}
+          {currentTab === "data" ? <DataLpkPage /> : <AkunLpkPage />}
         </div>
       </div>
     </DashboardLayout2>
