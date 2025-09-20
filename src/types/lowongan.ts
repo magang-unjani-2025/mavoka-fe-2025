@@ -51,5 +51,28 @@ export interface Lowongan {
   keuntungan: string[];
   // hanya dipakai di tabel Terpasang:
   status?: StatusLowongan;
+  perusahaan_id: number;
+  judul_lowongan: string;
+  lokasi_penempatan: string;
+  benefit?: string | null;
+  deadline_lamaran: string;
+  created_at: string;
+  updated_at: string;
+  perusahaan: Company;
 }
 
+// Payload ringan untuk create/update dari Form
+export type CreateLowonganPayload = {
+  perusahaan_id: number;
+  judul_lowongan: string;
+  posisi: string;
+  deskripsi: string;
+  kuota: number;
+  lokasi_penempatan: string;
+  deadline_lamaran: string; // YYYY-MM-DD
+  mulaiMagang: string;      // YYYY-MM-DD
+  selesaiMagang: string;    // YYYY-MM-DD
+  tugas: string[];
+  persyaratan: string[];
+  keuntungan: string[];
+};

@@ -3,7 +3,7 @@
 import { useMemo, useState, ChangeEvent, FormEvent } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import SuccessModal from "@/app/components/registrasi/PopupBerhasil";
-import type { Lowongan } from "@/types/lowongan";
+import type { Lowongan, CreateLowonganPayload } from "@/types/lowongan";
 
 export type LowonganFormMode =
   | "create"
@@ -18,25 +18,20 @@ type Props = {
   initial?: Partial<Lowongan>;
   onBack?: () => void;
 
-  onSaveDraft?: (payload: Lowongan) => void;
-  onUnggah?: (payload: Lowongan) => void;
-  onSave?: (payload: Lowongan) => void;
+onSaveDraft?: (payload: CreateLowonganPayload, id?: number) => void;
+  onUnggah?: (payload: CreateLowonganPayload, id?: number) => void;
+  onSave?: (payload: CreateLowonganPayload, id?: number) => void;
 
-  /** tampilkan popup hanya untuk aksi tertentu (default: none) */
   successFor?: ActionType[];
-  /** pesan popup (jika ditampilkan) */
   successMessage?: string;
-  /** dipanggil ketika popup ditutup */
   onSuccessClose?: (action: ActionType) => void;
 };
 
-// ====== Utils konversi antara textarea <-> array<string> ======
 const textToArray = (s: string) =>
   s.split(/\r?\n|;/).map((x) => x.trim()).filter(Boolean);
 
 const arrayToText = (arr?: string[]) => (arr && arr.length ? arr.join("\n") : "");
 
-// ====== Nilai kosong untuk inisialisasi ======
 const emptyForm = {
   posisi: "",
   deskripsi: "",
@@ -57,12 +52,11 @@ export default function LowonganFormView({
   onSaveDraft,
   onUnggah,
   onSave,
-  successFor = [],            // default: tidak ada popup
+  successFor = [],            
   successMessage,
   onSuccessClose,
 }: Props) {
-  // state UI form (pakai string agar mudah diketik)
-  const [form, setForm] = useState({
+   const [form, setForm] = useState({
     posisi: initial?.posisi ?? emptyForm.posisi,
     deskripsi: initial?.deskripsi ?? emptyForm.deskripsi,
     kuota: String(initial?.kuota ?? emptyForm.kuota),
@@ -88,25 +82,28 @@ export default function LowonganFormView({
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  // bangun payload Lowongan dari state form
-  const buildPayload = (): Lowongan => ({
-    id: typeof initial?.id === "number" ? initial!.id : Date.now(),
+    const buildPayload = (): CreateLowonganPayload => ({
+    perusahaan_id: initial?.perusahaan_id ?? 0,
+    judul_lowongan: form.posisi.trim(),
     posisi: form.posisi.trim(),
     deskripsi: form.deskripsi.trim(),
     kuota: Number(form.kuota || 0),
-    tanggalTutup: form.tanggalTutup,
+    lokasi_penempatan: form.lokasi.trim(),
+    deadline_lamaran: form.tanggalTutup,
     mulaiMagang: form.mulaiMagang,
     selesaiMagang: form.selesaiMagang,
-    lokasi: form.lokasi.trim(),
     tugas: textToArray(form.tugas),
     persyaratan: textToArray(form.persyaratan),
     keuntungan: textToArray(form.keuntungan),
-    // status tidak dikelola di form (hanya di tabel Terpasang)
   });
 
-    const trigger = (action: ActionType, fn?: (p: Lowongan) => void) => {
+  const trigger = (
+    action: ActionType,
+    fn?: (p: CreateLowonganPayload, id?: number) => void
+  ) => {
     const payload = buildPayload();
-    fn?.(payload);
+    const id = typeof initial?.id === "number" ? initial!.id : undefined;
+    fn?.(payload, id);
     setLastAction(action);
     if (successMessage && successFor.includes(action)) {
       setShowSuccess(true);
@@ -154,13 +151,11 @@ export default function LowonganFormView({
         )}
       </div>
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [readOnly, canShowDraft, canShowUnggah, canShowSimpan, onSaveDraft, onUnggah, onSave, successFor, successMessage, form]);
 
 
   return (
     <div className="w-full">
-      {/* Tombol kembali (atas) */}
       <button
         onClick={onBack ?? (() => history.back())}
         className="flex items-center gap-1 text-xl font-semibold mb-6 py-0 px-0 shadow-none bg-none"
@@ -169,14 +164,12 @@ export default function LowonganFormView({
         Kembali
       </button>
 
-      {/* Card Form */}
       <div className="w-full bg-white p-6 rounded-lg">
         <h3 className="font-semibold text-lg mb-1">Data Lowongan</h3>
         <p className="mb-6 text-sm text-gray-600">{subtitle}</p>
         <hr className="border-t border-gray-300 mb-6" />
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Posisi */}
           <div>
             <label className="block font-semibold">Posisi</label>
             <input
@@ -190,7 +183,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Deskripsi */}
           <div>
             <label className="block font-semibold">Deskripsi</label>
             <textarea
@@ -204,7 +196,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Jumlah Kuota */}
           <div>
             <label className="block font-semibold">Jumlah Kuota</label>
             <input
@@ -218,7 +209,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Tanggal Penutupan */}
           <div>
             <label className="block font-semibold">Tanggal Penutupan Lowongan</label>
             <input
@@ -231,7 +221,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Periode Magang */}
           <div className="grid grid-cols-1 desktop:grid-cols-2 gap-4">
             <div>
               <label className="block font-semibold">Periode Mulai Magang</label>
@@ -257,7 +246,6 @@ export default function LowonganFormView({
             </div>
           </div>
 
-          {/* Lokasi Penempatan */}
           <div>
             <label className="block font-semibold">Lokasi Penempatan</label>
             <input
@@ -271,7 +259,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Tugas & Tanggung Jawab */}
           <div>
             <label className="block font-semibold">Tugas & Tanggung Jawab</label>
             <textarea
@@ -285,7 +272,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Persyaratan */}
           <div>
             <label className="block font-semibold">Persyaratan</label>
             <textarea
@@ -299,7 +285,6 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Keuntungan */}
           <div>
             <label className="block font-semibold">Keuntungan</label>
             <textarea
@@ -313,12 +298,10 @@ export default function LowonganFormView({
             />
           </div>
 
-          {/* Tombol footer */}
           {footerButtons}
         </form>
       </div>
 
-      {/* Success popup (opsional) */}
      <SuccessModal
         open={showSuccess}
         title="Berhasil"

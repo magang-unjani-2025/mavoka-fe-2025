@@ -1,11 +1,9 @@
 "use client";
 import { PiStudent } from "react-icons/pi";
 
-interface Props {
-  persyaratan?: string | null;
-}
+type Props = { persyaratan?: string[] | null };
 
-export default function Persyaratan({ persyaratan = "-" }: Props) {
+export default function Persyaratan({ persyaratan = [] }: Props) {
   return (
     <div className="mt-10 bg-white rounded-xl border p-6">
       <div className="flex items-center gap-2 mb-4">

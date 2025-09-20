@@ -12,7 +12,7 @@ type User = {
   id: number | string;
   username: string;
   email: string;
-  role: string;
+  role?: string; // bisa kosong/beda casing dari BE
   name: string;
   avatar: string;
 };
@@ -28,21 +28,16 @@ export default function HeaderHome() {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    const storedRole = localStorage.getItem("role");
-    if (token && storedUser && storedRole) {
-      setUser(JSON.parse(storedUser));
-      setRole(storedRole);
-    }
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const storedRole = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+    if (token && storedUser) setUser(JSON.parse(storedUser));
+    if (storedRole) setRole(storedRole);
   }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     }
@@ -51,12 +46,11 @@ export default function HeaderHome() {
   }, []);
 
   function navLink(path: string, label: string) {
-    const isActive =
-      path === "/" ? pathname === "/" : pathname.startsWith(path);
-
+    const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
     return (
       <Link
         href={path}
+        prefetch={false}
         className={`transition-colors duration-200 ${
           isActive ? "text-[#0F67B1]" : "hover:text-[#0F67B1]"
         }`}
@@ -72,10 +66,12 @@ export default function HeaderHome() {
     localStorage.removeItem("role");
     setUser(null);
     setRole(null);
+    setOpen(false);
     router.push("/");
   }
 
-  function getDashboardPath(role: string) {
+  function getDashboardPath(r?: string) {
+    const role = (r ?? "").toLowerCase();
     switch (role) {
       case "siswa":
         return "/dashboard-siswa";
@@ -92,11 +88,14 @@ export default function HeaderHome() {
     }
   }
 
+  // Sumber role yang konsisten untuk desktop & mobile
+  const effectiveRole = (role ?? user?.role ?? "").toLowerCase();
+
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
       <Container className="flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <Image
             src="/img/logo-fit-academy.png"
             alt="Logo"
@@ -168,23 +167,23 @@ export default function HeaderHome() {
                 <span className="text-sm font-medium">{user.username}</span>
 
                 <IoChevronDown
-                  className={`transition-transform ${
-                    dropdownOpen ? "rotate-180" : ""
-                  }`}
+                  className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
                 />
               </button>
 
-              {dropdownOpen && role && (
+              {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 p-2 bg-white border rounded-md shadow-lg z-50">
                   <Link
-                    href={getDashboardPath(role)}
+                    href={getDashboardPath(effectiveRole)}
+                    prefetch={false}
+                    onClick={() => setDropdownOpen(false)}
                     className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
                   >
                     Dashboard
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg"
+                    className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg px-4 py-2 text-sm"
                   >
                     Keluar
                   </button>
@@ -208,16 +207,14 @@ export default function HeaderHome() {
       </Container>
 
       {/* Dropdown Mobile */}
-      <div
-        className={`desktop:hidden ${
-          open ? "fixed inset-x-0 top-16 z-50" : "hidden"
-        }`}
-      >
+      <div className={`desktop:hidden ${open ? "fixed inset-x-0 top-16 z-50" : "hidden"}`}>
         <div className="bg-white shadow-xl border-t border-black/10">
           <Container className="py-4 max-h-[calc(100vh-4rem)] overflow-auto">
             <div className="flex flex-col gap-2 py-2 text-sm font-medium font-poppins">
               <Link
                 href="/"
+                prefetch={false}
+                onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
                   pathname === "/" ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
@@ -226,50 +223,50 @@ export default function HeaderHome() {
               </Link>
               <Link
                 href="/tentang-mavoka"
+                prefetch={false}
+                onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/tentang")
-                    ? "text-[#0F67B1]"
-                    : "hover:bg-gray-100"
+                  pathname.startsWith("/tentang") ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
               >
                 Tentang MAVOKA
               </Link>
               <Link
                 href="/lowongan"
+                prefetch={false}
+                onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/lowongan")
-                    ? "text-[#0F67B1]"
-                    : "hover:bg-gray-100"
+                  pathname.startsWith("/lowongan") ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
               >
                 Cari Lowongan
               </Link>
               <Link
                 href="/list-perusahaan"
+                prefetch={false}
+                onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/list-perusahaan")
-                    ? "text-[#0F67B1]"
-                    : "hover:bg-gray-100"
+                  pathname.startsWith("/list-perusahaan") ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
               >
                 Perusahaan
               </Link>
               <Link
                 href="/lpk"
+                prefetch={false}
+                onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/lpk")
-                    ? "text-[#0F67B1]"
-                    : "hover:bg-gray-100"
+                  pathname.startsWith("/lpk") ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
               >
                 Lembaga Pelatihan
               </Link>
               <Link
                 href="/sekolah"
+                prefetch={false}
+                onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/sekolah")
-                    ? "text-[#0F67B1]"
-                    : "hover:bg-gray-100"
+                  pathname.startsWith("/sekolah") ? "text-[#0F67B1]" : "hover:bg-gray-100"
                 }`}
               >
                 Sekolah
@@ -280,13 +277,19 @@ export default function HeaderHome() {
                 {!user ? (
                   <>
                     <button
-                      onClick={() => router.push("/login")}
+                      onClick={() => {
+                        setOpen(false);
+                        router.push("/login");
+                      }}
                       className="w-full h-10 rounded-md bg-[#0F67B1] text-white hover:bg-opacity-80 transition"
                     >
                       Masuk
                     </button>
                     <button
-                      onClick={() => router.push("/registrasi")}
+                      onClick={() => {
+                        setOpen(false);
+                        router.push("/registrasi");
+                      }}
                       className="w-full h-10 rounded-md border border-[#0F67B1] text-[#0F67B1] hover:bg-gray-50 transition"
                     >
                       Daftar
@@ -308,17 +311,23 @@ export default function HeaderHome() {
                           <HiUser className="text-xl" />
                         </div>
                       )}
-                      <span className="font-medium">{user.name}</span>
+                      <span className="font-medium">{user.name || user.username}</span>
                     </div>
-                    <Link
-                      href={getDashboardPath(user.role)}
-                      className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
+
+                    {/* Dashboard mobile: pakai button + router untuk pasti jalan */}
+                    <button
+                      onClick={() => {
+                        setOpen(false);
+                        router.push(getDashboardPath(effectiveRole));
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
                     >
                       Dashboard
-                    </Link>
+                    </button>
+
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg"
+                      className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg px-4 py-2 text-sm"
                     >
                       Keluar
                     </button>

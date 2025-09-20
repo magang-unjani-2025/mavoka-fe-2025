@@ -108,13 +108,16 @@ const tabs = [
 
 type TabType = (typeof tabs)[number]["value"];
 
-export default function UploadLowonganLayout() {
+type UploadLowonganLayoutProps = {
+  view?: string;
+};
+
+export default function UploadLowonganLayout({ view }: UploadLowonganLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isLowonganBaruPage = pathname === "/upload-lowongan/lowongan-baru";
 
-  // state dummy biar bisa nambah lewat form
   const [draft, setDraft] = useState<Lowongan[]>(dummyLowonganDraft);
   const [terpasang, setTerpasang] = useState<
     (Lowongan & { status: StatusLowongan })[]
@@ -152,7 +155,6 @@ export default function UploadLowonganLayout() {
       { ...payload, status: "Aktif" as const },
       ...prev,
     ]);
-    // langsung alihkan ke tab terpasang
     router.replace("/upload-lowongan?tab=terpasang");
   }}
   successMessage="Lowongan berhasil diunggah."

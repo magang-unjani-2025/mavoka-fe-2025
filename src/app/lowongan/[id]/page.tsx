@@ -91,7 +91,6 @@ export default function DetailLowonganPage() {
             address={lowongan.lokasi_penempatan ?? "-"}
           />
           <Tugas tugas={lowongan.benefit ?? "-"} />
-          {/* tambah atribut tugas di backend */}
           <Persyaratan persyaratan={lowongan.persyaratan ?? "-"} />
           <Keuntungan benefit={lowongan.benefit ?? "-"} />
           <LamarButton />

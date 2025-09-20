@@ -17,8 +17,9 @@ type TopNavbarProps = {
   onBellClick?: () => void;
   className?: string;
   onMobileOpen?: () => void;
-  onToggleDesktop?: () => void;
 };
+
+type AnyUser = Record<string, any>;
 
 function getInitials(name?: string) {
   if (!name) return "U";
@@ -45,12 +46,54 @@ function Avatar({
     );
   }
   return (
-    <div
-      className={`${style} rounded-full border flex items-center justify-center bg-gray-200 text-gray-700 font-semibold`}
-    >
+    <div className={`${style} rounded-full border flex items-center justify-center bg-gray-200 text-gray-700 font-semibold`}>
       {getInitials(name)}
     </div>
   );
+}
+
+// ——— helpers: derive nama/org berdasar role dengan fallback ———
+function deriveFullName(user: AnyUser | null, role?: string) {
+  const r = (role ?? "").toLowerCase();
+  const u = user || {};
+  switch (r) {
+    case "siswa":
+      return u.nama_lengkap ?? u.name ?? u.username ?? "Siswa";
+    case "sekolah":
+      return u.nama_kepala_sekolah ?? u.penanggung_jawab ?? u.name ?? u.username ?? "Pengguna Sekolah";
+    case "perusahaan":
+      return u.penanggung_jawab ?? u.pic ?? u.name ?? u.username ?? "Pengguna Perusahaan";
+    case "lpk":
+      return u.penanggung_jawab ?? u.name ?? u.username ?? "Pengguna LPK";
+    case "admin":
+      return u.name ?? u.username ?? "Admin";
+    default:
+      return u.name ?? u.username ?? "Pengguna";
+  }
+}
+
+function deriveOrgName(user: AnyUser | null, role?: string) {
+  const r = (role ?? "").toLowerCase();
+  const u = user || {};
+  switch (r) {
+    case "siswa":
+      return u.sekolah?.nama ?? u.nama_sekolah ?? "Siswa";
+    case "sekolah":
+      return u.nama_sekolah ?? u.orgName ?? u.nama_instansi ?? u.sekolah?.nama ?? "Sekolah";
+    case "perusahaan":
+      return u.nama_perusahaan ?? u.company?.nama_perusahaan ?? "Perusahaan";
+    case "lpk":
+      return u.nama_lpk ?? u.nama_lembaga ?? u.lembaga?.nama ?? "Lembaga Pelatihan";
+    case "admin":
+      return "Administrator";
+    default:
+      return u.orgName ?? "MAVOKA";
+  }
+}
+
+function deriveAvatar(user: AnyUser | null, profilePic?: string | null) {
+  const u = user || {};
+  return profilePic ?? u.avatar ?? u.foto ?? null;
 }
 
 export default function TopNavbar({
@@ -58,12 +101,29 @@ export default function TopNavbar({
   fullName,
   orgName,
   profilePic,
-  settingsHref,
+  settingsHref = "/pengaturan",
   hasNotification = true,
   onBellClick,
   className = "",
   onMobileOpen,
 }: TopNavbarProps) {
+  const [loadedUser, setLoadedUser] = React.useState<AnyUser | null>(null);
+  const [loadedRole, setLoadedRole] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      const r = localStorage.getItem("role");
+      if (raw) setLoadedUser(JSON.parse(raw));
+      if (r) setLoadedRole(r);
+    } catch {}
+  }, []);
+
+  // Jika props tidak disediakan, fallback ke data dari localStorage
+  const displayFullName = fullName ?? deriveFullName(loadedUser, loadedRole ?? undefined);
+  const displayOrgName = orgName ?? deriveOrgName(loadedUser, loadedRole ?? undefined);
+  const displayAvatar = deriveAvatar(loadedUser, profilePic ?? null);
+
   return (
     <div className={`flex items-center justify-between px-6 py-4 border-b bg-white shadow-xl ${className}`}>
       {/* Left area + hamburger (mobile only) */}
@@ -78,8 +138,8 @@ export default function TopNavbar({
             <Menu size={22} />
           </button>
           <div className="min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">{fullName}</h3>
-            <small className="text-sm text-gray-500 truncate">{orgName}</small>
+            <h3 className="font-semibold text-gray-900 truncate">{displayFullName}</h3>
+            <small className="text-sm text-gray-500 truncate">{displayOrgName}</small>
           </div>
         </div>
       ) : (
@@ -94,14 +154,12 @@ export default function TopNavbar({
             <Menu size={22} />
           </button>
 
-          {/* ⛔️ Tidak ada toggle desktop di navbar agar tidak dobel */}
-
           <div>
             <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-[#0F67B1]">
               SELAMAT DATANG
             </h1>
             <p className="text-sm text-gray-500">
-              Hi, {orgName}. Selamat datang kembali di MAVOKA!
+              Hi, {displayOrgName}. Selamat datang kembali di MAVOKA!
             </p>
           </div>
         </div>
@@ -125,7 +183,7 @@ export default function TopNavbar({
 
         <Link href={settingsHref} aria-label="Buka pengaturan profil">
           <div className="relative w-9 h-9">
-            <Avatar name={fullName} src={profilePic ?? undefined} />
+            <Avatar name={displayFullName} src={displayAvatar ?? undefined} />
             <div className="absolute -bottom-1 -right-2">
               <RiPencilLine className="text-black w-4 h-4" />
             </div>
