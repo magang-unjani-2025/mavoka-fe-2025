@@ -21,15 +21,19 @@ export default function HeaderHome() {
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
-    if (token && storedUser) {
+    const storedRole = localStorage.getItem("role");
+    if (token && storedUser && storedRole) {
       setUser(JSON.parse(storedUser));
+      setRole(storedRole);
     }
   }, []);
 
@@ -65,7 +69,9 @@ export default function HeaderHome() {
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
     setUser(null);
+    setRole(null);
     router.push("/");
   }
 
@@ -168,11 +174,11 @@ export default function HeaderHome() {
                 />
               </button>
 
-              {dropdownOpen && (
+              {dropdownOpen && role && (
                 <div className="absolute right-0 mt-2 w-48 p-2 bg-white border rounded-md shadow-lg z-50">
                   <Link
-                    href={getDashboardPath(user.role)}
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg "
+                    href={getDashboardPath(role)}
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
                   >
                     Dashboard
                   </Link>

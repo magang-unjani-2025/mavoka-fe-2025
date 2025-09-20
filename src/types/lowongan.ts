@@ -18,19 +18,38 @@ export type Company = {
   updated_at: string;
 };
 
-export type Lowongan = {
+//export type Lowongan = {
+//  id: number;
+//  perusahaan_id: number;
+//  judul_lowongan: string;
+//  deskripsi: string;
+//  posisi: string;
+//  kuota: number;
+//  lokasi_penempatan: string;
+//  persyaratan: string;
+//  benefit?: string | null;
+//  status: "buka" | "tutup" | string;
+//  deadline_lamaran: string;
+//  created_at: string;
+//  updated_at: string;
+//  perusahaan: Company;
+//};
+
+export type StatusLowongan = "Aktif" | "Nonaktif";
+
+export interface Lowongan {
   id: number;
-  perusahaan_id: number;
-  judul_lowongan: string;
-  deskripsi: string;
   posisi: string;
+  deskripsi: string;
   kuota: number;
-  lokasi_penempatan: string;
-  persyaratan: string;
-  benefit?: string | null;
-  status: "buka" | "tutup" | string;
-  deadline_lamaran: string;
-  created_at: string;
-  updated_at: string;
-  perusahaan: Company;
-};
+  tanggalTutup: string;     // YYYY-MM-DD
+  mulaiMagang: string;      // YYYY-MM-DD
+  selesaiMagang: string;    // YYYY-MM-DD
+  lokasi: string;
+  tugas: string[];          // tampil ringkas di tabel
+  persyaratan: string[];
+  keuntungan: string[];
+  // hanya dipakai di tabel Terpasang:
+  status?: StatusLowongan;
+}
+
