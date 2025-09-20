@@ -33,24 +33,13 @@ export default function FormLoginMultiRole({
   const router = useRouter();
 
   function redirectByRole(role: Role) {
-    switch (role) {
-      case "admin":
-        return router.push("/dashboard-admin");
-      case "siswa":
-        return router.push("/dashboard-siswa");
-      case "sekolah":
-        return router.push("/dashboard-sekolah");
-      case "perusahaan":
-        return router.push("/dashboard-perusahaan");
-      case "lpk":
-        return router.push("/dashboard-lpk");
-      default:
-        return router.push("/");
+    if (role === "admin") {
+      return router.push("/dashboard-admin");
     }
+    return router.push("/");
   }
 
   const onSubmit = async (data: FormValues) => {
-    // jika fixedRole ada → pakai itu; kalau tidak → pakai dari select
     const hintedRole: Role = (fixedRole ?? data.role) as Role;
 
     const payload: Login = {
@@ -62,7 +51,16 @@ export default function FormLoginMultiRole({
     try {
       setLoading(true);
       const res = await login(payload);
+
+      const token = res?.data?.token;
+      const user = res?.data?.user;
       const serverRole: Role = res?.data?.role ?? hintedRole;
+
+      if (token && user && serverRole) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("role", serverRole);
+      }
 
       redirectByRole(serverRole);
       reset();

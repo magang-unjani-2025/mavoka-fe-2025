@@ -9,10 +9,10 @@ export type School = {
   name: string;
   address: string;
   type?: string | null;
-  web_sekolah?: string | null;
+  website?: string | null;  // konsisten pakai 'website'
   email?: string | null;
   npsn?: string | null;
-  logoUrl?: string | null;
+  logoUrl?: string | null;  // opsional, bisa null
   slug?: string;
   jurusan?: Jurusan[];
 };

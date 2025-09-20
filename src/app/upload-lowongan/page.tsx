@@ -63,7 +63,7 @@ export default function UploadLowonganLayout() {
         <div className="flex flex-col h-full p-6">
           <h3 className="mb-5">Lowongan Perusahaan</h3>
 
-          <div className="flex items-center justify-between bg-white shrink-0">
+          <div className="flex items-center justify-between shrink-0">
             <div className="h-10 flex items-center">
               <ToggleTabs<TabType>
                 tabs={tabs}
