@@ -1,6 +1,5 @@
-"use client";
-import LowonganBaru from "@/app/components/upload-lowongan-pelatihan/LowonganBaru";
+import UploadLowonganLayout from "../layout";
 
-export default function ProfilePage() {
-  return <LowonganBaru role="perusahaan" />;
+export default function LowonganBaruPage() {
+  return <UploadLowonganLayout view="create" />;
 }
