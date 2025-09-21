@@ -2,7 +2,7 @@ name: Build and Deploy Frontend to Development
 
 on:
   push:
-    branches: [ 'dev' ]
+    branches: [ 'main' ]
   workflow_dispatch:
 
 jobs:
