@@ -22,13 +22,18 @@ jobs:
       - name: Build Container with Docker Compose
         run: |
           docker compose --file docker-compose-dev.yml build --no-cache
-          docker image save mavoka-fe-2025-dev-img:latest --output mavoka-fe-2025-dev-img.tar
+          docker image save mavoka-fe-2025-dev-img:latest | gzip > mavoka-fe-2025-dev-img.tar.gz
 
       - name: Copy Image with rsync over SSH
         uses: burnett01/rsync-deployments@7.0.2
         with:
-          switches: -avzr --delete
-          path: './mavoka-fe-2025-dev-img.tar'
+          switches: >-
+            -avh
+            --timeout 60
+            --progress
+            --no-compress
+            --bwlimit 5120
+          path: './mavoka-fe-2025-dev-img.tar.gz'
           remote_path: ${{ secrets.SCP_PATH }}
           remote_host: ${{ secrets.SSH_HOST }}
           remote_port: ${{ secrets.SSH_PORT }}
@@ -47,5 +52,6 @@ jobs:
             git pull origin dev
             echo "${{ vars.ENV_DEV }}" > .env.development
             docker compose --file docker-compose-dev.yml down --rmi all
-            docker image load --input mavoka-fe-2025-dev-img.tar
+            docker image load --input mavoka-fe-2025-dev-img.tar.gz
             docker compose --file docker-compose-dev.yml up --detach
+            rm mavoka-fe-2025-dev-img.tar.gz
