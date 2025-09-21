@@ -5,6 +5,10 @@ on:
     branches: [ 'main' ]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -49,7 +53,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ${{ secrets.SCP_PATH }}
-            git pull origin dev
+            git pull origin main
             echo "${{ vars.ENV_DEV }}" > .env.development
             docker compose --file docker-compose-dev.yml down --rmi all
             docker image load --input mavoka-fe-2025-dev-img.tar.gz
