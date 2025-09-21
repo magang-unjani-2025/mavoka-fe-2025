@@ -81,7 +81,7 @@ export default function DetailLowonganPage() {
         <Container className="py-6">
           <LowonganHeader
             name={lowongan.judul_lowongan}
-            subtitle={lowongan.perusahaan.nama_perusahaan}
+            subtitle={lowongan.perusahaan?.nama_perusahaan ?? "-"}
           />
           <DetailDescription
             type="lowongan"
@@ -90,9 +90,9 @@ export default function DetailLowonganPage() {
             deadline_lamaran={lowongan.deadline_lamaran ?? "-"}
             address={lowongan.lokasi_penempatan ?? "-"}
           />
-          <Tugas tugas={lowongan.benefit ?? "-"} />
-          <Persyaratan persyaratan={lowongan.persyaratan ?? "-"} />
-          <Keuntungan benefit={lowongan.benefit ?? "-"} />
+          <Tugas tugas={lowongan.tugas ?? []} />
+          <Persyaratan persyaratan={lowongan.persyaratan ?? []} />
+          <Keuntungan benefit={lowongan.keuntungan ?? []} />
           <LamarButton />
           <div className="mt-10 text-center">
             <h3>Temukan Posisi Magang Impianmu Di sini</h3>

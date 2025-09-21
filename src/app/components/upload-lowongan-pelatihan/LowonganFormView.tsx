@@ -5,11 +5,7 @@ import { IoArrowBack } from "react-icons/io5";
 import SuccessModal from "@/app/components/registrasi/PopupBerhasil";
 import type { Lowongan, CreateLowonganPayload } from "@/types/lowongan";
 
-export type LowonganFormMode =
-  | "create"
-  | "edit-draft"
-  | "edit-terpasang"
-  | "detail";
+export type LowonganFormMode = "create" | "edit-draft" | "edit-terpasang" | "detail";
 
 type ActionType = "draft" | "unggah" | "save";
 
@@ -18,7 +14,7 @@ type Props = {
   initial?: Partial<Lowongan>;
   onBack?: () => void;
 
-onSaveDraft?: (payload: CreateLowonganPayload, id?: number) => void;
+  onSaveDraft?: (payload: CreateLowonganPayload, id?: number) => void;
   onUnggah?: (payload: CreateLowonganPayload, id?: number) => void;
   onSave?: (payload: CreateLowonganPayload, id?: number) => void;
 
@@ -36,10 +32,10 @@ const emptyForm = {
   posisi: "",
   deskripsi: "",
   kuota: "",
-  tanggalTutup: "",
+  deadline_lamaran: "",
   mulaiMagang: "",
   selesaiMagang: "",
-  lokasi: "",
+  lokasi_penempatan: "",
   tugas: "",
   persyaratan: "",
   keuntungan: "",
@@ -52,18 +48,18 @@ export default function LowonganFormView({
   onSaveDraft,
   onUnggah,
   onSave,
-  successFor = [],            
+  successFor = [],
   successMessage,
   onSuccessClose,
 }: Props) {
-   const [form, setForm] = useState({
+  const [form, setForm] = useState({
     posisi: initial?.posisi ?? emptyForm.posisi,
     deskripsi: initial?.deskripsi ?? emptyForm.deskripsi,
     kuota: String(initial?.kuota ?? emptyForm.kuota),
-    tanggalTutup: initial?.tanggalTutup ?? emptyForm.tanggalTutup,
+    deadline_lamaran: initial?.deadline_lamaran ?? emptyForm.deadline_lamaran,
     mulaiMagang: initial?.mulaiMagang ?? emptyForm.mulaiMagang,
     selesaiMagang: initial?.selesaiMagang ?? emptyForm.selesaiMagang,
-    lokasi: initial?.lokasi ?? emptyForm.lokasi,
+    lokasi_penempatan: initial?.lokasi_penempatan ?? emptyForm.lokasi_penempatan,
     tugas: arrayToText(initial?.tugas),
     persyaratan: arrayToText(initial?.persyaratan),
     keuntungan: arrayToText(initial?.keuntungan),
@@ -82,14 +78,14 @@ export default function LowonganFormView({
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-    const buildPayload = (): CreateLowonganPayload => ({
+  const buildPayload = (): CreateLowonganPayload => ({
     perusahaan_id: initial?.perusahaan_id ?? 0,
     judul_lowongan: form.posisi.trim(),
     posisi: form.posisi.trim(),
     deskripsi: form.deskripsi.trim(),
     kuota: Number(form.kuota || 0),
-    lokasi_penempatan: form.lokasi.trim(),
-    deadline_lamaran: form.tanggalTutup,
+    lokasi_penempatan: form.lokasi_penempatan.trim(),
+    deadline_lamaran: form.deadline_lamaran,
     mulaiMagang: form.mulaiMagang,
     selesaiMagang: form.selesaiMagang,
     tugas: textToArray(form.tugas),
@@ -102,7 +98,7 @@ export default function LowonganFormView({
     fn?: (p: CreateLowonganPayload, id?: number) => void
   ) => {
     const payload = buildPayload();
-    const id = typeof initial?.id === "number" ? initial!.id : undefined;
+    const id = typeof initial?.id === "number" ? initial.id : undefined;
     fn?.(payload, id);
     setLastAction(action);
     if (successMessage && successFor.includes(action)) {
@@ -116,7 +112,7 @@ export default function LowonganFormView({
 
   const subtitle = "Pastikan informasi data lowongan terisi dengan benar.";
 
- const footerButtons = useMemo(() => {
+  const footerButtons = useMemo(() => {
     if (readOnly) return null;
     return (
       <div className="flex justify-end gap-2 mt-6">
@@ -151,8 +147,18 @@ export default function LowonganFormView({
         )}
       </div>
     );
-  }, [readOnly, canShowDraft, canShowUnggah, canShowSimpan, onSaveDraft, onUnggah, onSave, successFor, successMessage, form]);
-
+  }, [
+    readOnly,
+    canShowDraft,
+    canShowUnggah,
+    canShowSimpan,
+    onSaveDraft,
+    onUnggah,
+    onSave,
+    successFor,
+    successMessage,
+    form,
+  ]);
 
   return (
     <div className="w-full">
@@ -213,8 +219,8 @@ export default function LowonganFormView({
             <label className="block font-semibold">Tanggal Penutupan Lowongan</label>
             <input
               type="date"
-              name="tanggalTutup"
-              value={form.tanggalTutup}
+              name="deadline_lamaran"
+              value={form.deadline_lamaran}
               onChange={onChange}
               readOnly={readOnly}
               className="mt-1 w-full rounded border px-3 py-2 text-sm text-[#3a3a3a] disabled:bg-gray-100"
@@ -250,11 +256,11 @@ export default function LowonganFormView({
             <label className="block font-semibold">Lokasi Penempatan</label>
             <input
               type="text"
-              name="lokasi"
-              value={form.lokasi}
+              name="lokasi_penempatan"
+              value={form.lokasi_penempatan}
               onChange={onChange}
               readOnly={readOnly}
-              placeholder="Masukkan Lokasi..."
+              placeholder="Masukkan lokasi penempatan..."
               className="mt-1 w-full rounded border px-3 py-2 text-sm text-[#3a3a3a] disabled:bg-gray-100"
             />
           </div>
@@ -302,7 +308,7 @@ export default function LowonganFormView({
         </form>
       </div>
 
-     <SuccessModal
+      <SuccessModal
         open={showSuccess}
         title="Berhasil"
         message={successMessage ?? "Perubahan berhasil disimpan"}

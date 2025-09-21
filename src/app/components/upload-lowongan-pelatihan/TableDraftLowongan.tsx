@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { BiEdit } from "react-icons/bi";
 import Pagination from "@/app/components/dashboard/Pagination";
 import { Lowongan } from "@/types/lowongan";
-
+import { getLowonganPerusahaan } from "@/lib/api-lowongan"; // bikin helper API
 
 type Props = {
-  initialData?: Lowongan[];
   onDetail?: (id: number) => void;
   onEdit?: (id: number) => void;
 };
@@ -20,15 +19,33 @@ const summarize = (v: unknown, max = 2) => {
   return arr.length <= max ? arr.join(", ") : `${arr.slice(0, max).join(", ")} +${arr.length - max} lainnya`;
 };
 
-export default function TableDraftLowongan({ initialData, onDetail, onEdit }: Props) {
-  const data: Lowongan[] = Array.isArray(initialData) ? initialData : [];
+export default function TableDraftLowongan({ onDetail, onEdit }: Props) {
+  const [rows, setRows] = useState<Lowongan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [perPage, setPerPage] = useState(10);
   const [page, setPage] = useState(1);
 
-  const totalPages = Math.max(1, Math.ceil(data.length / perPage));
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getLowonganPerusahaan(); // panggil endpoint
+        setRows(data);
+      } catch (e: any) {
+        setError(e?.response?.data?.message || "Gagal memuat data");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
   const start = (page - 1) * perPage;
-  const current = useMemo(() => data.slice(start, start + perPage), [data, start, perPage]);
+  const current = useMemo(
+    () => rows.slice(start, start + perPage),
+    [rows, start, perPage]
+  );
 
   return (
     <div className="rounded-xl">
@@ -55,7 +72,15 @@ export default function TableDraftLowongan({ initialData, onDetail, onEdit }: Pr
             </thead>
 
             <tbody>
-              {current.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={12} className="px-4 py-10 text-center bg-white">Memuat…</td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan={12} className="px-4 py-10 text-center bg-white text-red-600">{error}</td>
+                </tr>
+              ) : current.length === 0 ? (
                 <tr>
                   <td colSpan={12} className="px-4 py-10 text-center text-gray-500 bg-white">
                     Belum ada draft lowongan. Klik <b>Buat Lowongan Baru</b> untuk menambah data.
@@ -68,18 +93,16 @@ export default function TableDraftLowongan({ initialData, onDetail, onEdit }: Pr
                     <td className="px-4 py-3 font-medium">{item.posisi}</td>
                     <td className="px-4 py-3 max-w-[360px] truncate">{item.deskripsi}</td>
                     <td className="px-4 py-3 text-center">{item.kuota}</td>
-                    <td className="px-4 py-3 text-center">{item.tanggalTutup}</td>
+                    <td className="px-4 py-3 text-center">{item.deadline_lamaran}</td>
                     <td className="px-4 py-3 text-center">{item.mulaiMagang}</td>
                     <td className="px-4 py-3 text-center">{item.selesaiMagang}</td>
-                    <td className="px-4 py-3">{item.lokasi}</td>
+                    <td className="px-4 py-3">{item.lokasi_penempatan}</td>
                     <td className="px-4 py-3 max-w-[320px] truncate">{summarize(item.tugas)}</td>
                     <td className="px-4 py-3 max-w-[320px] truncate">{summarize(item.persyaratan)}</td>
                     <td className="px-4 py-3 max-w-[320px] truncate">{summarize(item.keuntungan)}</td>
 
-                    {/* AKSI */}
                     <td className="px-4 py-3">
                       <div className="flex justify-center items-center gap-3">
-                        {/* Detail */}
                         {onDetail ? (
                           <button
                             onClick={() => onDetail(item.id)}
@@ -96,7 +119,6 @@ export default function TableDraftLowongan({ initialData, onDetail, onEdit }: Pr
                           </Link>
                         )}
 
-                        {/* Edit */}
                         {onEdit ? (
                           <button
                             aria-label="Edit"

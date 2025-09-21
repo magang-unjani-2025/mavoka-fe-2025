@@ -39,7 +39,7 @@ export async function getSchoolById(id: string | number): Promise<School | null>
   name: r.nama_sekolah ?? "Sekolah",
   address: r.alamat ?? "-",
   type: r.jenis ?? null,
-  web_sekolah: r.web_sekolah ?? null,
+  website: r.web_sekolah ?? null,
   email: r.email ?? null,
   npsn: r.npsn ?? null,
   logoUrl: r.logo_sekolah ?? r.logo_url ?? null,

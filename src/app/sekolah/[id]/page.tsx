@@ -50,7 +50,7 @@ export default function DetailSekolahPage() {
             email={sekolah.email ?? "-"}
             address={sekolah.address ?? "-"}
             npsn={sekolah.npsn ?? "-"}
-            website={sekolah.web_sekolah ?? "-"}
+            website={sekolah.website ?? "-"}
           />
           <KompetensiKeahlian jurusan={sekolah.jurusan} />
         </Container>

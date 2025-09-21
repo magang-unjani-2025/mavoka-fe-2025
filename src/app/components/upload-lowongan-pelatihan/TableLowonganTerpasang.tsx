@@ -1,71 +1,21 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { BiEdit } from "react-icons/bi";
 import Pagination from "@/app/components/dashboard/Pagination";
 import ConfirmModal from "./ConfirmModal";
 import SuccessModal from "@/app/components/registrasi/PopupBerhasil";
+import { getLowonganPerusahaan } from "@/lib/api-lowongan";
+import { Lowongan, StatusLowongan } from "@/types/lowongan";
 
-export type StatusLowongan = "Aktif" | "Nonaktif";
-export interface LowonganPerusahaan {
-  id: number;
-  posisi: string;
-  deskripsi: string;
-  kuota: number;
-  tanggalTutup?: string;
-  mulaiMagang?: string;
-  selesaiMagang?: string;
-  lokasi?: string;
-  tugas?: string[] | string;
-  persyaratan?: string[] | string;
-  keuntungan?: string[] | string;
-  status: StatusLowongan;
-}
-
-const toArray = (v: unknown): string[] =>
-  Array.isArray(v) ? v : typeof v === "string" && v.trim() ? [v] : [];
-const summarize = (v: unknown, max = 2) => {
-  const arr = toArray(v);
-  return arr.length <= max
-    ? arr.join(", ")
-    : `${arr.slice(0, max).join(", ")} +${arr.length - max} lainnya`;
-};
-const dash = (v?: string | number) => (v ? String(v) : "-");
-
-type Props = {
-  initialData: LowonganPerusahaan[];         
-  onDetail?: (id: number) => void;
-  onEdit?: (id: number) => void;
-  onToggleStatus?: (id: number, next: StatusLowongan) => void; 
-};
-
-export default function TableLowonganTerpasang({
-  initialData,
-  onDetail,
-  onEdit,
-  onToggleStatus,
-}: Props) {
-  const [rows, setRows] = useState<LowonganPerusahaan[]>(
-    Array.isArray(initialData) ? [...initialData] : []
-  );
-
-  const sorted = useMemo(
-    () =>
-      [...rows].sort((a, b) =>
-        a.status === b.status ? 0 : a.status === "Aktif" ? -1 : 1
-      ),
-    [rows]
-  );
+export default function TableLowonganTerpasang() {
+  const [rows, setRows] = useState<Lowongan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [perPage, setPerPage] = useState(10);
   const [page, setPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(sorted.length / perPage));
-  const start = (page - 1) * perPage;
-  const current = useMemo(
-    () => sorted.slice(start, start + perPage),
-    [sorted, start, perPage]
-  );
 
   const [confirm, setConfirm] = useState<{ open: boolean; id?: number }>({
     open: false,
@@ -74,6 +24,27 @@ export default function TableLowonganTerpasang({
     open: false,
     msg: "",
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getLowonganPerusahaan();
+        setRows(data);
+      } catch (e: any) {
+        setError(e?.response?.data?.message || "Gagal memuat data");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
+  const startIndex = (page - 1) * perPage;
+
+  const current = useMemo(
+    () => rows.slice(startIndex, startIndex + perPage),
+    [rows, startIndex, perPage]
+  );
 
   const nextStatus = (s: StatusLowongan): StatusLowongan =>
     s === "Aktif" ? "Nonaktif" : "Aktif";
@@ -87,8 +58,19 @@ export default function TableLowonganTerpasang({
     const row = rows.find((r) => r.id === id);
     const after = row ? nextStatus(row.status) : "Aktif";
     setSuccess({ open: true, msg: `Status berhasil diubah menjadi ${after}.` });
-    onToggleStatus?.(id, after);
   };
+
+  const toArray = (v: string[] | string | undefined | null): string[] =>
+    Array.isArray(v) ? v : typeof v === "string" && v.trim() ? [v] : [];
+
+  const summarize = (v: string[] | string | undefined, max = 2) => {
+    const arr = toArray(v);
+    return arr.length <= max
+      ? arr.join(", ")
+      : `${arr.slice(0, max).join(", ")} +${arr.length - max} lainnya`;
+  };
+
+  const dash = (v?: string | number | null) => (v ? String(v) : "-");
 
   return (
     <div className="rounded-xl">
@@ -125,7 +107,22 @@ export default function TableLowonganTerpasang({
             </thead>
 
             <tbody>
-              {current.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={13} className="px-4 py-10 text-center bg-white">
+                    Memuat…
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td
+                    colSpan={13}
+                    className="px-4 py-10 text-center bg-white text-red-600"
+                  >
+                    {error}
+                  </td>
+                </tr>
+              ) : current.length === 0 ? (
                 <tr>
                   <td
                     colSpan={13}
@@ -141,7 +138,7 @@ export default function TableLowonganTerpasang({
                     className="border-t border-gray-100 hover:bg-gray-50"
                   >
                     <td className="px-4 py-3 text-center whitespace-nowrap">
-                      {start + idx + 1}
+                      {startIndex + idx + 1}
                     </td>
                     <td className="px-4 py-3">
                       <span className="font-medium">{item.posisi}</span>
@@ -153,7 +150,7 @@ export default function TableLowonganTerpasang({
                       {dash(item.kuota)}
                     </td>
                     <td className="px-4 py-3 text-center whitespace-nowrap">
-                      {dash(item.tanggalTutup)}
+                      {dash(item.deadline_lamaran)}
                     </td>
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       {dash(item.mulaiMagang)}
@@ -161,7 +158,7 @@ export default function TableLowonganTerpasang({
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       {dash(item.selesaiMagang)}
                     </td>
-                    <td className="px-4 py-3">{dash(item.lokasi)}</td>
+                    <td className="px-4 py-3">{dash(item.lokasi_penempatan)}</td>
                     <td className="px-4 py-3 max-w-[320px]">
                       <p className="truncate">{summarize(item.tugas)}</p>
                     </td>
@@ -197,41 +194,21 @@ export default function TableLowonganTerpasang({
                           {item.status === "Aktif" ? "Nonaktifkan" : "Aktifkan"}
                         </button>
 
-                        {onDetail ? (
-                          <button
-                            onClick={() => onDetail(item.id)}
-                            className="inline-flex h-8 px-3 items-center rounded-[5px] bg-[#0F67B1] text-white text-xs font-medium hover:bg-[#0c599b]"
-                          >
-                            Detail
-                          </button>
-                        ) : (
-                          <Link
-                            href={`/upload-lowongan/detail/${item.id}`}
-                            className="inline-flex h-8 px-3 items-center rounded-[5px] bg-[#0F67B1] text-white text-xs font-medium hover:bg-[#0c599b]"
-                          >
-                            Detail
-                          </Link>
-                        )}
+                        <Link
+                          href={`/upload-lowongan/detail/${item.id}`}
+                          className="inline-flex h-8 px-3 items-center rounded-[5px] bg-[#0F67B1] text-white text-xs font-medium hover:bg-[#0c599b] transition"
+                        >
+                          Detail
+                        </Link>
 
-                        {onEdit ? (
-                          <button
-                            aria-label="Edit"
-                            onClick={() => onEdit(item.id)}
-                            className="text-[#0F67B1] hover:opacity-80"
-                            title="Edit"
-                          >
-                            <BiEdit size={18} />
-                          </button>
-                        ) : (
-                          <Link
-                            aria-label="Edit"
-                            href={`/upload-lowongan/edit/terpasang/${item.id}`}
-                            className="text-[#0F67B1] hover:opacity-80"
-                            title="Edit"
-                          >
-                            <BiEdit size={18} />
-                          </Link>
-                        )}
+                        <Link
+                          aria-label="Edit"
+                          href={`/upload-lowongan/edit/terpasang/${item.id}`}
+                          className="text-[#0F67B1] hover:opacity-80"
+                          title="Edit"
+                        >
+                          <BiEdit size={18} />
+                        </Link>
                       </div>
                     </td>
                   </tr>
@@ -245,7 +222,7 @@ export default function TableLowonganTerpasang({
       <Pagination
         page={page}
         totalPages={totalPages}
-        onPageChange={setPage}
+        onPageChange={(p) => setPage(p)}
         perPage={perPage}
         onPerPageChange={(n) => {
           setPerPage(n);

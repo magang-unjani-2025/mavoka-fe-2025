@@ -1,25 +1,3 @@
-//export type Pelatihan = {
-//  id: number;
-//  namaPelatihan: string;
-//  deskripsi: string;
-//  kategori: string;
-//  capaian: string;
-//};
-
-//export type Batch = {
-//  name: string;   // "Batch 1"
-//  start: string;  // YYYY-MM-DD
-//  end: string;    // YYYY-MM-DD
-//};
-
-//export type PelatihanFormValues = {
-//  namaPelatihan: string;
-//  deskripsi: string;
-//  kategori: string;
-//  capaian: string[]; // multi capaian
-//};
-
-// types/pelatihan.ts
 export type BatchStatus = "sedang_berjalan" | "selesai";
 
 export type Batch = {

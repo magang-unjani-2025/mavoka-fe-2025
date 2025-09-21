@@ -18,50 +18,69 @@ export type Company = {
   updated_at: string;
 };
 
-//export type Lowongan = {
-//  id: number;
-//  perusahaan_id: number;
-//  judul_lowongan: string;
-//  deskripsi: string;
-//  posisi: string;
-//  kuota: number;
-//  lokasi_penempatan: string;
-//  persyaratan: string;
-//  benefit?: string | null;
-//  status: "buka" | "tutup" | string;
-//  deadline_lamaran: string;
-//  created_at: string;
-//  updated_at: string;
-//  perusahaan: Company;
-//};
-
 export type StatusLowongan = "Aktif" | "Nonaktif";
 
+/**
+ * Lowongan versi client (sudah dirapikan untuk frontend)
+ */
 export interface Lowongan {
   id: number;
+  perusahaan_id: number;
+  judul_lowongan: string;
   posisi: string;
   deskripsi: string;
   kuota: number;
-  tanggalTutup: string;     // YYYY-MM-DD
-  mulaiMagang: string;      // YYYY-MM-DD
-  selesaiMagang: string;    // YYYY-MM-DD
-  lokasi: string;
-  tugas: string[];          // tampil ringkas di tabel
-  persyaratan: string[];
-  keuntungan: string[];
-  // hanya dipakai di tabel Terpasang:
-  status?: StatusLowongan;
-  perusahaan_id: number;
-  judul_lowongan: string;
   lokasi_penempatan: string;
-  benefit?: string | null;
+
+  persyaratan: string[];  // dari backend string → diparse ke array
+  keuntungan: string[];   // dari backend string → diparse ke array
+  tugas: string[];        // dari backend string → diparse ke array
+
+  mulaiMagang?: string | null;   // periode_awal
+  selesaiMagang?: string | null; // periode_akhir
   deadline_lamaran: string;
+
   created_at: string;
   updated_at: string;
-  perusahaan: Company;
+  status: StatusLowongan;
+
+  perusahaan?: Company; // optional, tergantung endpoint include relasi atau nggak
 }
 
-// Payload ringan untuk create/update dari Form
+/**
+ * Mapper: ubah response API (raw) jadi Lowongan versi client
+ */
+export function mapApiLowonganToClient(apiData: any): Lowongan {
+  return {
+    id: apiData.id,
+    perusahaan_id: apiData.perusahaan_id,
+    judul_lowongan: apiData.judul_lowongan,
+    posisi: apiData.posisi,
+    deskripsi: apiData.deskripsi,
+    kuota: apiData.kuota,
+    lokasi_penempatan: apiData.lokasi_penempatan,
+
+    persyaratan: apiData.persyaratan ? apiData.persyaratan.split("\n") : [],
+    keuntungan: apiData.benefit ? apiData.benefit.split("\n") : [],
+    tugas: apiData.tugas_tanggung_jawab
+      ? apiData.tugas_tanggung_jawab.split("\n")
+      : [],
+
+    mulaiMagang: apiData.periode_awal,
+    selesaiMagang: apiData.periode_akhir,
+    deadline_lamaran: apiData.deadline_lamaran,
+
+    created_at: apiData.created_at,
+    updated_at: apiData.updated_at,
+    status: apiData.status === "buka" ? "Aktif" : "Nonaktif",
+
+    perusahaan: apiData.perusahaan,
+  };
+}
+
+/**
+ * Payload ringan untuk create/update dari Form
+ */
 export type CreateLowonganPayload = {
   perusahaan_id: number;
   judul_lowongan: string;
@@ -70,8 +89,8 @@ export type CreateLowonganPayload = {
   kuota: number;
   lokasi_penempatan: string;
   deadline_lamaran: string; // YYYY-MM-DD
-  mulaiMagang: string;      // YYYY-MM-DD
-  selesaiMagang: string;    // YYYY-MM-DD
+  mulaiMagang?: string;      // YYYY-MM-DD
+  selesaiMagang?: string;    // YYYY-MM-DD
   tugas: string[];
   persyaratan: string[];
   keuntungan: string[];

@@ -147,7 +147,7 @@ export default function HeaderHome() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="flex items-center gap-4 py-0 px-2 shadow-none border"
+                className="flex items-center gap-4 py-2 px-2 shadow-none border"
               >
                 {/* Avatar */}
                 {user.avatar && user.avatar.trim() !== "" ? (
