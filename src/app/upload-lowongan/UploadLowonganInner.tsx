@@ -75,7 +75,7 @@ export default function UploadLowonganInner({ view }: UploadLowonganLayoutProps)
               href="/upload-lowongan/lowongan-baru"
               className="h-10 inline-flex items-center px-4 rounded-lg bg-[#0F67B1] text-white font-medium hover:bg-[#0d5692] transition"
             >
-              + Buat Lowongan Baru
+              Lowongan Baru
             </Link>
           </div>
 

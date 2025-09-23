@@ -52,7 +52,6 @@ function Avatar({
   );
 }
 
-// ——— helpers: derive nama/org berdasar role dengan fallback ———
 function deriveFullName(user: AnyUser | null, role?: string) {
   const r = (role ?? "").toLowerCase();
   const u = user || {};
@@ -119,14 +118,21 @@ export default function TopNavbar({
     } catch {}
   }, []);
 
-  // Jika props tidak disediakan, fallback ke data dari localStorage
   const displayFullName = fullName ?? deriveFullName(loadedUser, loadedRole ?? undefined);
-  const displayOrgName = orgName ?? deriveOrgName(loadedUser, loadedRole ?? undefined);
-  const displayAvatar = deriveAvatar(loadedUser, profilePic ?? null);
+  const displayOrgName  = orgName   ?? deriveOrgName(loadedUser, loadedRole ?? undefined);
+  const displayAvatar   = deriveAvatar(loadedUser, profilePic ?? null);
 
   return (
-    <div className={`flex items-center justify-between px-6 py-4 border-b bg-white shadow-xl ${className}`}>
-      {/* Left area + hamburger (mobile only) */}
+    // Tinggi fix 84px agar sejajar dengan header Sidebar (yang juga h-[84px])
+    <div
+  className={`flex justify-between
+              h-auto sm:h-[84px]
+              py-3 sm:py-0
+              items-start sm:items-center
+              px-4 md:px-6 border-b bg-white ${className}`}
+>
+
+      {/* Left area + hamburger */}
       {variant === "siswa" ? (
         <div className="min-w-0 flex items-center gap-2">
           <button
@@ -137,14 +143,13 @@ export default function TopNavbar({
           >
             <Menu size={22} />
           </button>
-          <div className="min-w-0">
+          <div className="min-w-0 leading-tight">
             <h3 className="font-semibold text-gray-900 truncate">{displayFullName}</h3>
             <small className="text-sm text-gray-500 truncate">{displayOrgName}</small>
           </div>
         </div>
       ) : (
         <div className="min-w-0 flex items-center gap-3">
-          {/* hamburger mobile */}
           <button
             type="button"
             onClick={onMobileOpen}
@@ -154,7 +159,7 @@ export default function TopNavbar({
             <Menu size={22} />
           </button>
 
-          <div>
+          <div className="leading-tight">
             <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-[#0F67B1]">
               SELAMAT DATANG
             </h1>
@@ -166,29 +171,29 @@ export default function TopNavbar({
       )}
 
       {/* Right actions */}
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={onBellClick}
-          className="relative rounded-none shadow-none p-0"
-          aria-label="Notifikasi"
-        >
-          <FaBell className="w-6 h-6 text-[#0F67B1]" />
-          {hasNotification && (
-            <span className="absolute top-1 right-0 block w-2 h-2 bg-[#28A745] rounded-full" />
-          )}
-        </button>
+      <div className="flex items-center gap-4 self-center">
+<button
+    type="button"
+    onClick={onBellClick}
+    className="relative rounded-none shadow-none p-0 self-center"
+    aria-label="Notifikasi"
+  >
+    <FaBell className="w-6 h-6 text-[#0F67B1]" />
+    {hasNotification && (
+      <span className="absolute top-1 right-0 block w-2 h-2 bg-[#28A745] rounded-full" />
+    )}
+  </button>
 
-        <div className="w-px h-10 bg-gray-300" />
+  <div className="w-px h-10 sm:h-8 bg-gray-300 self-center" />
 
-        <Link href={settingsHref} aria-label="Buka pengaturan profil">
-          <div className="relative w-9 h-9">
-            <Avatar name={displayFullName} src={displayAvatar ?? undefined} />
-            <div className="absolute -bottom-1 -right-2">
-              <RiPencilLine className="text-black w-4 h-4" />
-            </div>
-          </div>
-        </Link>
+  <Link href={settingsHref} aria-label="Buka pengaturan profil" className="self-center">
+    <div className="relative w-9 h-9">
+      <Avatar name={displayFullName} src={displayAvatar ?? undefined} />
+      <div className="absolute -bottom-1 -right-2">
+        <RiPencilLine className="text-black w-4 h-4" />
+      </div>
+    </div>
+  </Link>
       </div>
     </div>
   );
