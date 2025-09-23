@@ -1,13 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  HiOutlineMapPin,
-  HiOutlineBuildingLibrary,
-  HiOutlineLink,
-} from "react-icons/hi2";
+import { HiOutlineMapPin, HiOutlineLink, HiUser } from "react-icons/hi2";
 import { School } from "@/types/school";
 
 type Props = { data: School };
@@ -19,14 +15,15 @@ export default function SchoolCard({ data }: Props) {
     router.push(data.slug ? `/sekolah/${data.slug}` : `/sekolah/${data.id}`);
   }, [router, data.slug, data.id]);
 
-  const openWebsite = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      if (data.web_sekolah)
-        window.open(data.web_sekolah, "_blank", "noopener,noreferrer");
-    },
-    [data.web_sekolah]
-  );
+  // Bangun sumber logo final: prioritas logoUrl (absolut). Jika tidak ada, coba rakit dari logo_sekolah (relatif)
+  const logoSrc = useMemo(() => {
+    if (data.logoUrl && data.logoUrl.trim() !== "") return data.logoUrl;
+    if (data.logo_sekolah && data.logo_sekolah.trim() !== "") {
+      const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "";
+      return `${base}/${data.logo_sekolah.replace(/^\//,'')}`;
+    }
+    return null;
+  }, [data.logoUrl, data.logo_sekolah]);
 
   return (
     <article
@@ -36,20 +33,24 @@ export default function SchoolCard({ data }: Props) {
                  transition overflow-hidden"
     >
       <div className="flex">
-        {/* LEFT: Logo, bg putih */}
+        {/* LEFT: Logo */}
         <div className="w-[120px] tablet:w-[140px] desktop:w-[160px] bg-white p-4 grid place-items-center">
-          <div className="relative h-[80px] w-[80px] desktop:h-[96px] desktop:w-[96px]">
-            <Image
-              src={data.logoUrl}
-              alt={`${data.name} logo`}
-              fill
-              className="object-contain"
-              sizes="96px"
-            />
+          <div className="relative h-[80px] w-[80px] desktop:h-[96px] desktop:w-[96px] flex items-center justify-center">
+            {logoSrc ? (
+              <Image
+                src={logoSrc}
+                alt={`${data.name} logo`}
+                fill
+                className="object-contain"
+                sizes="96px"
+              />
+            ) : (
+              <HiUser className=" text-black" size={64} />
+            )}
           </div>
         </div>
 
-        {/* RIGHT: Konten, bg F7F6FA */}
+        {/* RIGHT: Konten */}
         <div className="flex-1 bg-[#F7F6FA] p-4 relative">
           <h3 className="text-[#0F67B1] font-extrabold leading-snug line-clamp-2">
             {data.name}
@@ -57,50 +58,34 @@ export default function SchoolCard({ data }: Props) {
 
           {/* Alamat */}
           <div className="mt-4 flex items-start gap-2 text-[#94A3B8]">
-            <span className="mt-[2px] text-[#94A3B8]" aria-hidden>
-              <HiOutlineMapPin size={18} />
-            </span>
+            <HiOutlineMapPin size={18} />
             <p className="text-[13px] leading-relaxed line-clamp-2 flex-1">
               {data.address}
             </p>
           </div>
 
-          {/* Jenis SMK */}
-          {data.type && (
-            <div className="mt-2 flex items-center gap-2 text-[#94A3B8]">
-              <span className="text-[#94A3B8]" aria-hidden>
-                <HiOutlineBuildingLibrary size={18} />
-              </span>
-              <span className="text-[13px]">{data.type}</span>
-            </div>
-          )}
-
-          {/* web_sekolah */}
-          {/* web_sekolah */}
-          {data.web_sekolah && (
+          {/* Website */}
+          {data.website && (
             <div className="mt-2 flex items-start gap-2 text-[#94A3B8]">
-              <span className="mt-[2px]" aria-hidden>
-                <HiOutlineLink size={18} />
-              </span>
+              <HiOutlineLink size={18} />
               <a
-                href={data.web_sekolah}
+                href={data.website}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[13px] text-[#94A3B8] hover:underline truncate max-w-[240px]"
               >
-                {data.web_sekolah}
+                {data.website}
               </a>
             </div>
           )}
 
-          {/* Button Detail pojok kanan-bawah */}
+          {/* Tombol Detail */}
           <div className="mt-2 flex justify-end">
             <button
               type="button"
               onClick={goDetail}
               className="rounded-full bg-[#0F67B1] px-5 py-2 text-white text-[12px] font-extrabold
                          hover:bg-[#0D5796] focus:outline-none focus:ring-2 focus:ring-[#0F67B1]/50"
-              aria-label={`Lihat detail ${data.name}`}
             >
               Detail
             </button>

@@ -12,15 +12,15 @@ type Props = {
 
 export default function Filter({ positions, posisiId, status, onChangePosisi, onChangeStatus }: Props) {
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-4">
+    <div className="mb-4 flex flex-wrap items-center gap-4 ">
       <div className="flex items-center">
         <label className="w-14 text-sm text-gray-600">Posisi</label>
         <select
-          className="h-10 min-w-[200px] rounded-[5px] border border-gray-300 px-3 outline-none"
+          className="h-10 min-w-[200px] rounded-[5px] border border-gray-300 px-3 outline-none text-sm"
           value={posisiId}
           onChange={(e) => onChangePosisi(e.target.value)}
         >
-          <option value="">Semua Posisi</option>
+          <option className="" value="">Semua Posisi</option>
           {positions.map((p) => (
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
@@ -30,7 +30,7 @@ export default function Filter({ positions, posisiId, status, onChangePosisi, on
       <div className="flex items-center">
         <label className="w-14 text-sm text-gray-600">Status</label>
         <select
-          className="h-10 min-w-[200px] rounded-[5px] border border-gray-300 px-3 outline-none"
+          className="h-10 min-w-[200px] rounded-[5px] border border-gray-300 px-3 outline-none text-sm"
           value={status}
           onChange={(e) => onChangeStatus(e.target.value as ApplicantStatus | "")}
         >

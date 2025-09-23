@@ -1,5 +1,24 @@
-import CardUtama from "@/app/components/dashboard/siswa/CardUtama";
+'use client';
+import StudentApplicationsTable from "@/app/components/dashboard/siswa/pengajuan-magang/table";
+import { dummyApplications } from "@/app/data/dummyApplications";
 
 export default function PengajuanMagangPage() {
-  return    // 👈 tidak perlu bungkus layout lagi
+    const handleAccept = (id: string) => {
+    console.log("Accepted:", id);
+  };
+
+  const handleReject = (id: string) => {
+    console.log("Rejected:", id);
+  };
+
+  return (
+    <div className="p-4">
+      <h3 className="mb-4">Lowongan Dilamar</h3>
+      <StudentApplicationsTable
+        data={dummyApplications}
+        onAccept={handleAccept}
+        onReject={handleReject}
+      />
+    </div>
+  );
 }

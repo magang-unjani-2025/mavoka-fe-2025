@@ -22,26 +22,29 @@ const api = axios.create({
 
 // Ambil semua perusahaan
 export async function getAllPerusahaan(): Promise<Company[]> {
-  const { data } = await api.get<{ data?: RawCompany[] }>(
-    "/api/user/show-akun/perusahaan"
-  );
-
-  const rows: RawCompany[] = (data as any)?.data ?? (data as any) ?? [];
-
-  return rows.map<Company>((r) => ({
-    id: r.id,
-    name: r.nama_perusahaan ?? r.name ?? "Perusahaan",
-    address: r.alamat ?? r.address ?? "-",
-    logoUrl: r.logo_url ?? r.logo ?? "/assets/img/placeholder-logo.png",
-    slug: r.slug,
-  }));
+  // Endpoint publik baru: /api/perusahaan/all
+  const { data } = await api.get<{ data?: RawCompany[] }>("/api/perusahaan/all");
+  const rows: RawCompany[] = (data as any)?.data ?? [];
+  return rows.map<Company>((r) => {
+    const logo = r.logo_url ?? r.logo;
+    return {
+      id: r.id,
+      name: r.nama_perusahaan ?? r.name ?? "Perusahaan",
+      address: r.alamat ?? r.address ?? "-",
+      logoUrl: logo || "/assets/img/placeholder-logo.png",
+      slug: r.slug,
+      description: r.deskripsi_usaha,
+      web: (r as any).web_perusahaan,
+    };
+  });
 }
 
 // Ambil detail perusahaan
 export async function getDetailPerusahaan(id: string | number): Promise<Company | null> {
   try {
-    const { data } = await api.get<RawCompany>(`/api/user/perusahaan/${id}`);
-    const r = data;
+  // Gunakan endpoint detail publik yang sudah ada
+  const { data } = await api.get<{ success?: boolean; data?: RawCompany }>(`/api/perusahaan/detail/${id}`);
+  const r: any = data?.data ?? data;
 
     return {
       id: r.id,

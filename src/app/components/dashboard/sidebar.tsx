@@ -391,33 +391,101 @@ export default function Sidebar({
     admin: [
       { name: "Dashboard", href: "/dashboard-admin", icon: <Home size={20} /> },
       { name: "Kelola Akun", href: "/kelola-akun", icon: <Users size={20} /> },
-      { name: "Laporan Umum", href: "/laporan-umum", icon: <FileText size={20} /> },
+      {
+        name: "Laporan Umum",
+        href: "/laporan-umum",
+        icon: <FileText size={20} />,
+      },
     ],
     perusahaan: [
-      { name: "Dashboard", href: "/dashboard-perusahaan", icon: <Home size={20} /> },
-      { name: "Upload Lowongan", href: "/upload-lowongan", icon: <FileText size={20} /> },
-      { name: "Pelamar", href: "/dashboard-perusahaan/pelamar", icon: <Users size={20} /> },
-      { name: "Monitoring", href: "/monitoring", icon: <LuNotepadText size={20} /> },
-      { name: "Pengaturan", href: "/pengaturan-perusahaan", icon: <MdOutlineSettings size={20} /> },
+      {
+        name: "Dashboard",
+        href: "/dashboard-perusahaan",
+        icon: <Home size={20} />,
+      },
+      {
+        name: "Upload Lowongan",
+        href: "/upload-lowongan",
+        icon: <FileText size={20} />,
+      },
+      {
+        name: "Pelamar",
+        href: "/dashboard-perusahaan/pelamar",
+        icon: <Users size={20} />,
+      },
+      {
+        name: "Monitoring",
+        href: "/monitoring",
+        icon: <LuNotepadText size={20} />,
+      },
+      {
+        name: "Pengaturan",
+        href: "/pengaturan-perusahaan",
+        icon: <MdOutlineSettings size={20} />,
+      },
     ],
     lpk: [
       { name: "Beranda", href: "/dashboard-lpk", icon: <Home size={20} /> },
-      { name: "Upload Pelatihan", href: "/upload-pelatihan", icon: <HiOutlineDocumentAdd size={20} /> },
-      { name: "Penilaian Siswa", href: "/penilaian", icon: <HiOutlineClipboardList size={20} /> },
-      { name: "Pengaturan", href: "/pengaturan-lpk", icon: <MdOutlineSettings size={20} /> },
+      {
+        name: "Upload Pelatihan",
+        href: "/upload-pelatihan",
+        icon: <HiOutlineDocumentAdd size={20} />,
+      },
+      {
+        name: "Penilaian Siswa",
+        href: "/penilaian",
+        icon: <HiOutlineClipboardList size={20} />,
+      },
+      {
+        name: "Pengaturan",
+        href: "/pengaturan-lpk",
+        icon: <MdOutlineSettings size={20} />,
+      },
     ],
     sekolah: [
-      { name: "Dashboard", href: "/dashboard-sekolah", icon: <Home size={20} /> },
-      { name: "Unggah Data Siswa", href: "/dashboard-sekolah/unggah-data-siswa", icon: <Users size={20} /> },
-      { name: "Status Lamaran", href: "/dashboard-sekolah/status-lamaran", icon: <FileText size={20} /> },
-      { name: "Laporan Evaluasi", href: "/dashboard-sekolah/laporan-evaluasi", icon: <FileText size={20} /> },
-      { name: "Pengaturan", href: "/pengaturan-sekolah", icon: <MdOutlineSettings size={20} /> },
+      {
+        name: "Dashboard",
+        href: "/dashboard-sekolah",
+        icon: <Home size={20} />,
+      },
+      {
+        name: "Unggah Data Siswa",
+        href: "/dashboard-sekolah/unggah-data-siswa",
+        icon: <Users size={20} />,
+      },
+      {
+        name: "Status Lamaran",
+        href: "/dashboard-sekolah/status-lamaran",
+        icon: <FileText size={20} />,
+      },
+      {
+        name: "Laporan Evaluasi",
+        href: "/dashboard-sekolah/laporan-evaluasi",
+        icon: <FileText size={20} />,
+      },
+      {
+        name: "Pengaturan",
+        href: "/pengaturan-sekolah",
+        icon: <MdOutlineSettings size={20} />,
+      },
     ],
     siswa: [
       { name: "Dashboard", href: "/dashboard-siswa", icon: <Home size={20} /> },
-      { name: "Pengajuan Magang", href: "/dashboard-siswa/pengajuan-magang", icon: <HiOutlineBriefcase size={20} /> },
-      { name: "Laporan & Evaluasi", href: "/laporan-evaluasi", icon: <GrDocumentUpload size={20} /> },
-      { name: "Pengaturan", href: "/pengaturan", icon: <MdOutlineSettings size={20} /> },
+      {
+        name: "Pengajuan Magang",
+        href: "/dashboard-siswa/pengajuan-magang",
+        icon: <HiOutlineBriefcase size={20} />,
+      },
+      {
+        name: "Laporan & Evaluasi",
+        href: "/dashboard-siswa/laporan-evaluasi",
+        icon: <GrDocumentUpload size={20} />,
+      },
+      {
+        name: "Pengaturan",
+        href: "/pengaturan",
+        icon: <MdOutlineSettings size={20} />,
+      },
     ],
   };
 
@@ -464,7 +532,9 @@ export default function Sidebar({
               )}
               <div
                 className={`flex items-center gap-2 px-3 py-2 ml-2 transition rounded-l-md w-full ${
-                  isActive ? "bg-[#0F67B1] text-white" : "text-gray-700 hover:bg-gray-100"
+                  isActive
+                    ? "bg-[#0F67B1] text-white"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
                 {item.icon}
@@ -528,7 +598,6 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Desktop / Tablet sidebar */}
       <aside
         className={[
           "bg-white border-r flex flex-col min-h-screen transition-all duration-300 overflow-hidden",
@@ -541,7 +610,6 @@ export default function Sidebar({
         {renderMenuList()}
       </aside>
 
-      {/* Mobile drawer + overlay */}
       {isMobile && (
         <>
           <div
@@ -577,8 +645,10 @@ export default function Sidebar({
         open={logoutOpen}
         onClose={() => setLogoutOpen(false)}
         onConfirm={() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
           setLogoutOpen(false);
-          handleLogout();
+          router.push("/");
         }}
       />
     </>

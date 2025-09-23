@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import JobCard from "./jobCard";
+import JobCardSkeleton from "./jobCardSkeleton";
 import { ArrowRight } from "lucide-react";
 import { TampilAllLowongan } from "@/lib/api-lowongan";
 import { Container } from "@/app/components/Container";
@@ -54,7 +55,11 @@ export default function JobList() {
         </div>
 
         {loading ? (
-          <p>Memuat lowongan...</p>
+          <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <JobCardSkeleton key={i} />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
             {jobs.slice(0, 8).map((job) => (

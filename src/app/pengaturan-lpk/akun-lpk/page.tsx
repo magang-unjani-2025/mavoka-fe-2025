@@ -5,7 +5,7 @@ import AkunHeader from "@/app/components/pengaturan-profil/akun/AkunHeader";
 import AkunView from "@/app/components/pengaturan-profil/akun/AkunView";
 import ChangePasswordFlow from "@/app/components/pengaturan-profil/akun/ChangePasswordFlow";
 
-export default function AkunPage() {
+export default function AkunLpkPage() {
   const [activeTab, setActiveTab] = useState("akun");
   const [isEditing, setIsEditing] = useState(false);
 

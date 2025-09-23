@@ -26,7 +26,7 @@ export default function CompanyCard({ data }: Props) {
       <div className="relative grid place-items-center px-4 pt-6 pb-4">
         <div className="relative w-full" style={{ height: LOGO_H }}>
           <Image
-            src={data.logoUrl || "/placeholder-logo.png"} // fallback logo
+            src={data.logoUrl || "/assets/img/placeholder-logo.png"} // fallback logo konsisten dengan api-perusahaan
             alt={`${data.name} logo`}
             fill
             className="object-contain"
