@@ -197,7 +197,10 @@ export default function FormLoginMultiRole({
 
     // fallback nested: user.perusahaan.id / user.sekolah.id / dst.
     const nested = (user as any)?.[role];
-    if (nested && (typeof nested.id === "number" || typeof nested.id === "string")) {
+    if (
+      nested &&
+      (typeof nested.id === "number" || typeof nested.id === "string")
+    ) {
       return nested.id;
     }
 
@@ -237,9 +240,12 @@ export default function FormLoginMultiRole({
 
         // opsional: token/id per role jika butuh multi-session
         localStorage.setItem(`access_token_${serverRole}`, token);
-if (actorId != null) localStorage.setItem(`id_${serverRole}`, String(actorId));
-localStorage.setItem("actor", JSON.stringify({ role: serverRole, id: actorId }));
-
+        if (actorId != null)
+          localStorage.setItem(`id_${serverRole}`, String(actorId));
+        localStorage.setItem(
+          "actor",
+          JSON.stringify({ role: serverRole, id: actorId })
+        );
       }
 
       redirectByRole(serverRole);

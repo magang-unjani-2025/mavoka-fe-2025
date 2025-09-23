@@ -7,12 +7,15 @@ import { useEffect, useState, useRef } from "react";
 import { Container } from "@/app/components/Container";
 import { HiUser } from "react-icons/hi";
 import { IoChevronDown } from "react-icons/io5";
+import { LuLayoutPanelLeft } from "react-icons/lu";
+import { IoIosLogOut } from "react-icons/io";
+import ConfirmLogoutDialog from "@/app/components/dashboard/popupLogout";
 
 type User = {
   id: number | string;
   username: string;
   email: string;
-  role?: string; // bisa kosong/beda casing dari BE
+  role?: string;
   name: string;
   avatar: string;
 };
@@ -20,24 +23,33 @@ type User = {
 export default function HeaderHome() {
   const router = useRouter();
   const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-    const storedRole = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const storedUser =
+      typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const storedRole =
+      typeof window !== "undefined" ? localStorage.getItem("role") : null;
     if (token && storedUser) setUser(JSON.parse(storedUser));
     if (storedRole) setRole(storedRole);
   }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -46,7 +58,8 @@ export default function HeaderHome() {
   }, []);
 
   function navLink(path: string, label: string) {
-    const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
+    const isActive =
+      path === "/" ? pathname === "/" : pathname.startsWith(path);
     return (
       <Link
         href={path}
@@ -67,6 +80,9 @@ export default function HeaderHome() {
     setUser(null);
     setRole(null);
     setOpen(false);
+    setDropdownOpen(false);
+    setMobileProfileOpen(false);
+    setConfirmOpen(false);
     router.push("/");
   }
 
@@ -88,13 +104,11 @@ export default function HeaderHome() {
     }
   }
 
-  // Sumber role yang konsisten untuk desktop & mobile
   const effectiveRole = (role ?? user?.role ?? "").toLowerCase();
 
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
       <Container className="flex items-center justify-between h-16">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <Image
             src="/img/logo-fit-academy.png"
@@ -115,7 +129,6 @@ export default function HeaderHome() {
           </div>
         </Link>
 
-        {/* Menu Desktop */}
         <nav className="hidden desktop:flex space-x-5 font-medium text-sm font-poppins">
           {navLink("/", "Beranda")}
           {navLink("/tentang-mavoka", "Tentang MAVOKA")}
@@ -125,13 +138,12 @@ export default function HeaderHome() {
           {navLink("/sekolah", "Sekolah")}
         </nav>
 
-        {/* Buttons Desktop */}
         <div className="hidden desktop:flex items-center space-x-3">
           {!user ? (
             <>
               <button
                 onClick={() => router.push("/login")}
-                className="bg-[#0F67B1] text-white hover:bg-opacity-70 transition px-4 py-2 rounded-md"
+                className="bg-[#0F67B1] text-white hover:bg-opacity-70 transition px-4 py-2 rounded-md "
               >
                 Masuk
               </button>
@@ -147,45 +159,54 @@ export default function HeaderHome() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="flex items-center gap-4 py-2 px-2 shadow-none border"
+                className="flex items-center gap-3 py-1.5 px-2 shadow-none border rounded-md"
+                aria-haspopup="menu"
+                aria-expanded={dropdownOpen}
               >
-                {/* Avatar */}
                 {user.avatar && user.avatar.trim() !== "" ? (
                   <Image
                     src={user.avatar}
-                    alt={user.name}
+                    alt={user.name || "Avatar"}
                     width={35}
                     height={35}
-                    className="rounded-full object-cover text-xs"
+                    className="rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
                     <HiUser className="text-xl" />
                   </div>
                 )}
-
-                <span className="text-sm font-medium">{user.username}</span>
-
                 <IoChevronDown
-                  className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                  className={`transition-transform ${
+                    dropdownOpen ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 p-2 bg-white border rounded-md shadow-lg z-50">
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-56 p-2 bg-white border rounded-md shadow-lg z-50"
+                >
                   <Link
                     href={getDashboardPath(effectiveRole)}
                     prefetch={false}
                     onClick={() => setDropdownOpen(false)}
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
                   >
-                    Dashboard
+                    <LuLayoutPanelLeft className="text-[18px]" />
+                    <span>Dashboard</span>
                   </Link>
+
                   <button
-                    onClick={handleLogout}
-                    className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg px-4 py-2 text-sm"
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setConfirmOpen(true);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 rounded-lg shadow-none text-[#BA0000]"
                   >
-                    Keluar
+                    <IoIosLogOut className="text-[18px]" />
+                    <span>Keluar</span>
                   </button>
                 </div>
               )}
@@ -193,7 +214,6 @@ export default function HeaderHome() {
           )}
         </div>
 
-        {/* Toggle Mobile */}
         <div className="flex items-center desktop:hidden">
           <button
             aria-label="Toggle menu"
@@ -206,8 +226,11 @@ export default function HeaderHome() {
         </div>
       </Container>
 
-      {/* Dropdown Mobile */}
-      <div className={`desktop:hidden ${open ? "fixed inset-x-0 top-16 z-50" : "hidden"}`}>
+      <div
+        className={`desktop:hidden ${
+          open ? "fixed inset-x-0 top-16 z-50" : "hidden"
+        }`}
+      >
         <div className="bg-white shadow-xl border-t border-black/10">
           <Container className="py-4 max-h-[calc(100vh-4rem)] overflow-auto">
             <div className="flex flex-col gap-2 py-2 text-sm font-medium font-poppins">
@@ -226,7 +249,9 @@ export default function HeaderHome() {
                 prefetch={false}
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/tentang") ? "text-[#0F67B1]" : "hover:bg-gray-100"
+                  pathname.startsWith("/tentang")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 Tentang MAVOKA
@@ -236,7 +261,9 @@ export default function HeaderHome() {
                 prefetch={false}
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/lowongan") ? "text-[#0F67B1]" : "hover:bg-gray-100"
+                  pathname.startsWith("/lowongan")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 Cari Lowongan
@@ -246,7 +273,9 @@ export default function HeaderHome() {
                 prefetch={false}
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/list-perusahaan") ? "text-[#0F67B1]" : "hover:bg-gray-100"
+                  pathname.startsWith("/list-perusahaan")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 Perusahaan
@@ -256,7 +285,9 @@ export default function HeaderHome() {
                 prefetch={false}
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/lpk") ? "text-[#0F67B1]" : "hover:bg-gray-100"
+                  pathname.startsWith("/lpk")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 Lembaga Pelatihan
@@ -266,13 +297,15 @@ export default function HeaderHome() {
                 prefetch={false}
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-2 py-2 ${
-                  pathname.startsWith("/sekolah") ? "text-[#0F67B1]" : "hover:bg-gray-100"
+                  pathname.startsWith("/sekolah")
+                    ? "text-[#0F67B1]"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 Sekolah
               </Link>
 
-              {/* Tombol login/daftar atau avatar di mobile */}
+              {/* Auth area (mobile) */}
               <div className="mt-3 flex flex-col gap-3">
                 {!user ? (
                   <>
@@ -297,40 +330,64 @@ export default function HeaderHome() {
                   </>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between py-0 px-2 shadow-none border rounded-[5px] ">
-                      {user.avatar && user.avatar.trim() !== "" ? (
-                        <Image
-                          src={user.avatar}
-                          alt={user.name}
-                          width={40}
-                          height={40}
-                          className="rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
-                          <HiUser className="text-xl" />
-                        </div>
-                      )}
-                      <span className="font-medium">{user.name || user.username}</span>
-                    </div>
-
-                    {/* Dashboard mobile: pakai button + router untuk pasti jalan */}
+                    {/* Mobile profile dropdown header (avatar + chevron, tanpa nama) */}
                     <button
-                      onClick={() => {
-                        setOpen(false);
-                        router.push(getDashboardPath(effectiveRole));
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 rounded-lg"
+                      onClick={() => setMobileProfileOpen((s) => !s)}
+                      className="w-full flex items-center justify-between px-3 py-2 border rounded-md shadow-none"
+                      aria-expanded={mobileProfileOpen}
+                      aria-controls="mobile-profile-menu"
                     >
-                      Dashboard
+                      <div className="flex items-center gap-3">
+                        {user.avatar && user.avatar.trim() !== "" ? (
+                          <Image
+                            src={user.avatar}
+                            alt={user.name || "Avatar"}
+                            width={40}
+                            height={40}
+                            className="rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+                            <HiUser className="text-xl" />
+                          </div>
+                        )}
+                      </div>
+                      <IoChevronDown
+                        className={`transition-transform ${
+                          mobileProfileOpen ? "rotate-180" : ""
+                        }`}
+                      />
                     </button>
 
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left hover:bg-gray-100 shadow-none rounded-lg px-4 py-2 text-sm"
-                    >
-                      Keluar
-                    </button>
+                    {mobileProfileOpen && (
+                      <div
+                        id="mobile-profile-menu"
+                        className="mt-1 overflow-hidden rounded-md border"
+                      >
+                        <button
+                          onClick={() => {
+                            setOpen(false);
+                            setMobileProfileOpen(false);
+                            router.push(getDashboardPath(effectiveRole));
+                          }}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-left text-sm hover:bg-gray-100 shadow-none"
+                        >
+                          <LuLayoutPanelLeft className="text-[18px]" />
+                          <span>Dashboard</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setMobileProfileOpen(false);
+                            setConfirmOpen(true);
+                          }}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-left text-sm hover:bg-gray-100 text-[#BA0000] shadow-none"
+                        >
+                          <IoIosLogOut className="text-[18px]" />
+                          <span>Keluar</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -338,6 +395,13 @@ export default function HeaderHome() {
           </Container>
         </div>
       </div>
+
+      {/* Confirm Logout Dialog (reusable) */}
+      <ConfirmLogoutDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleLogout}
+      />
     </header>
   );
 }

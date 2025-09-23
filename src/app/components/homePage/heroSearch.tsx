@@ -68,33 +68,43 @@ export default function HeroSearch({
               {title}
             </h1>
 
-            <form
-              onSubmit={handleSubmit}
-              role="search"
-              aria-label={`Pencarian ${title}`}
-              className="w-full max-w-[760px]"
-            >
-              <div className="flex items-stretch rounded-[8px] bg-white p-2 shadow-md">
-                <label htmlFor="hero-search-input" className="sr-only">
-                  {placeholder}
-                </label>
-                <input
-                  id="hero-search-input"
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder={placeholder}
-                  className="flex-1 rounded-[8px] border border-gray-300 px-4 py-2 text-sm text-gray-900 outline-none
-                 focus:border-[#0F67B1] focus:ring-1 focus:ring-[#0F67B1] placeholder:text-gray-400"
-                />
-                <button
-                  type="submit"
-                  aria-label="Cari"
-                  className="ml-2 flex items-center justify-center rounded-lg bg-[#0F67B1] px-4 py-2 text-white hover:bg-opacity-70 transition"
-                >
-                  <BiSearchAlt size={24} />
-                </button>
-              </div>
-            </form>
+<form
+  onSubmit={handleSubmit}
+  role="search"
+  aria-label={`Pencarian ${title}`}
+  className="w-full max-w-[760px] mx-auto"
+>
+  {/* wrapper putih */}
+  <div className="rounded-[8px] bg-white p-2 shadow-md">
+    {/* grid 1fr + auto, aman di layar kecil */}
+    <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+      <label htmlFor="hero-search-input" className="sr-only">
+        {placeholder}
+      </label>
+
+      {/* min-w-0 menghindari overflow saat ruang sempit */}
+      <input
+        id="hero-search-input"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder={placeholder}
+        className="min-w-0 w-full rounded-[8px] border border-gray-300 px-4 h-11 text-sm text-gray-900 outline-none
+                   focus:border-[#0F67B1] focus:ring-1 focus:ring-[#0F67B1] placeholder:text-gray-400"
+      />
+
+      {/* tombol tidak menyusut */}
+      <button
+        type="submit"
+        aria-label="Cari"
+        className="shrink-0 grid place-items-center rounded-lg bg-[#0F67B1] h-11 w-11
+                   tablet:h-11 tablet:w-11 desktop:px-4 desktop:w-auto desktop:min-w-[44px] text-white hover:bg-opacity-70 transition"
+      >
+        <BiSearchAlt size={24} />
+      </button>
+    </div>
+  </div>
+</form>
+
           </div>
         </div>
       </Container>
