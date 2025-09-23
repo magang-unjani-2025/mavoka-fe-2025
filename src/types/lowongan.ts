@@ -31,25 +31,39 @@ export interface Lowongan {
   deskripsi: string;
   kuota: number;
   lokasi_penempatan: string;
-
-  persyaratan: string[];  // dari backend string → diparse ke array
-  keuntungan: string[];   // dari backend string → diparse ke array
-  tugas: string[];        // dari backend string → diparse ke array
-
-  mulaiMagang?: string | null;   // periode_awal
-  selesaiMagang?: string | null; // periode_akhir
+  persyaratan: string[];
+  keuntungan: string[];
+  tugas: string[];
+  mulaiMagang?: string | null;
+  selesaiMagang?: string | null;
   deadline_lamaran: string;
-
   created_at: string;
   updated_at: string;
   status: StatusLowongan;
-
-  perusahaan?: Company; // optional, tergantung endpoint include relasi atau nggak
+  perusahaan?: Company;
 }
 
-/**
- * Mapper: ubah response API (raw) jadi Lowongan versi client
- */
+function normalizeDelimited(value: any): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(Boolean).map(String).map(v => v.trim()).filter(v => v.length > 0);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    // Kalau JSON array dalam bentuk string
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(Boolean).map(String).map(v => v.trim()).filter(v => v.length > 0);
+        }
+      } catch {/* ignore */}
+    }
+    // Split berdasarkan newline, koma, atau titik koma
+    return trimmed.split(/[\n;,]+/).map(s => s.trim()).filter(s => s.length > 0);
+  }
+  return [];
+}
+
 export function mapApiLowonganToClient(apiData: any): Lowongan {
   return {
     id: apiData.id,
@@ -57,23 +71,17 @@ export function mapApiLowonganToClient(apiData: any): Lowongan {
     judul_lowongan: apiData.judul_lowongan,
     posisi: apiData.posisi,
     deskripsi: apiData.deskripsi,
-    kuota: apiData.kuota,
+    kuota: Number(apiData.kuota ?? 0),
     lokasi_penempatan: apiData.lokasi_penempatan,
-
-    persyaratan: apiData.persyaratan ? apiData.persyaratan.split("\n") : [],
-    keuntungan: apiData.benefit ? apiData.benefit.split("\n") : [],
-    tugas: apiData.tugas_tanggung_jawab
-      ? apiData.tugas_tanggung_jawab.split("\n")
-      : [],
-
-    mulaiMagang: apiData.periode_awal,
-    selesaiMagang: apiData.periode_akhir,
+    persyaratan: normalizeDelimited(apiData.persyaratan),
+    keuntungan: normalizeDelimited(apiData.benefit),
+    tugas: normalizeDelimited(apiData.tugas_tanggung_jawab),
+    mulaiMagang: apiData.periode_awal ?? null,
+    selesaiMagang: apiData.periode_akhir ?? null,
     deadline_lamaran: apiData.deadline_lamaran,
-
     created_at: apiData.created_at,
     updated_at: apiData.updated_at,
-    status: apiData.status === "buka" ? "Aktif" : "Nonaktif",
-
+  status: ["buka","aktif"].includes(String(apiData.status).toLowerCase()) ? "Aktif" : "Nonaktif",
     perusahaan: apiData.perusahaan,
   };
 }

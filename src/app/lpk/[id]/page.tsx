@@ -11,6 +11,7 @@ import DetailDescription from "@/app/components/homePage/detail-role/DetailDescr
 import DetailHeader from "@/app/components/homePage/detail-role/DetailHeader";
 import BidangPelatihan from "@/app/components/homePage/listLpk/detail-lpk/BidangPelatihan";
 import { Container } from "@/app/components/Container";
+import { FullPageLoader } from "@/app/components/ui/LoadingSpinner";
 
 export default function DetailLPKPage() {
   const { id } = useParams();
@@ -32,7 +33,15 @@ export default function DetailLPKPage() {
     })();
   }, [id]);
 
-  if (loading) return <p className="text-center py-10">Loading...</p>;
+  if (loading) return (
+    <>
+      <HeaderHome />
+      <main>
+        <FullPageLoader label="Memuat detail LPK" />
+      </main>
+      <Footer />
+    </>
+  );
   if (!lpk)
     return (
       <p className="text-center py-10">
@@ -47,7 +56,7 @@ export default function DetailLPKPage() {
         <Container className="py-6">
           <DetailHeader
             name={lpk.name}
-            logo={lpk.logoUrl || "/img/sejarah-mavoka.png"}
+            logo={lpk.logoUrl ?? "/assets/img/placeholder-logo.png"}
           />
           <DetailDescription
             type="organisasi"

@@ -1,172 +1,134 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { HiUser } from "react-icons/hi";
 import { Container } from "@/app/components/Container"; // ✅ pakai Container
+import { getAllLpk } from "@/services/lpk";
 
-function useBreakpoint() {
-  const [breakpoint, setBreakpoint] = useState("desktop");
-
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 640) setBreakpoint("mobile");
-      else if (width < 1024) setBreakpoint("tablet");
-      else setBreakpoint("desktop");
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return breakpoint;
-}
+// (Optional) Breakpoint util retained if needed in future – removed usage for smoother marquee
 
 export default function TrainingCarousel() {
-  const trainingCenters = [
-    { logo: "", name: "Vayond"},
-    { logo: "", name: "Indobot Academy" },
-    { logo: "", name: "Koding Next" },
-    { logo: "", name: "Adirim" },
-    { logo: "", name: "Gamelab Indonesia" },
-    { logo: "", name: "Genius Learning" },
-    { logo: "", name: "Rumah Mesin" },
-    { logo: "", name: "BDM School" },
-  ];
+  const [items, setItems] = useState<
+    {
+      id: string | number;
+      name: string;
+      logo?: string | null;
+      bidang?: string | null;
+    }[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const touchStartX = useRef<number | null>(null);
-  const touchEndX = useRef<number | null>(null);
-  const breakpoint = useBreakpoint();
+  // Build marquee list (duplicate 3x for seamless loop)
+  const marqueeItems = useMemo(() => {
+    if (!items.length) return [] as typeof items;
+    return [...items, ...items, ...items];
+  }, [items]);
 
-  const getVisibleLogos = () => {
-    let range = 4; //dekstop
-    if (breakpoint === "tablet") range = 2;
-    if (breakpoint === "mobile") range = 1;
+  // Dynamic animation duration: slower when more items; clamp 35s - 80s
+  const animationDuration = useMemo(() => {
+    if (!items.length) return 40;
+    const base = items.length * 5; // 5s per unique item
+    return Math.max(35, Math.min(80, base));
+  }, [items.length]);
 
-    const visible = [];
-    for (let i = -range; i <= range; i++) {
-      const index =
-        (currentIndex + i + trainingCenters.length) % trainingCenters.length;
-      visible.push({
-        ...trainingCenters[index],
-        isCenter: i === 0,
-      });
-    }
-    return visible;
-  };
-
+  // Fetch data LPK sekali saat mount
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % trainingCenters.length);
-    }, 3000);
-    return () => clearInterval(interval);
+    (async () => {
+      try {
+        setLoading(true);
+        const list = await getAllLpk();
+        const mapped = list.map((l) => ({
+          id: l.id,
+          name: l.name,
+          logo: l.logoUrl ?? null,
+          bidang: l.bidang_pelatihan ?? null,
+        }));
+        setItems(mapped);
+        if (mapped.length === 0) setError("Belum ada data lembaga pelatihan");
+      } catch (e: any) {
+        console.error("[TrainingCarousel] fetch error", e);
+        setError("Gagal memuat data");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return;
-    const distance = touchStartX.current - touchEndX.current;
-
-    if (distance > 50)
-      setCurrentIndex((prev) => (prev + 1) % trainingCenters.length);
-    else if (distance < -50)
-      setCurrentIndex(
-        (prev) => (prev - 1 + trainingCenters.length) % trainingCenters.length
-      );
-
-    touchStartX.current = null;
-    touchEndX.current = null;
-  };
+  // Continuous marquee: no manual touch logic needed
 
   return (
-    <section className="py-8">
+    <section className="py-8 overflow-x-hidden">
       <Container className="text-center">
         <h2 className="text-xl font-semibold mb-2">Lembaga Pelatihan</h2>
-
-        {/* <div className="flex justify-center my-3">
-          <svg
-            width="59"
-            height="9"
-            viewBox="0 0 59 9"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              x="0.44043"
-              width="58"
-              height="9"
-              rx="4.5"
-              fill="url(#paint0_linear_1456_3879)"
-            />
-            <defs>
-              <linearGradient
-                id="paint0_linear_1456_3879"
-                x1="-21.5568"
-                y1="-5.6056"
-                x2="-21.1726"
-                y2="7.15909"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#B2EBF2" />
-                <stop offset="1" stopColor="#D1C4E9" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div> */}
-
-        <p className="text-sm text-gray-600 mb-8">
-          MAVOKA bekerja sama dengan berbagai lembaga pelatihan
-        </p>
-
-        <div
-          className="flex gap-8 justify-center overflow-visible select-none"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          style={{
-            padding: "20px 0",
-            minHeight: "140px",
-          }}
-        >
-          {getVisibleLogos().map((center, idx) => (
-            <div
-              key={idx}
-              className={`flex flex-col items-center transition-transform duration-500 ${
-                center.isCenter ? "scale-125" : "scale-100"
-              }`}
-            >
-              <div
-                className="rounded-full border-2 border-[#0F67B1] flex items-center justify-center bg-white"
-                style={{ width: "90px", height: "90px" }}
-              >
-                {center.logo ? (
-                  <Image
-                    src={center.logo}
-                    alt={center.name}
-                    width={60}
-                    height={60}
-                  />
-                ) : (
-                  <HiUser className="w-12 h-12 text-black" />
-                )}
-              </div>
-              {center.isCenter && (
-                <p className="mt-2 text-sm font-medium">{center.name}</p>
-              )}
-            </div>
-          ))}
-        </div>
+        <p className="text-sm text-gray-600 mb-8">MAVOKA bekerja sama dengan berbagai lembaga pelatihan</p>
       </Container>
+
+      {/* Full-bleed marquee wrapper (extends to viewport width without horizontal scroll) */}
+      <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden">
+        {loading && (
+          <div className="flex gap-6 justify-center py-6">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="rounded-full border-2 border-dashed border-[#0F67B1] w-[90px] h-[90px] animate-pulse" />
+            ))}
+          </div>
+        )}
+        {!loading && error && (
+          <p className="text-sm text-center text-gray-500 italic py-4">{error}</p>
+        )}
+        {!loading && !error && items.length === 0 && (
+          <p className="text-sm text-center text-gray-500 italic py-4">Belum ada lembaga terdaftar</p>
+        )}
+        {!loading && !error && items.length > 0 && (
+          <div className="relative select-none" style={{ padding: '4px 0' }}>
+            {/* Track uses extra side padding so logos tidak terpotong keras di tepi viewport */}
+            <div
+              className="flex gap-10 pl-32 pr-32 animate-lpk-marquee hover:[animation-play-state:paused] will-change-transform"
+              style={{ animationDuration: `${animationDuration}s` }}
+            >
+              {marqueeItems.map((m, idx) => (
+                <div key={idx} className="flex flex-col items-center">
+                  <div
+                    className="relative rounded-full border-2 border-[#0F67B1] overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
+                    style={{ width: 90, height: 90 }}
+                  >
+                    {m.logo ? (
+                      <Image
+                        src={m.logo}
+                        alt={m.name}
+                        fill
+                        sizes="90px"
+                        className="object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <HiUser className="w-10 h-10 text-black" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-2 text-xs font-medium w-24 text-center truncate" title={m.name}>{m.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <style jsx>{`
+        @keyframes lpk-marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-33.333%);
+          }
+        }
+        .animate-lpk-marquee {
+          width: max-content;
+          animation: lpk-marquee 40s linear infinite;
+        }
+      `}</style>
     </section>
   );
 }

@@ -9,6 +9,7 @@ import LpkCard from "./lpkCard";
 import { useResponsivePerPage, PER_PAGE } from "@/app/components/homePage/pageResponsive";
 import { TampilAlllpk } from "@/lib/api-lpk";
 import type { Lpk } from "@/types/lpk";
+import { LpkCardSkeleton } from "@/app/components/homePage/lpkCardSkeleton";
 
 export default function LpkList() {
   const [data, setData] = useState<Lpk[]>([]);
@@ -41,16 +42,48 @@ export default function LpkList() {
           return /^https?:\/\//i.test(t) ? t : `https://${t}`;
         };
 
-        const mapped: Lpk[] = rows.map((r: any) => ({
-          id: r.id,
-          name: r.nama_lembaga ?? "LPK",
-          address: r.alamat ?? "-",
-          website: normalizeUrl(r.web_lembaga ?? null),
-          logoUrl: r.logo_lembaga ?? r.logo_url ?? "/assets/img/placeholder-logo.png",
-          // belum ada di API → placeholder; kalau nanti ada r.cover_url tinggal ganti
-          coverUrl: r.cover_url ?? "/assets/img/placeholder-cover.jpg",
-          slug: r.slug,
-        }));
+        const mapped: Lpk[] = rows.map((r: any) => {
+          // Web: simpan sesuai tipe (web_lembaga)
+            const web = normalizeUrl(r.web_lembaga ?? null);
+            // Logo: pilih yang tersedia lalu normalisasi absolute jika relatif
+            let logo = r.logo_url ?? r.logo_lembaga ?? null;
+            if (logo) {
+              const trimmed = String(logo).trim();
+              if (!/^https?:\/\//i.test(trimmed)) {
+                let path = trimmed.startsWith('/') ? trimmed : '/' + trimmed;
+                if (/^\/(logos|storage)\//.test(path)) {
+                  const base = (process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8000').replace(/\/$/, '');
+                  logo = base + path;
+                } else {
+                  logo = path; // relative public asset
+                }
+              } else {
+                logo = trimmed;
+              }
+            }
+            if (!logo) logo = '/assets/img/placeholder-logo.svg';
+            // Cover placeholder gunakan svg yang sudah dibuat
+            let cover = r.cover_url ?? '/assets/img/placeholder-cover.svg';
+            if (cover && !/^https?:\/\//i.test(cover)) {
+              if (!cover.startsWith('/')) cover = '/' + cover;
+              if (/^\/(logos|storage|covers)\//.test(cover)) {
+                const base = (process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8000').replace(/\/$/, '');
+                cover = base + cover;
+              }
+            }
+            return {
+              id: r.id,
+              name: r.nama_lembaga ?? 'LPK',
+              address: r.alamat ?? '-',
+              web_lembaga: web,
+              logoUrl: logo,
+              coverUrl: cover,
+              bidang_pelatihan: r.bidang_pelatihan ?? null,
+              deskripsi_lembaga: r.deskripsi_lembaga ?? null,
+              slug: r.slug,
+              email: r.email ?? undefined,
+            } as Lpk;
+        });
 
         setData(mapped);
         setErr(null);
@@ -120,10 +153,7 @@ export default function LpkList() {
         {loading && (
           <div className="grid gap-5 grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3">
             {Array.from({ length: itemsPerPage }).map((_, i) => (
-              <div
-                key={i}
-                className="h-[260px] rounded-[8px] border border-[#D6DDEB] bg-gray-100 animate-pulse"
-              />
+              <LpkCardSkeleton key={i} />
             ))}
           </div>
         )}

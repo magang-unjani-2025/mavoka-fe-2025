@@ -6,6 +6,7 @@ import { Container } from "@/app/components/Container";
 import HeroSearch from "@/app/components/homePage/heroSearch";
 import Pagination from "@/app/components/homePage/pagination";
 import SchoolCard from "@/app/components/homePage/listSekolah/schoolCard";
+import { SchoolCardSkeleton } from "@/app/components/homePage/schoolCardSkeleton";
 import { TampilAllSekolah } from "@/lib/api-sekolah";
 import { useResponsivePerPage, PER_PAGE } from "@/app/components/homePage/pageResponsive";
 import { School } from "@/types/school";
@@ -119,10 +120,7 @@ export default function SchoolList() {
         {loading && (
           <div className="grid gap-5 grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-2">
             {Array.from({ length: itemsPerPage }).map((_, i) => (
-              <div
-                key={i}
-                className="h-[156px] rounded-[8px] border border-[#D6DDEB] bg-gray-100 animate-pulse"
-              />
+              <SchoolCardSkeleton key={i} />
             ))}
           </div>
         )}

@@ -71,6 +71,7 @@
 
 import { useEffect, useState } from "react";
 import CompanyCard from "./companyCard";
+import CompanyCardSkeleton from "./companyCardSkeleton";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/app/components/Container";
 
@@ -83,15 +84,14 @@ type Perusahaan = {
 
 export default function CompanyList() {
   const [companies, setCompanies] = useState<Perusahaan[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const API_BASE_URL =
-          process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
-        const response = await fetch(
-          `${API_BASE_URL}/api/user/show-akun/perusahaan`
-        );
+        setLoading(true);
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+        const response = await fetch(`${API_BASE_URL}/api/user/show-akun/perusahaan`);
         const json = await response.json();
         const verified = json.data.filter(
           (item: Perusahaan) => item.status_verifikasi === "Terverifikasi"
@@ -99,6 +99,8 @@ export default function CompanyList() {
         setCompanies(verified);
       } catch (error) {
         console.error("Gagal mengambil data perusahaan:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -127,21 +129,29 @@ export default function CompanyList() {
             href="/list-perusahaan"
             className="tablet:hidden text-[#0F67B1] hover:underline"
           >
-            <ArrowRight size={24} />
+            Lihat semua perusahaan <ArrowRight size={20} />
           </a>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
-          {companies.slice(0, 8).map((company) => (
-            <CompanyCard
-              key={company.id}
-              logo={company.logo_perusahaan || null}
-              name={company.nama_perusahaan}
-              detailLink={`/list-perusahaan/${company.id}`}
-            />
-          ))}
-        </div>
+        {/* Grid or Skeleton */}
+        {loading ? (
+          <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <CompanyCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
+            {companies.slice(0, 8).map((company) => (
+              <CompanyCard
+                key={company.id}
+                logo={company.logo_perusahaan || null}
+                name={company.nama_perusahaan}
+                detailLink={`/list-perusahaan/${company.id}`}
+              />
+            ))}
+          </div>
+        )}
       </Container>
     </section>
   );
