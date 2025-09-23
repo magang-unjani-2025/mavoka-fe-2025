@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { HiOutlineMapPin, HiOutlineLink, HiUser } from "react-icons/hi2";
 import { School } from "@/types/school";
@@ -15,6 +15,16 @@ export default function SchoolCard({ data }: Props) {
     router.push(data.slug ? `/sekolah/${data.slug}` : `/sekolah/${data.id}`);
   }, [router, data.slug, data.id]);
 
+  // Bangun sumber logo final: prioritas logoUrl (absolut). Jika tidak ada, coba rakit dari logo_sekolah (relatif)
+  const logoSrc = useMemo(() => {
+    if (data.logoUrl && data.logoUrl.trim() !== "") return data.logoUrl;
+    if (data.logo_sekolah && data.logo_sekolah.trim() !== "") {
+      const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "";
+      return `${base}/${data.logo_sekolah.replace(/^\//,'')}`;
+    }
+    return null;
+  }, [data.logoUrl, data.logo_sekolah]);
+
   return (
     <article
       className="rounded-[8px] border border-[#D6DDEB] bg-white 
@@ -26,9 +36,9 @@ export default function SchoolCard({ data }: Props) {
         {/* LEFT: Logo */}
         <div className="w-[120px] tablet:w-[140px] desktop:w-[160px] bg-white p-4 grid place-items-center">
           <div className="relative h-[80px] w-[80px] desktop:h-[96px] desktop:w-[96px] flex items-center justify-center">
-            {data.logoUrl && data.logoUrl.trim() !== "" ? (
+            {logoSrc ? (
               <Image
-                src={data.logoUrl}
+                src={logoSrc}
                 alt={`${data.name} logo`}
                 fill
                 className="object-contain"

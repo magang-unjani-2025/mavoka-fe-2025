@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HiOutlineMapPin, HiOutlineLink } from "react-icons/hi2";
 import { Lpk } from "@/types/lpk";
@@ -17,6 +17,39 @@ export default function LpkCard({ data }: Props) {
 
   const websiteHost = data.web_lembaga?.replace(/^https?:\/\//i, "");
 
+  const [logoFailed, setLogoFailed] = useState(false);
+  const normalizedLogo = useMemo(() => {
+    if (!data.logoUrl || logoFailed) return null;
+    let src = data.logoUrl.trim();
+    if (!/^https?:\/\//i.test(src)) {
+      if (!src.startsWith('/')) src = '/' + src; // pastikan leading slash
+      if (/^\/(logos|storage)\//.test(src)) {
+        const base = (process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8000').replace(/\/$/, '');
+        src = base + src; // jadikan absolute
+      }
+    }
+    return src;
+  }, [data.logoUrl, logoFailed]);
+
+  const initials = useMemo(() => {
+    const parts = (data.name || '').trim().split(/\s+/).slice(0,2);
+    return parts.map(p => p[0]?.toUpperCase() ?? '').join('') || 'LPK';
+  }, [data.name]);
+
+  const [coverFailed, setCoverFailed] = useState(false);
+  const coverSrc = useMemo(() => {
+    if (coverFailed || !data.coverUrl) return '/assets/img/placeholder-cover.svg';
+    let src = data.coverUrl.trim();
+    if (!/^https?:\/\//i.test(src)) {
+      if (!src.startsWith('/')) src = '/' + src;
+      if (/^\/(logos|storage|covers)\//.test(src)) {
+        const base = (process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8000').replace(/\/$/, '');
+        src = base + src;
+      }
+    }
+    return src;
+  }, [data.coverUrl, coverFailed]);
+
   return (
     <article
       className="rounded-[8px] border border-[#D6DDEB] bg-white 
@@ -26,15 +59,15 @@ export default function LpkCard({ data }: Props) {
     >
       <div className="relative w-full">
         <div className="relative mx-auto w-[370px] h-[72px] bg-gray-100 overflow-hidden">
-          {data.coverUrl && (
-            <Image
-              src={data.coverUrl ?? null}
-              alt={`${data.name} cover`}
-              fill
-              className="object-cover"
-              sizes="370px"
-            />
-          )}
+          <Image
+            src={coverSrc}
+            alt={`${data.name} cover`}
+            fill
+            className="object-cover"
+            sizes="370px"
+            onError={() => setCoverFailed(true)}
+            priority={false}
+          />
         </div>
 
         {/* logo bulat di tengah: pakai inset-x-0 + justify-center */}
@@ -43,15 +76,20 @@ export default function LpkCard({ data }: Props) {
             className="h-[64px] w-[64px] rounded-full bg-white grid place-items-center
                     border border-[#E5E7EB] shadow-[0_2px_4px_rgba(0,0,0,0.15)] overflow-hidden"
           >
-            {data.logoUrl && (
-              <div className="relative h-[56px] w-[56px]">
+            {normalizedLogo ? (
+              <div className="relative h-[56px] w-[56px] rounded-full overflow-hidden bg-white">
                 <Image
-                  src={data.logoUrl ?? null}
+                  src={normalizedLogo}
                   alt={`${data.name} logo`}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   sizes="56px"
+                  onError={() => setLogoFailed(true)}
                 />
+              </div>
+            ) : (
+              <div className="h-[56px] w-[56px] flex items-center justify-center bg-[#E2E8F0] text-[#64748B] text-sm font-bold rounded-full select-none">
+                {initials}
               </div>
             )}
           </div>

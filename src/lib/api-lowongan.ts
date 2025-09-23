@@ -6,7 +6,14 @@ const API_BASE_URL =
 
 export async function TampilAllLowongan() {
   const res = await axios.get(`${API_BASE_URL}/all-lowongan`);
-  return res.data;
+  const payload = res.data;
+  // Backend sekarang bisa kirim {data: [...]} atau langsung array lama
+  const list = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.data)
+      ? payload.data
+      : [];
+  return list;
 }
 
 export async function getLowonganPerusahaan(): Promise<Lowongan[]> {

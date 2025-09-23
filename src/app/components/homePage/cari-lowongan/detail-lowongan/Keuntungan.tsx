@@ -13,13 +13,13 @@ export default function Keuntungan({ benefit = [] }: Props) {
         <h2 className="font-bold text-lg">Keuntungan</h2>
       </div>
       {benefit.length > 0 ? (
-        <ul className="list-disc pl-5 space-y-1">
+        <ol className="list-decimal list-inside space-y-1 text-sm leading-relaxed">
           {benefit.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
-        </ul>
+        </ol>
       ) : (
-        <p>-</p>
+        <p className="text-sm text-slate-500">-</p>
       )}
     </div>
   );
