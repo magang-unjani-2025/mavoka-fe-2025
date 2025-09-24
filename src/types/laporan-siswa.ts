@@ -6,14 +6,25 @@ content?: string;
 photoUrl?: string;
 };
 
+export type CompanyGrade = {
+  id: number;                 // 1..5 tetap
+  name: string;               // "Aspek Teknis", dst.
+  criteria?: string;          // multiline text (dipisah \n)
+  score?: number;             // 0..100
+};
+
 
 export type WeekReport = {
-id: string; // uuid
-number: number; // Minggu ke-
-logs: DayLog[];
-status: 'ongoing' | 'done';
-targetDays?: 5 | 6 | 7; // set saat selesai
-coverPhotoUrl?: string; // foto entri terakhir (opsional)
+  id: string;
+  number: number;
+  status: "ongoing" | "done";
+  targetDays?: number;
+  coverPhotoUrl?: string;
+  companyEvaluation?: string;
+  logs: any[];
+
+  // NEW: nilai perusahaan per minggu (opsional)
+  companyGrades?: CompanyGrade[];
 };
 
 
