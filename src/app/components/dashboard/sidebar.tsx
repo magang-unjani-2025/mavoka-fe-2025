@@ -209,11 +209,13 @@ export default function Sidebar({
                           if (isTablet) setIsOpen(false);
                         }}
                       >
-                        <div
-                          className={`flex items-center gap-2 px-3 py-2 rounded-md transition ${
-                            active ? "bg-[#0F67B1]/70 text-white" : "text-gray-700 hover:bg-gray-100"
-                          }`}
-                        >
+<div
+  className={`flex items-center gap-2 px-3 py-2 transition
+    ${active ? "bg-[#0F67B1]/70 text-white" : "text-gray-700 hover:bg-gray-100"}
+    rounded-l-md rounded-r-none
+  `}
+>
+
                           {sub.icon}
                           {labelVisible ? <span className="text-sm font-medium">{sub.name}</span> : null}
                         </div>
