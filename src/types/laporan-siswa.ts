@@ -27,5 +27,20 @@ export type WeekReport = {
   companyGrades?: CompanyGrade[];
 };
 
+// types/laporan-siswa.ts
+export type FinalAssessment = {
+  periodStart: string;   // "2026-07-01"
+  periodEnd: string;     // "2026-08-31"
+  rows: Array<{
+    id: string;
+    studentName: string;
+    position: string;
+    trainingName: string;
+    trainingScore?: number;     // nilai akhir pelatihan (opsional)
+    internshipScore?: number;   // nilai akhir magang (opsional)
+    certificateUrl?: string;    // link sertifikat (opsional)
+  }>;
+};
+
 
 export type ReportState = { weeks: WeekReport[] };

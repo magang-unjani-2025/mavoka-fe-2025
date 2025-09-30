@@ -72,38 +72,42 @@ export default function HeroSearch({
   onSubmit={handleSubmit}
   role="search"
   aria-label={`Pencarian ${title}`}
-  className="w-full max-w-[760px] mx-auto"
+  className="w-full mx-auto max-w-[min(760px,calc(100%-20px))]"
 >
   {/* wrapper putih */}
-  <div className="rounded-[8px] bg-white p-2 shadow-md">
-    {/* grid 1fr + auto, aman di layar kecil */}
-    <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+  <div className="rounded-[8px] bg-white p-2 shadow-md overflow-hidden">
+    {/* FLEX: input fleksibel, tombol fixed */}
+    <div className="flex items-center gap-2">
       <label htmlFor="hero-search-input" className="sr-only">
         {placeholder}
       </label>
 
-      {/* min-w-0 menghindari overflow saat ruang sempit */}
+      {/* min-w-0 penting agar tidak overflow */}
       <input
         id="hero-search-input"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={placeholder}
-        className="min-w-0 w-full rounded-[8px] border border-gray-300 px-4 h-11 text-sm text-gray-900 outline-none
+        className="flex-1 min-w-0 w-px rounded-[8px] border border-gray-300 px-4 h-11 
+                   text-base tablet:text-[14px] desktop:text-[14px] text-gray-900 outline-none
                    focus:border-[#0F67B1] focus:ring-1 focus:ring-[#0F67B1] placeholder:text-gray-400"
       />
 
-      {/* tombol tidak menyusut */}
-      <button
-        type="submit"
-        aria-label="Cari"
-        className="shrink-0 grid place-items-center rounded-lg bg-[#0F67B1] h-11 w-11
-                   tablet:h-11 tablet:w-11 desktop:px-4 desktop:w-auto desktop:min-w-[44px] text-white hover:bg-opacity-70 transition"
-      >
-        <BiSearchAlt size={24} />
-      </button>
+<button
+  type="submit"
+  aria-label="Cari"
+  className="flex-none inline-flex items-center justify-center
+             h-11 w-11 rounded-[5px] bg-[#0F67B1] p-0 leading-none
+             text-white hover:bg-opacity-80 focus:outline-none
+             focus:ring-2 focus:ring-[#0F67B1]/50"
+>
+  <BiSearchAlt size={22} className="block" />
+</button>
+
     </div>
   </div>
 </form>
+
 
           </div>
         </div>
