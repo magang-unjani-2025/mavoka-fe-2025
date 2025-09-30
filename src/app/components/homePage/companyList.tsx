@@ -129,7 +129,7 @@ export default function CompanyList() {
             href="/list-perusahaan"
             className="tablet:hidden text-[#0F67B1] hover:underline"
           >
-            Lihat semua perusahaan <ArrowRight size={20} />
+            <ArrowRight size={20} />
           </a>
         </div>
 

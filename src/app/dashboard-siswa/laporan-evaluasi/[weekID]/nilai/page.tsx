@@ -54,7 +54,7 @@ export default function WeekGradePage() {
     <div className="px-4 md:px-6">
       <div className="mb-2">
         <Link
-          href={`/dashboard-siswa/laporan-evaluasi/${week.id}`}
+          href={`/dashboard-siswa/laporan-evaluasi`}
           className="inline-flex items-center gap-2 text-gray-800 hover:text-[#0F67B1]"
           aria-label="Kembali"
         >
