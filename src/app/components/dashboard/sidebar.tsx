@@ -19,6 +19,7 @@ import { AiOutlineFileText, AiOutlineFileDone } from "react-icons/ai";
 import * as React from "react";
 import ConfirmLogoutDialog from "./popupLogout";
 import { useMedia } from "./useMedia";
+import { useAuth } from '@/app/components/auth/AuthProvider';
 
 type MenuItem = { name: string; href: string; icon: React.ReactNode };
 
@@ -40,6 +41,7 @@ export default function Sidebar({
   const pathname = usePathname();
   const router = useRouter();
   const [logoutOpen, setLogoutOpen] = React.useState(false);
+  const { logout } = useAuth();
 
   const isDesktop = useMedia("(min-width:1280px)");
   const isTablet = useMedia("(min-width:744px) and (max-width:1279.98px)");
@@ -395,10 +397,9 @@ const Header = ({ onToggle }: { onToggle: () => void }) => (
         open={logoutOpen}
         onClose={() => setLogoutOpen(false)}
         onConfirm={() => {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
+          logout('manual');
           setLogoutOpen(false);
-          router.push("/");
+          router.push('/login');
         }}
       />
     </>

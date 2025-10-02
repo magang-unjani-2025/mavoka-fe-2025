@@ -76,14 +76,21 @@ const mock = {
 ========================= */
 const api = {
   async getPositions(): Promise<Position[]> {
-    const r = await fetch("/api/positions", { credentials: "include" });
+    const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+    const r = await fetch(`${BASE}/positions`, { credentials: "include" });
     if (!r.ok) throw new Error("Failed to fetch positions");
     return r.json();
   },
   async getApplicants(): Promise<Applicant[]> {
-    const r = await fetch("/api/applicants", { credentials: "include" });
+    const BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+    // call the new endpoint that returns only the current siswa's applications
+    const r = await fetch(`${BASE}/pelamar`, { credentials: "include" });
     if (!r.ok) throw new Error("Failed to fetch applicants");
-    return r.json();
+    const body = await r.json();
+    // backend returns { status: 'success', data: [...] }
+    if (body && body.data) return body.data as Applicant[];
+    // fallback if backend returns array directly
+    return body as Applicant[];
   },
   async updateStatus(id: string, status: ApplicantStatus): Promise<Applicant | null> {
     const r = await fetch(`/api/applicants/${id}/status`, {

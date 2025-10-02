@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { BiSolidFilePdf } from "react-icons/bi";
+import useMyApplications from "@/lib/useMyApplications";
 
 export type ApplicationStatus =
   | "lamar"
@@ -20,16 +21,41 @@ export type Application = {
 };
 
 type Props = {
-  data: Application[];
-  onAccept: (id: string) => void;
-  onReject: (id: string) => void;
+  // optional: if provided by parent the table will render this data;
+  // otherwise the table will fetch the current siswa's applications itself.
+  data?: Application[];
+  onAccept?: (id: string) => void;
+  onReject?: (id: string) => void;
 };
 
-export default function StudentApplicationsTable({
-  data,
-  onAccept,
-  onReject,
-}: Props) {
+export default function StudentApplicationsTable({ data, onAccept, onReject }: Props) {
+  // fallback handlers
+  const noop = () => {};
+  const accept = onAccept ?? noop;
+  const reject = onReject ?? noop;
+
+  // if parent didn't provide `data`, fetch from API
+  const { loading: apiLoading, error: apiError, data: apiItems } = useMyApplications();
+
+  // map backend item shape to Application expected by this table
+  const mapApiItem = (a: any): Application => ({
+    id: String(a.id ?? a.pelamar_id ?? ""),
+    posisi: a.posisi ?? a.posisi_name ?? a.posisiId ?? "-",
+    perusahaan: (a.asalSekolah || a.perusahaan || a.perusahaan_nama) ?? "-",
+    penempatan: a.alamat ? String(a.alamat).split(",")[0] : a.penempatan ?? "-",
+    cvUrl: a.cvUrl ?? a.cv_url ?? null,
+    transkripUrl: a.transkripUrl ?? a.transkrip_url ?? null,
+    status: (a.status as ApplicationStatus) || (a.status_lamaran as ApplicationStatus) || "lamar",
+  });
+
+  const sourceData: Application[] | null = data
+    ? data
+    : Array.isArray(apiItems)
+    ? apiItems.map(mapApiItem)
+    : apiLoading
+    ? null
+    : [];
+
   const headers = [
     "NO",
     "POSISI",
@@ -51,6 +77,14 @@ export default function StudentApplicationsTable({
     "w-52 whitespace-nowrap", // aksi
   ];
 
+  // render states: loading / error / empty
+  if (!sourceData) {
+    return <div className="p-4">Memuat data...</div>;
+  }
+  // Note: we always render the table (headers) even when there are no rows.
+  // For loading we keep the early return. For error or empty data, we'll show
+  // a single row message inside the table body so the layout stays consistent.
+
   return (
     <div className="bg-white rounded-md p-4 shadow">
       {/* wrapper scrollable */}
@@ -71,42 +105,41 @@ export default function StudentApplicationsTable({
             </tr>
           </thead>
           <tbody>
-            {data.map((a, idx) => (
-              <tr
-                key={a.id}
-                className="border-b text-xs text-center hover:bg-gray-50 last:border-b-0"
-              >
-                <td className="px-4 py-4">{idx + 1}</td>
-                <td className="px-4 py-4">{a.posisi}</td>
-                <td className="px-4 py-4">{a.perusahaan}</td>
-                <td className="px-4 py-4">{a.penempatan}</td>
-                <td className="px-4 py-4 text-center">
-                  {a.cvUrl ? (
-                    <PdfButton url={a.cvUrl} title="Lihat CV" />
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-4 text-center">
-                  {a.transkripUrl ? (
-                    <PdfButton url={a.transkripUrl} title="Lihat Transkrip" />
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-4 text-center whitespace-nowrap">
-                  <StatusChip status={a.status} />
-                </td>
-                <td className="px-4 py-4 text-center">
-                  <ActionButtons
-                    status={a.status}
-                    id={a.id}
-                    onAccept={onAccept}
-                    onReject={onReject}
-                  />
+            {Array.isArray(sourceData) && sourceData.length > 0 ? (
+              sourceData.map((a, idx) => (
+                <tr
+                  key={a.id}
+                  className="border-b text-xs text-center hover:bg-gray-50 last:border-b-0"
+                >
+                  <td className="px-4 py-4">{idx + 1}</td>
+                  <td className="px-4 py-4">{a.posisi}</td>
+                  <td className="px-4 py-4">{a.perusahaan}</td>
+                  <td className="px-4 py-4">{a.penempatan}</td>
+                  <td className="px-4 py-4 text-center">
+                    {a.cvUrl ? <PdfButton url={a.cvUrl} title="Lihat CV" /> : <span className="text-gray-400">—</span>}
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    {a.transkripUrl ? (
+                      <PdfButton url={a.transkripUrl} title="Lihat Transkrip" />
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-4 text-center whitespace-nowrap">
+                    <StatusChip status={a.status} />
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <ActionButtons status={a.status} id={a.id} onAccept={accept} onReject={reject} />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={headers.length} className="px-4 py-6 text-center text-sm text-gray-600">
+                  {apiLoading ? "Memuat data..." : apiError ? `Gagal memuat lamaran: ${String(apiError)}` : "Data tidak ada."}
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

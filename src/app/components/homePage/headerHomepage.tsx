@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Container } from "@/app/components/Container";
 import { HiUser } from "react-icons/hi";
 import { IoChevronDown } from "react-icons/io5";
@@ -17,8 +17,71 @@ type User = {
   email: string;
   role?: string;
   name: string;
-  avatar: string;
+  avatar?: string;
+  foto_profil?: string; // path relative in DB (e.g. siswa/foto/xxxx.jpg)
+  foto?: string; // legacy field
+  // possible logo fields provided by backend
+  logo_sekolah?: string;
+  logo?: string;
+  logo_url?: string;
+  sekolah?: {
+    logo_sekolah?: string;
+    logo?: string;
+  };
 };
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+const API_ROOT = API_BASE.replace(/\/?api\/?$/i, '');
+
+function resolveAvatar(raw?: string | null): string | undefined {
+  if (!raw) return undefined;
+  if (raw.startsWith('data:') || raw.startsWith('blob:')) return raw;
+  if (/^(https?:)?\/\//i.test(raw)) {
+    try {
+      const url = new URL(raw, API_ROOT);
+      const root = new URL(API_ROOT);
+      if (url.host === root.host) {
+        const pathname = url.pathname.replace(/^\/+/, '');
+        return `${root.origin}/storage/${pathname}`;
+      }
+      return raw;
+    } catch (e) {
+      return raw;
+    }
+  }
+  const cleaned = raw.replace(/^\/+/, '');
+  const root = API_ROOT.replace(/\/$/, '');
+  // Prefer direct root/<path> then try storage/<path> (covers both hosting setups)
+  return `${root}/storage/${cleaned}`;
+}
+
+function buildAvatarCandidates(raw?: string | null): string[] {
+  if (!raw) return [];
+  if (raw.startsWith('data:') || raw.startsWith('blob:')) return [raw];
+  if (/^(https?:)?\/\//i.test(raw)) {
+    try {
+      const url = new URL(raw, API_ROOT);
+      const root = new URL(API_ROOT);
+      if (url.host === root.host) {
+        const pathname = url.pathname.replace(/^\/+/, '');
+        const c1 = `${root.origin}/storage/${pathname}`;
+        const c2 = `${root.origin}/${pathname}`;
+        return Array.from(new Set([c1, c2]));
+      }
+      return [raw];
+    } catch (e) {
+      return [raw];
+    }
+  }
+  const cleaned = raw.replace(/^\/+/, '');
+  const root = API_ROOT.replace(/\/$/, '');
+  const candidates: string[] = [];
+  // direct path (e.g. /logos/...) and storage symlink variant
+  // try storage first (typical Laravel setup), then raw path
+  candidates.push(`${root}/storage/${cleaned}`);
+  candidates.push(`${root}/${cleaned}`);
+  return Array.from(new Set(candidates));
+}
 
 export default function HeaderHome() {
   const router = useRouter();
@@ -106,6 +169,16 @@ export default function HeaderHome() {
 
   const effectiveRole = (role ?? user?.role ?? "").toLowerCase();
 
+  const avatarCandidates = useMemo(() => {
+    const raw =
+      user?.logo_sekolah || user?.logo || user?.logo_url || user?.foto_profil || user?.foto || user?.avatar || user?.sekolah?.logo_sekolah || user?.sekolah?.logo;
+    return buildAvatarCandidates(raw);
+  }, [user]);
+
+  const [avatarIdx, setAvatarIdx] = useState(0);
+  // Reset index when candidates change
+  useEffect(() => setAvatarIdx(0), [avatarCandidates.join('|')]);
+
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
       <Container className="flex items-center justify-between h-16">
@@ -159,20 +232,23 @@ export default function HeaderHome() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="flex items-center gap-3 py-1.5 px-2 shadow-none border rounded-md"
+                className="flex items-center gap-3 py-1.5 px-2 shadow-none"
                 aria-haspopup="menu"
                 aria-expanded={dropdownOpen}
               >
-                {user.avatar && user.avatar.trim() !== "" ? (
-                  <Image
-                    src={user.avatar}
-                    alt={user.name || "Avatar"}
-                    width={35}
-                    height={35}
-                    className="rounded-full object-cover"
-                  />
+                {avatarCandidates.length > 0 ? (
+                  <span className="w-9 h-9 rounded-full border-2 border-[#0F67B1] p-[2px] overflow-hidden flex items-center justify-center">
+                    <img
+                      src={avatarCandidates[avatarIdx]}
+                      alt={user.name || "Avatar"}
+                      width={35}
+                      height={35}
+                      onError={() => setAvatarIdx((i) => (i + 1 < avatarCandidates.length ? i + 1 : i))}
+                      className="rounded-full object-cover w-full h-full"
+                    />
+                  </span>
                 ) : (
-                  <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center border-2 border-[#0F67B1]">
                     <HiUser className="text-xl" />
                   </div>
                 )}
@@ -329,25 +405,28 @@ export default function HeaderHome() {
                     </button>
                   </>
                 ) : (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 border-2 border-gray-200">
                     {/* Mobile profile dropdown header (avatar + chevron, tanpa nama) */}
                     <button
                       onClick={() => setMobileProfileOpen((s) => !s)}
-                      className="w-full flex items-center justify-between px-3 py-2 border rounded-md shadow-none"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-md shadow-none"
                       aria-expanded={mobileProfileOpen}
                       aria-controls="mobile-profile-menu"
                     >
                       <div className="flex items-center gap-3">
-                        {user.avatar && user.avatar.trim() !== "" ? (
-                          <Image
-                            src={user.avatar}
-                            alt={user.name || "Avatar"}
-                            width={40}
-                            height={40}
-                            className="rounded-full object-cover"
-                          />
+                        {avatarCandidates.length > 0 ? (
+                          <span className="w-10 h-10 rounded-full p-[2px] overflow-hidden flex items-center justify-center">
+                            <img
+                              src={avatarCandidates[avatarIdx]}
+                              alt={user.name || "Avatar"}
+                              width={40}
+                              height={40}
+                              onError={() => setAvatarIdx((i) => (i + 1 < avatarCandidates.length ? i + 1 : i))}
+                              className="rounded-full object-cover w-full h-full"
+                            />
+                          </span>
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                             <HiUser className="text-xl" />
                           </div>
                         )}
