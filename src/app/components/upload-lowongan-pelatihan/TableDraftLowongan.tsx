@@ -7,11 +7,6 @@ import Pagination from "@/app/components/dashboard/Pagination";
 import { Lowongan } from "@/types/lowongan";
 import { getLowonganPerusahaan } from "@/lib/api-lowongan";
 
-type Props = {
-  onDetail?: (id: number) => void;
-  onEdit?: (id: number) => void;
-};
-
 const toArray = (v: unknown): string[] =>
   Array.isArray(v) ? v : typeof v === "string" && v.trim() ? [v] : [];
 const summarize = (v: unknown, max = 2) => {
@@ -21,7 +16,7 @@ const summarize = (v: unknown, max = 2) => {
     : `${arr.slice(0, max).join(", ")} +${arr.length - max} lainnya`;
 };
 
-export default function TableDraftLowongan({ onDetail, onEdit }: Props) {
+export default function TableDraftLowongan() {
   const [rows, setRows] = useState<Lowongan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +44,6 @@ export default function TableDraftLowongan({ onDetail, onEdit }: Props) {
     [rows, start, perPage]
   );
 
-  // header: rapat + 2 baris untuk 4 kolom
   const headerCells: { key: string; node: React.ReactNode }[] = [
     { key: "NO", node: "NO" },
     { key: "POSISI", node: "POSISI" },
@@ -100,7 +94,7 @@ export default function TableDraftLowongan({ onDetail, onEdit }: Props) {
   return (
     <div className="rounded-xl">
       <div className="-mx-6 overflow-x-auto">
-        {/* samakan lebar minimum */}
+        {/* samakan lebar minimum dengan tabel lain */}
         <div className="min-w-[2300px] px-6">
           <table className="w-full text-xs">
             <thead className="bg-[#0F67B1] text-white">
@@ -183,40 +177,24 @@ export default function TableDraftLowongan({ onDetail, onEdit }: Props) {
                       {summarize(item.keuntungan)}
                     </td>
 
+                    {/* AKSI — disamakan dengan tabel terpasang: pakai Link langsung */}
                     <td className="px-3 py-2">
                       <div className="flex justify-center items-center gap-3">
-                        {onDetail ? (
-                          <button
-                            onClick={() => onDetail(item.id)}
-                            className="inline-flex items-center justify-center h-8 px-3 rounded-[5px] bg-[#0F67B1] text-white text-xs font-medium hover:bg-[#0c599b] transition"
-                          >
-                            Detail
-                          </button>
-                        ) : (
-                          <Link
-                            href={`/upload-lowongan/detail/${item.id}`}
-                            className="inline-flex items-center justify-center h-8 px-3 rounded-[5px] bg-[#0F67B1] text-white text-xs font-medium hover:bg-[#0c599b] transition"
-                          >
-                            Detail
-                          </Link>
-                        )}
+                        <Link
+                          href={`/upload-lowongan/detail/${item.id}`}
+                          className="inline-flex items-center justify-center h-8 px-3 rounded-[5px] bg-[#0F67B1] text-white text-xs font-medium hover:bg-[#0c599b] transition"
+                        >
+                          Detail
+                        </Link>
 
-                        {onEdit ? (
-                          <button
-                            aria-label="Edit"
-                            onClick={() => onEdit(item.id)}
-                            className="text-[#0F67B1] hover:opacity-80"
-                          >
-                            <BiEdit size={18} />
-                          </button>
-                        ) : (
-                          <Link
-                            href={`/upload-lowongan/edit/draft/${item.id}`}
-                            className="text-[#0F67B1] hover:opacity-80"
-                          >
-                            <BiEdit size={18} />
-                          </Link>
-                        )}
+                        <Link
+                          aria-label="Edit"
+                          href={`/upload-lowongan/edit/draft/${item.id}`}
+                          className="text-[#0F67B1] hover:opacity-80"
+                          title="Edit"
+                        >
+                          <BiEdit size={18} />
+                        </Link>
                       </div>
                     </td>
                   </tr>
