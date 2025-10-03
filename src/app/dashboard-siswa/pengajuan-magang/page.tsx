@@ -1,15 +1,14 @@
 'use client';
 import StudentApplicationsTable from "@/app/components/dashboard/siswa/pengajuan-magang/table";
+import React, { useEffect, useMemo, useState } from "react";
 import { useApplicants } from "@/lib/mock-pelamar";
-import type { Applicant } from "@/types/pelamar";
-import { useEffect, useMemo, useState } from "react";
 import useMyApplications from "@/lib/useMyApplications";
 
 export default function PengajuanMagangPage() {
   const { loading, items, onAccept, onReject } = useApplicants();
-
   const USE_API = process.env.NEXT_PUBLIC_USE_API === "true";
-  const { loading: apiLoading, error: apiError, data: apiItems, status: apiStatus, usedToken } = useMyApplications();
+  // Hanya pakai hook API di page jika kita butuh debug info; tabel akan fetch sendiri kalau data tidak diberikan.
+  const { status: apiStatus, error: apiError, data: apiItems, loading: apiLoading, usedToken } = useMyApplications();
 
   // read current logged-in siswa info from localStorage (reactively)
   const [currentUser, setCurrentUser] = useState<Record<string, any> | null>(null);
@@ -24,7 +23,7 @@ export default function PengajuanMagangPage() {
   }, []);
 
   // determine source items: API-mode -> apiItems; otherwise use hook items (mock)
-  const sourceItems = USE_API ? apiItems ?? [] : items ?? [];
+  const sourceItems = USE_API ? (apiItems ?? []) : (items ?? []);
 
   // if not using API, keep previous filtering by current user (mock mode may contain all applicants)
   const filtered = useMemo(() => {
@@ -53,8 +52,8 @@ export default function PengajuanMagangPage() {
   const mapApplicant = (a: any) => ({
     id: String(a.id ?? a.pelamar_id ?? ""),
     posisi: a.posisi ?? a.posisi_name ?? a.posisiId ?? "-",
-  perusahaan: (a.asalSekolah || a.perusahaan || a.perusahaan_nama) ?? "-",
-    penempatan: a.alamat ? String(a.alamat).split(",")[0] : (a.penempatan ?? "-"),
+    perusahaan: (a.nama_perusahaan || a.perusahaan || a.perusahaan_nama || a.asalSekolah) ?? "-",
+    penempatan: a.lokasi_penempatan || (a.alamat ? String(a.alamat).split(",")[0] : (a.penempatan ?? "-")),
     cvUrl: a.cvUrl ?? a.cv_url ?? null,
     transkripUrl: a.transkripUrl ?? a.transkrip_url ?? null,
     status: (a.status as any) || a.status_lamaran || "lamar",
@@ -77,24 +76,14 @@ export default function PengajuanMagangPage() {
         </div>
       )}
       {USE_API ? (
-        apiLoading ? (
-          <div>Memuat data...</div>
-        ) : apiError ? (
-          <div className="text-red-600">Gagal memuat lamaran: {apiError}</div>
-        ) : (filtered.length === 0 ? (
-          <div>Data tidak ada.</div>
-        ) : (
-          <StudentApplicationsTable onAccept={onAccept} onReject={onReject} />
-        ))
+        // Mode API: biarkan tabel melakukan fetch internal dan menampilkan skeleton & empty state sendiri
+        <StudentApplicationsTable onAccept={onAccept} onReject={onReject} />
       ) : !currentUser ? (
         <div>Silakan login untuk melihat lamaran Anda.</div>
-      ) : loading ? (
-        <div>Memuat data...</div>
-      ) : (filtered.length === 0 ? (
-        <div>Data tidak ada.</div>
       ) : (
-        <StudentApplicationsTable onAccept={onAccept} onReject={onReject} />
-      ))}
+        // Mode mock: kirim data yang sudah difilter agar tabel tidak fetch API
+        <StudentApplicationsTable data={filtered.map(mapApplicant)} onAccept={onAccept} onReject={onReject} />
+      )}
     </div>
   );
 }

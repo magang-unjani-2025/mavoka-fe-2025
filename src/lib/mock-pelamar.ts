@@ -138,11 +138,22 @@ export function useApplicants() {
     (async () => {
       setLoading(true);
       try {
-        const [pos, apps] = await Promise.all([ds.getPositions(), ds.getApplicants()]);
+        const [pos, apps] = await Promise.all([
+          (async () => {
+            try { return await ds.getPositions(); } catch (e) { console.warn("getPositions failed", e); return []; }
+          })(),
+          (async () => {
+            try { return await ds.getApplicants(); } catch (e) { console.warn("getApplicants failed", e); return []; }
+          })(),
+        ]);
         setPositions(pos);
         setAllApplicants(apps);
         setOrderSeq(Object.fromEntries(apps.map((a, i) => [a.id, i]))); // urutan awal = urutan datang
         setSeqCounter(apps.length);
+      } catch (e) {
+        console.error("Failed initializing applicants dataset", e);
+        setPositions([]);
+        setAllApplicants([]);
       } finally {
         setLoading(false);
       }

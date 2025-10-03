@@ -3,6 +3,7 @@ import React from "react";
 import { BiSolidFilePdf } from "react-icons/bi";
 import useMyApplications from "@/lib/useMyApplications";
 
+
 export type ApplicationStatus =
   | "lamar"
   | "wawancara"
@@ -37,21 +38,81 @@ export default function StudentApplicationsTable({ data, onAccept, onReject }: P
   // if parent didn't provide `data`, fetch from API
   const { loading: apiLoading, error: apiError, data: apiItems } = useMyApplications();
 
+  // Ambil id siswa saat ini dari localStorage (tidak pakai state global agar sederhana)
+  let currentSiswaId: string | null = null;
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = localStorage.getItem('user');
+      if (raw) {
+        const u = JSON.parse(raw);
+        currentSiswaId = String(u.id ?? u.siswa_id ?? '');
+      }
+    } catch {}
+  }
+
+  // Debug panel: tampilkan data mentah dan hasil filter
+  const [showDebug, setShowDebug] = React.useState(false);
+  const filteredRaw = Array.isArray(apiItems)
+    ? apiItems.filter((row: any) => {
+        if (!currentSiswaId) return true;
+        const sid = row.siswa_id ?? row.siswaId ?? (row.siswa && row.siswa.id);
+        return sid ? String(sid) === currentSiswaId : true;
+      })
+    : [];
+
+  // Panel debug opsional: tekan tombol untuk tampilkan JSON apiItems
+  const debugPanel = (
+    <div className="mb-4 rounded-md border p-3 bg-yellow-50 text-xs text-gray-800">
+      <div className="font-semibold mb-1">Debug: Data apiItems (raw dari API)</div>
+      <pre className="whitespace-pre-wrap break-words max-h-64 overflow-auto">{JSON.stringify(apiItems, null, 2)}</pre>
+    </div>
+  );
+  // (duplicate debug state removed to fix redeclaration error)
+
   // map backend item shape to Application expected by this table
-  const mapApiItem = (a: any): Application => ({
-    id: String(a.id ?? a.pelamar_id ?? ""),
-    posisi: a.posisi ?? a.posisi_name ?? a.posisiId ?? "-",
-    perusahaan: (a.asalSekolah || a.perusahaan || a.perusahaan_nama) ?? "-",
-    penempatan: a.alamat ? String(a.alamat).split(",")[0] : a.penempatan ?? "-",
-    cvUrl: a.cvUrl ?? a.cv_url ?? null,
-    transkripUrl: a.transkripUrl ?? a.transkrip_url ?? null,
-    status: (a.status as ApplicationStatus) || (a.status_lamaran as ApplicationStatus) || "lamar",
-  });
+  const mapApiItem = (a: any): Application => {
+    // Perusahaan: utamakan nama_perusahaan
+    let perusahaan =
+      a.nama_perusahaan ||
+      a.perusahaan_nama ||
+      a.perusahaan ||
+      (a.perusahaanObj && (a.perusahaanObj.nama || a.perusahaanObj.name)) ||
+      a.asalSekolah ||
+      (a.perusahaan_id && typeof a.perusahaan_id === 'object' && (a.perusahaan_id.nama || a.perusahaan_id.name)) ||
+      "-";
+
+    // Penempatan: utamakan lokasi_penempatan
+    let penempatan =
+      a.lokasi_penempatan ||
+      a.penempatan ||
+      (a.lokasi && (a.lokasi.nama || a.lokasi.name)) ||
+      (a.alamat ? String(a.alamat).split(",")[0] : null) ||
+      (a.perusahaanObj && a.perusahaanObj.alamat) ||
+      (a.perusahaan_id && typeof a.perusahaan_id === 'object' && a.perusahaan_id.alamat) ||
+      "-";
+
+    return {
+      id: String(a.id ?? a.pelamar_id ?? ""),
+      posisi: a.posisi ?? a.posisi_name ?? a.posisiId ?? "-",
+      perusahaan,
+      penempatan,
+      cvUrl: a.cvUrl ?? a.cv_url ?? null,
+      transkripUrl: a.transkripUrl ?? a.transkrip_url ?? null,
+      status: (a.status as ApplicationStatus) || (a.status_lamaran as ApplicationStatus) || "lamar",
+    };
+  };
 
   const sourceData: Application[] | null = data
     ? data
     : Array.isArray(apiItems)
-    ? apiItems.map(mapApiItem)
+    ? apiItems
+        // filter: kalau endpoint /pelamar mengembalikan semua lamaran, batasi milik siswa login saja
+        .filter((row: any) => {
+          if (!currentSiswaId) return true; // jika tidak bisa baca user, tampilkan apa adanya
+            const sid = row.siswa_id ?? row.siswaId ?? (row.siswa && row.siswa.id);
+            return sid ? String(sid) === currentSiswaId : true;
+        })
+        .map(mapApiItem)
     : apiLoading
     ? null
     : [];
@@ -77,13 +138,7 @@ export default function StudentApplicationsTable({ data, onAccept, onReject }: P
     "w-52 whitespace-nowrap", // aksi
   ];
 
-  // render states: loading / error / empty
-  if (!sourceData) {
-    return <div className="p-4">Memuat data...</div>;
-  }
-  // Note: we always render the table (headers) even when there are no rows.
-  // For loading we keep the early return. For error or empty data, we'll show
-  // a single row message inside the table body so the layout stays consistent.
+  // Note: Selalu render tabel. Saat loading (sourceData null) tampilkan skeleton di tbody.
 
   return (
     <div className="bg-white rounded-md p-4 shadow">
@@ -133,10 +188,21 @@ export default function StudentApplicationsTable({ data, onAccept, onReject }: P
                   </td>
                 </tr>
               ))
+            ) : apiLoading ? (
+              // Skeleton loading rows
+              Array.from({ length: 3 }).map((_, idx) => (
+                <tr key={idx} className="border-b text-xs text-center last:border-b-0 animate-pulse">
+                  {colClasses.map((cls, i) => (
+                    <td key={i} className={`px-4 py-4 ${cls}`}>
+                      <div className="h-4 bg-gray-200 rounded w-full mx-auto" style={{ maxWidth: i === 0 ? 24 : i === 1 ? 80 : i === 2 ? 120 : i === 3 ? 120 : i === 4 || i === 5 ? 32 : i === 6 ? 80 : 60 }} />
+                    </td>
+                  ))}
+                </tr>
+              ))
             ) : (
               <tr>
                 <td colSpan={headers.length} className="px-4 py-6 text-center text-sm text-gray-600">
-                  {apiLoading ? "Memuat data..." : apiError ? `Gagal memuat lamaran: ${String(apiError)}` : "Data tidak ada."}
+                  {apiError ? `Gagal memuat lamaran: ${String(apiError)}` : "Belum melamar lowongan."}
                 </td>
               </tr>
             )}
