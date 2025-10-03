@@ -51,7 +51,7 @@ export default function WeekGradePage() {
   });
 
   return (
-    <div className="px-4 md:px-6">
+    <div className="p-3 mt-2">
       <div className="mb-2">
         <Link
           href={`/dashboard-siswa/laporan-evaluasi`}
