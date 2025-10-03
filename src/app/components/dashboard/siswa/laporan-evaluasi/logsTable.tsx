@@ -9,27 +9,41 @@ export type DetailLog = {
   solution?: string;
 };
 
-export default function LogsTable({ logs }: { logs: DetailLog[] }) {
+type Props = {
+  logs: DetailLog[];
+  canAdd?: boolean;
+  emptyMessage?: string;
+};
+
+export default function LogsTable({
+  logs,
+  canAdd = true,
+  emptyMessage,
+}: Props) {
+  const message =
+    emptyMessage ??
+    (canAdd
+      ? "Belum ada isi laporan. Klik Isi Laporan untuk menambah data."
+      : "Belum ada isi laporan.");
+
   return (
     <div className="rounded-xl border border-gray-300 bg-white p-3 md:p-4">
-      {/* Selalu izinkan scroll-x bila konten overflow */}
-      <div className="rounded-lg ring-1 ring-gray-200 overflow-x-auto">
+      <div className="rounded-lg ring-gray-200 overflow-x-auto">
         <table
           className="
             w-full text-xs
-            table-fixed                     /* kolom stabil di desktop */
-            min-w-[900px] sm:min-w-[1024px] md:min-w-0  /* mobile bisa swipe; desktop bebas */
+            table-fixed
+            min-w-[900px] sm:min-w-[1024px] md:min-w-0
           "
         >
-          {/* colgroup: hindari whitespace → render via map */}
           <colgroup>
             {[
-              "w-[12%] md:w-[12%]",  // Tanggal
-              "w-[14%] md:w-[12%]",  // Foto
-              "w-[30%] md:w-[26%]",  // Deskripsi
-              "w-[30%] md:w-[26%]",  // Output
-              "w-[22%] md:w-[12%]",  // Hambatan
-              "w-[22%] md:w-[12%]",  // Solusi
+              "w-[12%] md:w-[12%]", // Tanggal
+              "w-[14%] md:w-[12%]", // Foto
+              "w-[30%] md:w-[26%]", // Deskripsi
+              "w-[30%] md:w-[26%]", // Output
+              "w-[22%] md:w-[12%]", // Hambatan
+              "w-[22%] md:w-[12%]", // Solusi
             ].map((cls, i) => (
               <col key={i} className={cls} />
             ))}
@@ -45,7 +59,10 @@ export default function LogsTable({ logs }: { logs: DetailLog[] }) {
                 "HAMBATAN",
                 "SOLUSI",
               ].map((h, i) => (
-                <th key={i} className="px-3 md:px-4 py-3 text-left font-semibold whitespace-nowrap">
+                <th
+                  key={i}
+                  className="px-3 md:px-4 py-3 text-left font-semibold whitespace-nowrap"
+                >
                   {h}
                 </th>
               ))}
@@ -55,19 +72,23 @@ export default function LogsTable({ logs }: { logs: DetailLog[] }) {
           <tbody>
             {logs.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-gray-500 bg-white">
-                  Belum ada isi laporan. Klik <b>Isi Laporan</b> untuk menambah data.
+                <td
+                  colSpan={6}
+                  className="px-4 py-10 text-center text-gray-500 bg-white"
+                >
+                  {message}
                 </td>
               </tr>
             ) : (
               logs.map((l, idx) => (
-                <tr key={idx} className="border-t border-gray-100 align-top">
-                  {/* Tanggal: sempit + tidak wrap */}
+                <tr
+                  key={idx}
+                  className="border-t border-gray-100 align-top"
+                >
                   <td className="px-3 md:px-4 py-3 text-gray-800 whitespace-nowrap align-top">
                     {l.date}
                   </td>
 
-                  {/* Foto: ukuran kecil, tidak memaksa lebar tabel */}
                   <td className="px-3 md:px-4 py-3 align-top">
                     {l.photoUrl ? (
                       <img
@@ -81,7 +102,6 @@ export default function LogsTable({ logs }: { logs: DetailLog[] }) {
                     )}
                   </td>
 
-                  {/* Kolom teks: selalu wrap ke bawah */}
                   <td className="px-3 md:px-4 py-3 text-gray-800 break-words whitespace-pre-line leading-relaxed">
                     {l.activity}
                   </td>
