@@ -21,6 +21,12 @@ type TopNavbarProps = {
 
 type AnyUser = Record<string, any>;
 
+// Event sederhana untuk mem-broadcast perubahan profil (mis: foto profil diperbarui)
+// Komponen form update profil dapat memanggil: window.dispatchEvent(new CustomEvent('profile-updated', { detail: { at: Date.now() }}))
+// Lalu TopNavbar akan menangkap dan memaksa reload avatar.
+
+const PROFILE_UPDATED_EVENT = 'profile-updated';
+
 function getInitials(name?: string) {
   if (!name) return "U";
   const parts = name.trim().split(/\s+/);
@@ -65,36 +71,43 @@ function buildAvatarCandidates(raw?: string | null): string[] {
   return Array.from(new Set(candidates));
 }
 
-function Avatar({
-  name,
-  src,
-  size = 36,
-}: {
-  name?: string;
-  src?: string | null;
-  size?: number;
-}) {
-  const style = `w-9 h-9`;
+function Avatar({ name, src, size = 36 }: { name?: string; src?: string | null; size?: number; }) {
+  // Pastikan container bulat & gambar dicrop di dalamnya
+  const dimensionClass = `w-9 h-9`; // size 36px default
   const candidates = React.useMemo(() => buildAvatarCandidates(src), [src]);
   const [idx, setIdx] = React.useState(0);
   const current = candidates[idx];
-  if (current) {
-    return (
-      <Image
-        src={current}
-        alt={name ? `${name} avatar` : 'User avatar'}
-        width={size}
-        height={size}
-        onError={() => setIdx(i => (i + 1 < candidates.length ? i + 1 : i))}
-        className="rounded-full border object-cover"
-      />
-    );
-  }
+  // Untuk paksa refresh (cache bust) ketika profile-updated dipancarkan
+  const [version, setVersion] = React.useState(0);
+
+  React.useEffect(() => {
+    const handler = () => {
+      // Reset index supaya mencoba ulang candidate pertama, dan bump version untuk ubah key (cache bust)
+      setIdx(0);
+      setVersion(v => v + 1);
+    };
+    window.addEventListener(PROFILE_UPDATED_EVENT, handler as EventListener);
+    return () => window.removeEventListener(PROFILE_UPDATED_EVENT, handler as EventListener);
+  }, []);
+
   return (
     <div
-      className={`${style} rounded-full border flex items-center justify-center bg-gray-200 text-gray-700 font-semibold`}
+      className={`${dimensionClass} rounded-full border overflow-hidden flex items-center justify-center bg-gray-200 text-gray-700 font-semibold relative`}
+      style={{ width: size, height: size }}
     >
-      {getInitials(name)}
+      {current ? (
+        <Image
+          key={version + '-' + current} // ubah key agar Next Image re-render & fetch ulang
+          src={current + (current.includes('?') ? `&v=${version}` : `?v=${version}`)}
+          alt={name ? `${name} avatar` : 'User avatar'}
+          fill
+          sizes="36px"
+          onError={() => setIdx(i => (i + 1 < candidates.length ? i + 1 : i))}
+          className="object-cover"
+        />
+      ) : (
+        getInitials(name)
+      )}
     </div>
   );
 }
@@ -190,6 +203,7 @@ export default function TopNavbar({
 }: TopNavbarProps) {
   const [loadedUser, setLoadedUser] = React.useState<AnyUser | null>(null);
   const [loadedRole, setLoadedRole] = React.useState<string | null>(null);
+  const [profileVersion, setProfileVersion] = React.useState(0); // untuk memicu re-hit deriveAvatar saat profile diupdate
 
   React.useEffect(() => {
     try {
@@ -200,11 +214,24 @@ export default function TopNavbar({
     } catch {}
   }, []);
 
+  // Dengarkan event profile-updated untuk ambil ulang user dari localStorage (diasumsikan form update sudah menimpa localStorage 'user')
+  React.useEffect(() => {
+    const handler = () => {
+      try {
+        const raw = localStorage.getItem('user');
+        if (raw) setLoadedUser(JSON.parse(raw));
+        setProfileVersion(v => v + 1);
+      } catch {}
+    };
+    window.addEventListener(PROFILE_UPDATED_EVENT, handler as EventListener);
+    return () => window.removeEventListener(PROFILE_UPDATED_EVENT, handler as EventListener);
+  }, []);
+
   const displayFullName =
     fullName ?? deriveFullName(loadedUser, loadedRole ?? undefined);
   const displayOrgName =
     orgName ?? deriveOrgName(loadedUser, loadedRole ?? undefined);
-  const displayAvatar = deriveAvatar(loadedUser, profilePic ?? null);
+  const displayAvatar = React.useMemo(() => deriveAvatar(loadedUser, profilePic ?? null), [loadedUser, profilePic, profileVersion]);
 
   return (
     // Tinggi fix 84px agar sejajar dengan header Sidebar (yang juga h-[84px])
